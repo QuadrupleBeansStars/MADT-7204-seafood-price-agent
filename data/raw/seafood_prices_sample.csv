@@ -1,0 +1,561 @@
+date,shop,sku,item_name,category,price_per_kg,unit,available
+2026-03-22,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,267.6,kg,True
+2026-03-22,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,243.0,kg,True
+2026-03-22,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,455.6,kg,True
+2026-03-22,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,347.4,kg,True
+2026-03-22,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,191.5,kg,True
+2026-03-22,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,249.4,kg,True
+2026-03-22,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,109.7,kg,True
+2026-03-22,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,590.9,kg,False
+2026-03-22,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,83.4,kg,True
+2026-03-22,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,178.6,kg,True
+2026-03-22,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,224.5,kg,True
+2026-03-22,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,719.0,kg,True
+2026-03-22,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,337.7,kg,True
+2026-03-22,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,73.4,kg,True
+2026-03-22,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,135.5,kg,False
+2026-03-22,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,375.1,kg,True
+2026-03-22,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,373.5,kg,True
+2026-03-22,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,286.6,kg,True
+2026-03-22,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,533.5,kg,True
+2026-03-22,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,404.8,kg,True
+2026-03-22,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,245.3,kg,True
+2026-03-22,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,297.5,kg,True
+2026-03-22,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,127.9,kg,True
+2026-03-22,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,690.5,kg,True
+2026-03-22,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,109.9,kg,True
+2026-03-22,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,237.9,kg,True
+2026-03-22,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,275.6,kg,True
+2026-03-22,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,797.4,kg,True
+2026-03-22,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,377.0,kg,True
+2026-03-22,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,90.5,kg,True
+2026-03-22,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,183.3,kg,False
+2026-03-22,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,464.6,kg,False
+2026-03-22,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,307.5,kg,True
+2026-03-22,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,229.4,kg,True
+2026-03-22,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,466.7,kg,False
+2026-03-22,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,383.2,kg,True
+2026-03-22,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,207.0,kg,False
+2026-03-22,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,246.2,kg,False
+2026-03-22,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,110.7,kg,True
+2026-03-22,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,628.1,kg,True
+2026-03-22,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,80.8,kg,True
+2026-03-22,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,198.7,kg,True
+2026-03-22,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,258.2,kg,True
+2026-03-22,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,756.0,kg,False
+2026-03-22,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,330.3,kg,True
+2026-03-22,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,75.8,kg,True
+2026-03-22,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,136.4,kg,True
+2026-03-22,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,405.7,kg,False
+2026-03-22,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,315.6,kg,True
+2026-03-22,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,243.0,kg,True
+2026-03-22,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,471.8,kg,True
+2026-03-22,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,353.6,kg,True
+2026-03-22,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,205.1,kg,True
+2026-03-22,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,274.9,kg,True
+2026-03-22,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,110.8,kg,True
+2026-03-22,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,672.0,kg,True
+2026-03-22,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,86.5,kg,True
+2026-03-22,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,201.9,kg,False
+2026-03-22,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,265.7,kg,False
+2026-03-22,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,780.8,kg,True
+2026-03-22,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,335.9,kg,True
+2026-03-22,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,85.0,kg,True
+2026-03-22,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,158.8,kg,True
+2026-03-22,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,445.5,kg,True
+2026-03-22,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,326.7,kg,True
+2026-03-22,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,286.4,kg,True
+2026-03-22,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,477.6,kg,True
+2026-03-22,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,368.2,kg,True
+2026-03-22,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,241.3,kg,True
+2026-03-22,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,271.6,kg,True
+2026-03-22,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,130.0,kg,True
+2026-03-22,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,681.3,kg,True
+2026-03-22,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,92.1,kg,True
+2026-03-22,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,208.4,kg,False
+2026-03-22,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,281.8,kg,True
+2026-03-22,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,794.5,kg,True
+2026-03-22,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,346.1,kg,True
+2026-03-22,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,80.1,kg,True
+2026-03-22,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,160.9,kg,True
+2026-03-22,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,445.7,kg,True
+2026-03-23,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,272.2,kg,True
+2026-03-23,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,240.2,kg,True
+2026-03-23,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,453.5,kg,False
+2026-03-23,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,331.0,kg,True
+2026-03-23,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,209.9,kg,False
+2026-03-23,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,266.9,kg,True
+2026-03-23,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,110.4,kg,True
+2026-03-23,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,566.8,kg,True
+2026-03-23,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,77.3,kg,True
+2026-03-23,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,184.7,kg,True
+2026-03-23,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,226.0,kg,True
+2026-03-23,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,679.3,kg,False
+2026-03-23,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,304.7,kg,True
+2026-03-23,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,66.6,kg,True
+2026-03-23,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,128.3,kg,True
+2026-03-23,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,375.1,kg,True
+2026-03-23,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,381.1,kg,True
+2026-03-23,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,276.5,kg,True
+2026-03-23,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,563.7,kg,True
+2026-03-23,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,403.2,kg,True
+2026-03-23,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,254.2,kg,True
+2026-03-23,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,323.6,kg,True
+2026-03-23,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,133.5,kg,True
+2026-03-23,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,698.3,kg,True
+2026-03-23,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,95.9,kg,True
+2026-03-23,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,227.9,kg,True
+2026-03-23,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,302.9,kg,True
+2026-03-23,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,911.8,kg,False
+2026-03-23,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,428.2,kg,True
+2026-03-23,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,86.9,kg,True
+2026-03-23,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,161.5,kg,True
+2026-03-23,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,474.0,kg,True
+2026-03-23,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,292.1,kg,True
+2026-03-23,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,236.5,kg,True
+2026-03-23,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,458.3,kg,True
+2026-03-23,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,367.5,kg,True
+2026-03-23,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,200.3,kg,True
+2026-03-23,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,248.0,kg,True
+2026-03-23,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,113.0,kg,True
+2026-03-23,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,644.2,kg,True
+2026-03-23,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,88.5,kg,True
+2026-03-23,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,190.0,kg,True
+2026-03-23,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,255.7,kg,True
+2026-03-23,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,689.0,kg,False
+2026-03-23,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,329.2,kg,True
+2026-03-23,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,80.0,kg,True
+2026-03-23,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,138.7,kg,True
+2026-03-23,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,374.6,kg,True
+2026-03-23,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,317.3,kg,True
+2026-03-23,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,246.2,kg,True
+2026-03-23,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,497.2,kg,False
+2026-03-23,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,354.2,kg,True
+2026-03-23,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,215.4,kg,True
+2026-03-23,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,297.0,kg,True
+2026-03-23,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,114.5,kg,True
+2026-03-23,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,609.9,kg,True
+2026-03-23,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,86.7,kg,True
+2026-03-23,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,189.6,kg,True
+2026-03-23,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,278.5,kg,True
+2026-03-23,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,715.1,kg,True
+2026-03-23,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,359.4,kg,True
+2026-03-23,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,80.0,kg,True
+2026-03-23,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,158.5,kg,True
+2026-03-23,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,432.3,kg,False
+2026-03-23,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,329.1,kg,True
+2026-03-23,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,285.8,kg,True
+2026-03-23,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,491.2,kg,True
+2026-03-23,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,367.7,kg,True
+2026-03-23,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,228.3,kg,False
+2026-03-23,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,285.3,kg,True
+2026-03-23,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,134.1,kg,True
+2026-03-23,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,633.9,kg,True
+2026-03-23,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,100.3,kg,True
+2026-03-23,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,213.5,kg,True
+2026-03-23,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,272.5,kg,True
+2026-03-23,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,811.6,kg,True
+2026-03-23,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,359.6,kg,True
+2026-03-23,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,80.0,kg,True
+2026-03-23,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,157.6,kg,True
+2026-03-23,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,412.5,kg,True
+2026-03-24,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,303.2,kg,True
+2026-03-24,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,231.3,kg,True
+2026-03-24,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,445.3,kg,True
+2026-03-24,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,344.0,kg,True
+2026-03-24,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,199.6,kg,True
+2026-03-24,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,235.7,kg,False
+2026-03-24,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,99.9,kg,True
+2026-03-24,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,599.2,kg,True
+2026-03-24,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,85.6,kg,True
+2026-03-24,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,178.3,kg,True
+2026-03-24,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,223.8,kg,True
+2026-03-24,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,628.9,kg,True
+2026-03-24,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,312.9,kg,True
+2026-03-24,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,70.7,kg,True
+2026-03-24,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,144.7,kg,True
+2026-03-24,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,373.0,kg,False
+2026-03-24,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,341.0,kg,True
+2026-03-24,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,320.5,kg,True
+2026-03-24,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,519.9,kg,True
+2026-03-24,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,432.5,kg,True
+2026-03-24,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,266.2,kg,True
+2026-03-24,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,318.4,kg,True
+2026-03-24,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,131.1,kg,True
+2026-03-24,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,755.4,kg,True
+2026-03-24,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,104.5,kg,True
+2026-03-24,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,247.0,kg,False
+2026-03-24,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,287.7,kg,True
+2026-03-24,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,808.6,kg,False
+2026-03-24,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,376.9,kg,True
+2026-03-24,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,90.6,kg,False
+2026-03-24,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,162.8,kg,True
+2026-03-24,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,494.4,kg,True
+2026-03-24,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,301.4,kg,True
+2026-03-24,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,234.7,kg,False
+2026-03-24,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,464.7,kg,False
+2026-03-24,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,368.0,kg,True
+2026-03-24,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,211.0,kg,True
+2026-03-24,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,269.3,kg,True
+2026-03-24,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,106.0,kg,True
+2026-03-24,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,636.6,kg,True
+2026-03-24,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,89.2,kg,True
+2026-03-24,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,185.3,kg,True
+2026-03-24,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,257.1,kg,True
+2026-03-24,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,699.8,kg,True
+2026-03-24,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,345.1,kg,True
+2026-03-24,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,74.6,kg,True
+2026-03-24,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,142.1,kg,True
+2026-03-24,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,382.4,kg,True
+2026-03-24,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,329.1,kg,True
+2026-03-24,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,248.5,kg,True
+2026-03-24,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,442.6,kg,True
+2026-03-24,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,360.1,kg,True
+2026-03-24,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,212.4,kg,True
+2026-03-24,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,295.5,kg,False
+2026-03-24,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,120.8,kg,True
+2026-03-24,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,698.4,kg,False
+2026-03-24,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,95.5,kg,True
+2026-03-24,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,196.7,kg,True
+2026-03-24,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,268.1,kg,True
+2026-03-24,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,790.0,kg,True
+2026-03-24,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,371.6,kg,True
+2026-03-24,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,84.2,kg,True
+2026-03-24,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,156.5,kg,False
+2026-03-24,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,395.3,kg,True
+2026-03-24,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,319.2,kg,True
+2026-03-24,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,259.5,kg,True
+2026-03-24,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,527.4,kg,True
+2026-03-24,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,375.9,kg,True
+2026-03-24,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,212.8,kg,True
+2026-03-24,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,282.9,kg,True
+2026-03-24,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,117.1,kg,True
+2026-03-24,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,668.8,kg,True
+2026-03-24,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,88.5,kg,True
+2026-03-24,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,214.5,kg,True
+2026-03-24,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,286.2,kg,True
+2026-03-24,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,814.8,kg,True
+2026-03-24,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,353.9,kg,True
+2026-03-24,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,78.2,kg,True
+2026-03-24,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,156.1,kg,True
+2026-03-24,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,460.2,kg,True
+2026-03-25,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,283.9,kg,True
+2026-03-25,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,232.2,kg,True
+2026-03-25,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,460.2,kg,False
+2026-03-25,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,323.6,kg,True
+2026-03-25,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,204.2,kg,True
+2026-03-25,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,253.9,kg,True
+2026-03-25,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,100.2,kg,True
+2026-03-25,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,548.8,kg,False
+2026-03-25,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,79.1,kg,True
+2026-03-25,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,193.1,kg,True
+2026-03-25,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,252.1,kg,True
+2026-03-25,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,623.0,kg,False
+2026-03-25,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,337.7,kg,True
+2026-03-25,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,76.4,kg,True
+2026-03-25,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,128.7,kg,True
+2026-03-25,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,351.3,kg,True
+2026-03-25,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,394.8,kg,True
+2026-03-25,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,309.2,kg,True
+2026-03-25,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,584.2,kg,True
+2026-03-25,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,446.2,kg,True
+2026-03-25,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,235.5,kg,True
+2026-03-25,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,315.6,kg,True
+2026-03-25,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,127.7,kg,True
+2026-03-25,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,738.6,kg,True
+2026-03-25,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,105.9,kg,True
+2026-03-25,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,239.7,kg,True
+2026-03-25,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,321.1,kg,True
+2026-03-25,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,825.2,kg,True
+2026-03-25,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,417.1,kg,True
+2026-03-25,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,85.6,kg,True
+2026-03-25,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,179.3,kg,True
+2026-03-25,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,467.3,kg,True
+2026-03-25,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,326.3,kg,True
+2026-03-25,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,250.6,kg,True
+2026-03-25,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,491.9,kg,True
+2026-03-25,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,378.3,kg,True
+2026-03-25,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,201.3,kg,True
+2026-03-25,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,283.1,kg,True
+2026-03-25,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,120.3,kg,True
+2026-03-25,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,640.6,kg,False
+2026-03-25,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,80.3,kg,True
+2026-03-25,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,205.0,kg,True
+2026-03-25,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,236.5,kg,True
+2026-03-25,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,762.7,kg,True
+2026-03-25,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,326.7,kg,True
+2026-03-25,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,79.3,kg,True
+2026-03-25,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,148.3,kg,True
+2026-03-25,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,406.1,kg,True
+2026-03-25,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,317.6,kg,True
+2026-03-25,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,244.9,kg,True
+2026-03-25,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,461.2,kg,True
+2026-03-25,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,378.4,kg,True
+2026-03-25,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,221.1,kg,True
+2026-03-25,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,287.2,kg,True
+2026-03-25,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,111.2,kg,True
+2026-03-25,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,625.9,kg,True
+2026-03-25,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,86.6,kg,True
+2026-03-25,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,204.2,kg,True
+2026-03-25,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,246.9,kg,True
+2026-03-25,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,704.4,kg,False
+2026-03-25,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,345.8,kg,True
+2026-03-25,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,81.8,kg,True
+2026-03-25,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,155.4,kg,True
+2026-03-25,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,437.3,kg,True
+2026-03-25,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,313.5,kg,True
+2026-03-25,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,261.1,kg,True
+2026-03-25,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,508.9,kg,True
+2026-03-25,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,379.3,kg,True
+2026-03-25,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,226.0,kg,True
+2026-03-25,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,299.4,kg,True
+2026-03-25,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,129.6,kg,False
+2026-03-25,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,736.3,kg,False
+2026-03-25,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,97.3,kg,True
+2026-03-25,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,215.1,kg,False
+2026-03-25,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,262.8,kg,True
+2026-03-25,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,764.7,kg,False
+2026-03-25,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,341.0,kg,True
+2026-03-25,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,81.2,kg,True
+2026-03-25,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,145.2,kg,True
+2026-03-25,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,437.1,kg,True
+2026-03-26,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,298.5,kg,True
+2026-03-26,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,247.9,kg,False
+2026-03-26,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,406.0,kg,True
+2026-03-26,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,346.6,kg,True
+2026-03-26,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,204.5,kg,True
+2026-03-26,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,236.6,kg,True
+2026-03-26,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,113.0,kg,False
+2026-03-26,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,570.4,kg,True
+2026-03-26,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,74.8,kg,True
+2026-03-26,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,168.2,kg,True
+2026-03-26,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,218.0,kg,True
+2026-03-26,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,707.9,kg,True
+2026-03-26,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,302.7,kg,True
+2026-03-26,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,75.5,kg,True
+2026-03-26,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,141.1,kg,True
+2026-03-26,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,392.0,kg,True
+2026-03-26,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,343.1,kg,True
+2026-03-26,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,293.3,kg,True
+2026-03-26,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,519.2,kg,False
+2026-03-26,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,450.5,kg,True
+2026-03-26,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,244.9,kg,True
+2026-03-26,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,320.9,kg,True
+2026-03-26,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,137.4,kg,True
+2026-03-26,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,750.0,kg,True
+2026-03-26,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,105.6,kg,True
+2026-03-26,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,246.9,kg,True
+2026-03-26,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,313.2,kg,True
+2026-03-26,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,866.8,kg,True
+2026-03-26,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,431.5,kg,True
+2026-03-26,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,98.0,kg,True
+2026-03-26,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,180.6,kg,True
+2026-03-26,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,470.9,kg,True
+2026-03-26,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,327.4,kg,True
+2026-03-26,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,239.1,kg,True
+2026-03-26,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,485.4,kg,True
+2026-03-26,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,342.0,kg,True
+2026-03-26,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,205.5,kg,True
+2026-03-26,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,247.6,kg,True
+2026-03-26,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,120.8,kg,True
+2026-03-26,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,601.8,kg,True
+2026-03-26,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,83.6,kg,True
+2026-03-26,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,189.2,kg,True
+2026-03-26,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,240.1,kg,True
+2026-03-26,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,729.1,kg,True
+2026-03-26,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,335.4,kg,True
+2026-03-26,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,76.0,kg,True
+2026-03-26,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,132.2,kg,True
+2026-03-26,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,385.2,kg,False
+2026-03-26,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,304.9,kg,True
+2026-03-26,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,260.2,kg,True
+2026-03-26,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,443.5,kg,True
+2026-03-26,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,387.4,kg,True
+2026-03-26,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,207.9,kg,True
+2026-03-26,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,289.5,kg,True
+2026-03-26,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,123.6,kg,False
+2026-03-26,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,643.8,kg,True
+2026-03-26,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,94.7,kg,True
+2026-03-26,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,193.8,kg,True
+2026-03-26,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,263.5,kg,True
+2026-03-26,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,767.3,kg,False
+2026-03-26,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,331.7,kg,True
+2026-03-26,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,81.6,kg,True
+2026-03-26,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,140.0,kg,False
+2026-03-26,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,394.1,kg,True
+2026-03-26,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,328.1,kg,True
+2026-03-26,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,258.9,kg,True
+2026-03-26,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,513.3,kg,True
+2026-03-26,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,385.0,kg,True
+2026-03-26,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,224.6,kg,True
+2026-03-26,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,302.9,kg,True
+2026-03-26,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,124.4,kg,True
+2026-03-26,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,678.4,kg,True
+2026-03-26,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,89.3,kg,True
+2026-03-26,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,216.0,kg,True
+2026-03-26,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,269.1,kg,True
+2026-03-26,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,741.3,kg,True
+2026-03-26,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,389.3,kg,True
+2026-03-26,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,82.8,kg,True
+2026-03-26,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,148.6,kg,True
+2026-03-26,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,411.7,kg,True
+2026-03-27,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,299.5,kg,True
+2026-03-27,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,248.9,kg,True
+2026-03-27,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,459.5,kg,True
+2026-03-27,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,339.9,kg,True
+2026-03-27,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,182.8,kg,True
+2026-03-27,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,267.4,kg,True
+2026-03-27,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,110.9,kg,True
+2026-03-27,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,599.1,kg,True
+2026-03-27,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,77.7,kg,True
+2026-03-27,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,181.1,kg,True
+2026-03-27,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,242.8,kg,True
+2026-03-27,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,645.0,kg,True
+2026-03-27,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,293.2,kg,True
+2026-03-27,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,72.0,kg,True
+2026-03-27,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,128.9,kg,True
+2026-03-27,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,380.1,kg,True
+2026-03-27,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,352.0,kg,True
+2026-03-27,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,306.1,kg,False
+2026-03-27,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,548.6,kg,True
+2026-03-27,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,465.9,kg,True
+2026-03-27,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,268.5,kg,True
+2026-03-27,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,307.7,kg,True
+2026-03-27,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,139.2,kg,True
+2026-03-27,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,699.2,kg,True
+2026-03-27,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,111.1,kg,True
+2026-03-27,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,241.0,kg,True
+2026-03-27,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,295.5,kg,True
+2026-03-27,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,839.5,kg,True
+2026-03-27,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,432.1,kg,True
+2026-03-27,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,96.3,kg,True
+2026-03-27,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,182.4,kg,True
+2026-03-27,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,479.1,kg,True
+2026-03-27,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,316.3,kg,True
+2026-03-27,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,258.4,kg,False
+2026-03-27,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,422.6,kg,True
+2026-03-27,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,357.9,kg,True
+2026-03-27,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,199.9,kg,True
+2026-03-27,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,268.6,kg,True
+2026-03-27,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,109.2,kg,True
+2026-03-27,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,619.5,kg,True
+2026-03-27,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,87.7,kg,True
+2026-03-27,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,175.7,kg,False
+2026-03-27,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,261.3,kg,True
+2026-03-27,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,698.7,kg,True
+2026-03-27,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,331.1,kg,True
+2026-03-27,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,71.4,kg,True
+2026-03-27,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,147.0,kg,True
+2026-03-27,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,373.6,kg,True
+2026-03-27,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,324.5,kg,True
+2026-03-27,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,270.4,kg,True
+2026-03-27,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,456.6,kg,True
+2026-03-27,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,392.9,kg,True
+2026-03-27,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,231.6,kg,True
+2026-03-27,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,265.7,kg,True
+2026-03-27,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,122.6,kg,False
+2026-03-27,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,650.3,kg,True
+2026-03-27,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,84.7,kg,True
+2026-03-27,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,184.8,kg,True
+2026-03-27,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,272.8,kg,True
+2026-03-27,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,722.0,kg,True
+2026-03-27,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,364.6,kg,True
+2026-03-27,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,80.5,kg,True
+2026-03-27,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,154.6,kg,False
+2026-03-27,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,420.3,kg,True
+2026-03-27,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,316.6,kg,True
+2026-03-27,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,268.0,kg,False
+2026-03-27,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,488.0,kg,True
+2026-03-27,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,374.0,kg,True
+2026-03-27,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,237.5,kg,True
+2026-03-27,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,314.9,kg,True
+2026-03-27,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,133.9,kg,True
+2026-03-27,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,687.1,kg,True
+2026-03-27,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,98.3,kg,True
+2026-03-27,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,223.2,kg,True
+2026-03-27,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,283.4,kg,True
+2026-03-27,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,756.4,kg,False
+2026-03-27,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,361.4,kg,True
+2026-03-27,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,77.6,kg,True
+2026-03-27,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,165.2,kg,True
+2026-03-27,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,406.8,kg,True
+2026-03-28,Talad Thai,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,310.8,kg,False
+2026-03-28,Talad Thai,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,245.8,kg,True
+2026-03-28,Talad Thai,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,448.2,kg,True
+2026-03-28,Talad Thai,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,357.6,kg,True
+2026-03-28,Talad Thai,FISH-SEABASS,Sea Bass (Whole),fish,210.1,kg,True
+2026-03-28,Talad Thai,FISH-SNAPPER,Red Snapper (Whole),fish,271.7,kg,True
+2026-03-28,Talad Thai,FISH-MACKEREL,Mackerel (Whole),fish,99.5,kg,True
+2026-03-28,Talad Thai,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,587.4,kg,True
+2026-03-28,Talad Thai,FISH-TILAPIA,Tilapia (Whole),fish,75.5,kg,True
+2026-03-28,Talad Thai,SQUID-WHOLE-M,Squid (Medium),squid,187.1,kg,True
+2026-03-28,Talad Thai,SQUID-WHOLE-L,Squid (Large),squid,235.4,kg,True
+2026-03-28,Talad Thai,CRAB-MUD-L,Mud Crab (Large),crab,679.3,kg,True
+2026-03-28,Talad Thai,CRAB-BLUE,Blue Swimming Crab,crab,294.4,kg,True
+2026-03-28,Talad Thai,MUSSEL-GREEN,Green Mussel,shellfish,67.5,kg,False
+2026-03-28,Talad Thai,CLAM-HARD,Hard Shell Clam,shellfish,144.9,kg,True
+2026-03-28,Talad Thai,OYSTER-FRESH,Fresh Oyster,shellfish,395.4,kg,True
+2026-03-28,Or Tor Kor Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,361.9,kg,True
+2026-03-28,Or Tor Kor Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,318.7,kg,True
+2026-03-28,Or Tor Kor Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,511.8,kg,False
+2026-03-28,Or Tor Kor Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,448.3,kg,True
+2026-03-28,Or Tor Kor Market,FISH-SEABASS,Sea Bass (Whole),fish,239.6,kg,True
+2026-03-28,Or Tor Kor Market,FISH-SNAPPER,Red Snapper (Whole),fish,315.0,kg,True
+2026-03-28,Or Tor Kor Market,FISH-MACKEREL,Mackerel (Whole),fish,136.3,kg,True
+2026-03-28,Or Tor Kor Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,795.1,kg,True
+2026-03-28,Or Tor Kor Market,FISH-TILAPIA,Tilapia (Whole),fish,104.4,kg,False
+2026-03-28,Or Tor Kor Market,SQUID-WHOLE-M,Squid (Medium),squid,246.0,kg,True
+2026-03-28,Or Tor Kor Market,SQUID-WHOLE-L,Squid (Large),squid,283.0,kg,True
+2026-03-28,Or Tor Kor Market,CRAB-MUD-L,Mud Crab (Large),crab,851.6,kg,True
+2026-03-28,Or Tor Kor Market,CRAB-BLUE,Blue Swimming Crab,crab,394.0,kg,False
+2026-03-28,Or Tor Kor Market,MUSSEL-GREEN,Green Mussel,shellfish,97.4,kg,True
+2026-03-28,Or Tor Kor Market,CLAM-HARD,Hard Shell Clam,shellfish,170.9,kg,True
+2026-03-28,Or Tor Kor Market,OYSTER-FRESH,Fresh Oyster,shellfish,480.1,kg,True
+2026-03-28,Makro Samut Prakan,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,304.5,kg,False
+2026-03-28,Makro Samut Prakan,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,237.6,kg,True
+2026-03-28,Makro Samut Prakan,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,450.1,kg,True
+2026-03-28,Makro Samut Prakan,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,365.2,kg,False
+2026-03-28,Makro Samut Prakan,FISH-SEABASS,Sea Bass (Whole),fish,196.1,kg,True
+2026-03-28,Makro Samut Prakan,FISH-SNAPPER,Red Snapper (Whole),fish,265.5,kg,True
+2026-03-28,Makro Samut Prakan,FISH-MACKEREL,Mackerel (Whole),fish,107.9,kg,True
+2026-03-28,Makro Samut Prakan,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,665.2,kg,True
+2026-03-28,Makro Samut Prakan,FISH-TILAPIA,Tilapia (Whole),fish,89.1,kg,True
+2026-03-28,Makro Samut Prakan,SQUID-WHOLE-M,Squid (Medium),squid,176.3,kg,True
+2026-03-28,Makro Samut Prakan,SQUID-WHOLE-L,Squid (Large),squid,250.1,kg,True
+2026-03-28,Makro Samut Prakan,CRAB-MUD-L,Mud Crab (Large),crab,684.8,kg,True
+2026-03-28,Makro Samut Prakan,CRAB-BLUE,Blue Swimming Crab,crab,334.5,kg,True
+2026-03-28,Makro Samut Prakan,MUSSEL-GREEN,Green Mussel,shellfish,79.0,kg,True
+2026-03-28,Makro Samut Prakan,CLAM-HARD,Hard Shell Clam,shellfish,134.1,kg,True
+2026-03-28,Makro Samut Prakan,OYSTER-FRESH,Fresh Oyster,shellfish,399.9,kg,True
+2026-03-28,Thai Market Bangkapi,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,298.2,kg,True
+2026-03-28,Thai Market Bangkapi,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,244.3,kg,True
+2026-03-28,Thai Market Bangkapi,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,512.1,kg,True
+2026-03-28,Thai Market Bangkapi,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,351.0,kg,True
+2026-03-28,Thai Market Bangkapi,FISH-SEABASS,Sea Bass (Whole),fish,212.3,kg,False
+2026-03-28,Thai Market Bangkapi,FISH-SNAPPER,Red Snapper (Whole),fish,264.4,kg,True
+2026-03-28,Thai Market Bangkapi,FISH-MACKEREL,Mackerel (Whole),fish,126.5,kg,True
+2026-03-28,Thai Market Bangkapi,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,646.3,kg,True
+2026-03-28,Thai Market Bangkapi,FISH-TILAPIA,Tilapia (Whole),fish,89.7,kg,True
+2026-03-28,Thai Market Bangkapi,SQUID-WHOLE-M,Squid (Medium),squid,186.6,kg,True
+2026-03-28,Thai Market Bangkapi,SQUID-WHOLE-L,Squid (Large),squid,255.7,kg,True
+2026-03-28,Thai Market Bangkapi,CRAB-MUD-L,Mud Crab (Large),crab,701.7,kg,True
+2026-03-28,Thai Market Bangkapi,CRAB-BLUE,Blue Swimming Crab,crab,339.5,kg,True
+2026-03-28,Thai Market Bangkapi,MUSSEL-GREEN,Green Mussel,shellfish,83.4,kg,True
+2026-03-28,Thai Market Bangkapi,CLAM-HARD,Hard Shell Clam,shellfish,152.0,kg,True
+2026-03-28,Thai Market Bangkapi,OYSTER-FRESH,Fresh Oyster,shellfish,444.9,kg,True
+2026-03-28,Chatuchak Fish Market,SHRIMP-WHITE-L,White Shrimp (Large),shrimp,354.8,kg,True
+2026-03-28,Chatuchak Fish Market,SHRIMP-WHITE-M,White Shrimp (Medium),shrimp,291.6,kg,True
+2026-03-28,Chatuchak Fish Market,SHRIMP-TIGER-L,Tiger Prawn (Large),shrimp,541.0,kg,True
+2026-03-28,Chatuchak Fish Market,SHRIMP-TIGER-M,Tiger Prawn (Medium),shrimp,410.0,kg,True
+2026-03-28,Chatuchak Fish Market,FISH-SEABASS,Sea Bass (Whole),fish,245.8,kg,True
+2026-03-28,Chatuchak Fish Market,FISH-SNAPPER,Red Snapper (Whole),fish,289.9,kg,True
+2026-03-28,Chatuchak Fish Market,FISH-MACKEREL,Mackerel (Whole),fish,128.4,kg,True
+2026-03-28,Chatuchak Fish Market,FISH-SALMON-FILLET,Salmon Fillet (Imported),fish,730.1,kg,True
+2026-03-28,Chatuchak Fish Market,FISH-TILAPIA,Tilapia (Whole),fish,101.7,kg,True
+2026-03-28,Chatuchak Fish Market,SQUID-WHOLE-M,Squid (Medium),squid,223.4,kg,True
+2026-03-28,Chatuchak Fish Market,SQUID-WHOLE-L,Squid (Large),squid,287.1,kg,True
+2026-03-28,Chatuchak Fish Market,CRAB-MUD-L,Mud Crab (Large),crab,802.5,kg,True
+2026-03-28,Chatuchak Fish Market,CRAB-BLUE,Blue Swimming Crab,crab,362.2,kg,True
+2026-03-28,Chatuchak Fish Market,MUSSEL-GREEN,Green Mussel,shellfish,81.5,kg,True
+2026-03-28,Chatuchak Fish Market,CLAM-HARD,Hard Shell Clam,shellfish,168.1,kg,False
+2026-03-28,Chatuchak Fish Market,OYSTER-FRESH,Fresh Oyster,shellfish,433.4,kg,True
