@@ -4,14 +4,13 @@
 
 ## Team
 
-| Role | Name |
-|------|------|
-| IT Lead | [Your Name] |
-| Mgmt Member | [Member 1] |
-| Mgmt Member | [Member 2] |
-| Mgmt Member | [Member 3] |
-| Mgmt Member | [Member 4] |
-| Mgmt Member | [Member 5] |
+| Student ID | Name | Role |
+|------------|------|------|
+| 6810424003 | Nititorn Chawanpunya | **IT Lead** |
+| 6810414003 | Thanaree Raksaman | Mgmt Member |
+| 6810424002 | Kanyathat Rakdee | Mgmt Member |
+| 6810424011 | Natta Chaisiripant | Mgmt Member |
+| 6810424014 | Phawinee Jinapang | Mgmt Member |
 
 ## Problem Statement
 
