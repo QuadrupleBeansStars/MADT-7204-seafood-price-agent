@@ -62,7 +62,7 @@ def query_seafood_prices(
         result = result[result["date"] == latest_date]
 
     if result.empty:
-        return f"No data found for the specified date."
+        return "No data found for the specified date."
 
     # Format output
     lines = [f"Seafood prices for '{item}' ({result.iloc[0]['date']}):\n"]
@@ -76,59 +76,3 @@ def query_seafood_prices(
     return "\n".join(lines)
 
 
-@tool
-def compare_prices(item: str, target_date: str | None = None) -> str:
-    """Compare prices for a seafood item across all shops, ranked cheapest first.
-
-    Use this tool when the user wants to find the best price for a specific item.
-
-    Args:
-        item: Seafood item to compare (e.g. 'white shrimp', 'sea bass', 'squid').
-        target_date: Optional date in YYYY-MM-DD format. Defaults to latest date.
-    """
-    df = _load_prices()
-
-    mask = df["item_name"].str.contains(item, case=False, na=False)
-    result = df[mask]
-
-    if result.empty:
-        return f"No results found for '{item}'. Try: shrimp, fish, squid, crab, mussel, clam, oyster."
-
-    # Use latest date if not specified
-    if target_date:
-        result = result[result["date"] == date.fromisoformat(target_date)]
-    else:
-        latest_date = result["date"].max()
-        result = result[result["date"] == latest_date]
-
-    if result.empty:
-        return f"No data for the specified date."
-
-    # Only show available items, sort by price
-    available = result[result["available"]].sort_values("price_per_kg")
-    unavailable = result[~result["available"]]
-
-    lines = [f"Price comparison for '{item}' ({result.iloc[0]['date']}):\n"]
-    lines.append("AVAILABLE (cheapest first):")
-
-    if available.empty:
-        lines.append("  No shops have this item in stock today.")
-    else:
-        for rank, (_, row) in enumerate(available.iterrows(), 1):
-            savings = ""
-            if rank == 1 and len(available) > 1:
-                savings = " ★ BEST PRICE"
-            lines.append(
-                f"  {rank}. {row['shop']:25s} | ฿{row['price_per_kg']:>8.1f}/{row['unit']}{savings}"
-            )
-
-        # Price spread
-        cheapest = available.iloc[0]["price_per_kg"]
-        most_expensive = available.iloc[-1]["price_per_kg"]
-        spread = most_expensive - cheapest
-        lines.append(f"\n  Price spread: ฿{spread:.1f}/kg ({spread/most_expensive*100:.0f}% difference)")
-
-    if not unavailable.empty:
-        lines.append(f"\nOUT OF STOCK at: {', '.join(unavailable['shop'].tolist())}")
-
-    return "\n".join(lines)
