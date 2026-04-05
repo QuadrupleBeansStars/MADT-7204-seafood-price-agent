@@ -2,7 +2,6 @@
 
 **Branch:** `feature/tool-best-deals`
 **File to edit:** `agent/tools/seafood_prices.py` and `agent/tools/__init__.py`
-**Difficulty:** Beginner (vibe code friendly)
 
 ---
 
@@ -50,48 +49,49 @@ Agent reads your output and replies:
 
 ---
 
-## Vibe-code prompt
+## Thinking steps
 
-Copy this and paste it into Claude or Gemini:
+Before you ask an AI to write the code, think through these questions:
 
-```
-I'm building a LangChain tool for a seafood price comparison agent.
-The tool is called get_best_deals.
+1. **What counts as a "deal"?** The threshold is >10% below the market average for that item. How do you calculate the market average — average of all shops, or only shops that have it in stock?
 
-Here is the existing code in agent/tools/seafood_prices.py:
-[paste the full file content here]
+2. **What if there are no deals today?** Prices might all be close to average on a given day. What should the function return in that case?
 
-Please add a new @tool function with this signature:
-get_best_deals(category: str | None = None, target_date: str | None = None) -> str
+3. **What if a category filter is given but doesn't match anything?** E.g. `category = "lobster"` — should you return an error or an empty result with a message?
 
-- category: optional filter — "fish", "shrimp", "squid", "crab", or "shellfish"
-- target_date: optional YYYY-MM-DD, defaults to latest date in CSV
+4. **How do you rank the deals?** By % discount? By absolute ฿ savings? Decide what makes most sense for a restaurant buyer.
 
-Steps:
-1. Load the CSV using _load_prices()
-2. Filter to the target date (latest if not specified)
-3. Filter to available items only
-4. If category is provided, filter by the category column
-5. For each item_name, calculate the average price across all shops
-6. Find shops where price < (average * 0.90) — i.e. more than 10% below average
-7. Rank these "deals" by % discount (largest first)
-8. Return formatted output
+5. **How many deals should you show?** All of them, or a top N? Think about what's useful — a wall of 30 deals is overwhelming; a top 5 or top 10 is actionable.
 
-Output example:
-  Best deals today (2026-03-28):
-
-  🏆 #1  White Shrimp (Large)
-         Talad Thai: ฿252/kg  |  Market avg: ฿308/kg  |  18% BELOW AVERAGE
-
-  🥈 #2  Tilapia
-         Makro: ฿96/kg  |  Market avg: ฿109/kg  |  12% BELOW AVERAGE
-
-  If no deals found, return: "No significant deals today — prices are close to average across all shops."
-```
+6. **What if the same item has multiple shop entries?** One item might appear at 5 shops. Only the shops with price below average should be flagged as deals.
 
 ---
 
-## After generating the code
+## Acceptance criteria
+
+Your task is complete when all of the following work correctly:
+
+**Basic cases:**
+- [ ] No arguments → scans all categories for today's latest date, returns top deals ranked by % discount
+- [ ] `category = "fish"` → returns only fish deals
+- [ ] `category = "shrimp"` → returns only shrimp deals
+- [ ] `target_date` given → scans that specific date instead of the latest
+
+**Edge cases:**
+- [ ] No deals found on a given date → returns a friendly message instead of an empty response
+- [ ] Category filter doesn't match any known category → returns an error message listing the valid categories
+- [ ] `target_date` given but no data exists for that date → returns a helpful message
+- [ ] All items at a shop are out of stock → those items are excluded from deal calculations
+- [ ] Only one shop has an item in stock → market average = that shop's price, so no deal can be flagged (handle gracefully)
+
+**Output quality:**
+- [ ] Each deal entry clearly shows: shop name, item name, price, market average, and % savings
+- [ ] The output is useful to a restaurant buyer making a morning purchasing decision
+- [ ] Total number of deals found is mentioned (e.g. "Found 6 deals today across all categories")
+
+---
+
+## After writing the code
 
 1. Paste the new function into `agent/tools/seafood_prices.py` (add at the bottom)
 2. Open `agent/tools/__init__.py` and add `get_best_deals`:
@@ -110,7 +110,7 @@ ALL_TOOLS = [query_seafood_prices, get_best_deals]
 git checkout main && git pull origin main
 git checkout -b feature/tool-best-deals
 
-# paste your generated code, save files
+# save your file changes
 
 git add agent/tools/seafood_prices.py agent/tools/__init__.py
 git commit -m "feat: add get_best_deals tool for daily deal summary"
@@ -125,10 +125,14 @@ git push origin feature/tool-best-deals
 ```bash
 python -c "
 from agent.tools.seafood_prices import get_best_deals
+
+# All categories
 print(get_best_deals.invoke({}))
 print('---')
+# Filter by fish
 print(get_best_deals.invoke({'category': 'fish'}))
+print('---')
+# Invalid category
+print(get_best_deals.invoke({'category': 'lobster'}))
 "
 ```
-
-You should see a ranked list of deals for all items, then filtered to fish only.

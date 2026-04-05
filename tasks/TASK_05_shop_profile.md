@@ -4,15 +4,14 @@
 **Files to create/edit:**
 - Create: `app/pages/shop_profile.py`
 - Edit: `app/main.py` (tab 3 — replace the placeholder)
-**Difficulty:** Beginner (vibe code friendly — no agent knowledge needed)
 
 ---
 
 ## What you're building
 
-A "shop report card" tab inside the Streamlit app. Users pick a shop and see its full profile: which items it carries, how its prices compare to the market average, and its availability rate.
+A "shop report card" tab inside the Streamlit app. Users can explore individual shops — understanding their pricing patterns, what they carry, and how reliable their stock is.
 
-This helps buyers evaluate which shop to trust for regular orders — not just on price, but on reliability.
+This helps buyers build trust with a shop before committing to regular orders — it's not just about today's price, but consistency over time.
 
 ---
 
@@ -23,70 +22,61 @@ User opens the web app → clicks "🏪 Shop Profiles" tab
     │
     ▼
 Your Streamlit page loads
-User selects: shop = "Makro"
+User picks a shop to explore
     │
     ▼
-Page reads data/raw/seafood_prices_sample.csv directly
-Shows: 16 items carried, avg price ฿245/kg vs market ฿278/kg (-12%)
-Shows: 94% availability rate
-Shows: table of all items with price vs market avg
+Page reads data/raw/seafood_prices_sample.csv directly using pandas
+Shows stats, charts, and tables for the selected shop
 ```
 
-No AI agent involved — this reads the CSV directly with Pandas.
+No AI agent involved — this reads the CSV directly with pandas.
 
 ---
 
 ## What the page should include
 
-**Sidebar:**
-- Dropdown: select shop (all 5 shop names from CSV)
+Design the layout and content yourself. Think about what a buyer would want to know about a shop before deciding to source from them regularly.
 
-**Main area:**
-- Headline stats (3 columns):
-  - Total items carried
-  - Average price vs market average (with % above/below)
-  - Availability rate (% of items in stock across all dates)
-- Table: one row per item — item name, this shop's avg price, market avg price, % difference, typical availability
-- A note at the bottom: "Based on sample data (seafood_prices_sample.csv)"
+At minimum, there should be a way to select a shop, and the page should display meaningful statistics and at least one visual (chart, metric, or table) about that shop's pricing and availability.
+
+The data has these columns: `date`, `shop`, `sku`, `item_name`, `category`, `price_per_kg`, `unit`, `available`.
 
 ---
 
-## Vibe-code prompt
+## Thinking steps
 
-Copy this and paste it into Claude or Gemini:
+Before you start, think through what a buyer would want to know about a shop:
 
-```
-I'm building a Streamlit page for a seafood price comparison app.
+1. **What questions does a buyer ask about a supplier?** Think beyond just price — reliability, range of products, consistency over time.
 
-The CSV file is at: data/raw/seafood_prices_sample.csv
-Columns: date, shop, sku, item_name, category, price_per_kg, unit, available
+2. **How do you compare a shop to the market?** You have prices from 5 shops. How do you calculate "market average" for a fair comparison?
 
-Build a file called app/pages/shop_profile.py that:
+3. **What does "availability rate" mean?** If a shop shows 90% availability, does that mean 90% of its items are in stock today, or across all 7 days of data?
 
-1. Loads the CSV with pandas
-2. Shows a sidebar selectbox to choose a shop (all unique shop names)
-3. Filters data to the selected shop
-4. Shows 3 metric cards at the top (use st.metric):
-   - "Items Carried": count of unique item_names this shop has
-   - "Avg Price vs Market": this shop's average price_per_kg vs the overall average across all shops (show % above or below)
-   - "Availability Rate": percentage of rows where available=True for this shop
-5. Shows a table with columns:
-   - Item Name
-   - This Shop Avg Price (฿/kg)
-   - Market Avg Price (฿/kg)
-   - Difference (% above or below market)
-   - Availability (% of days in stock)
-6. Use color to highlight: green if shop is cheaper than market, red if more expensive
+4. **What's the most useful visual for this page?** A bar chart comparing this shop vs market average per item? A trend line showing how prices changed over the week? Think about what tells the clearest story.
 
-Use st.set_page_config with title = "Shop Profiles" and layout = "wide".
-```
+5. **What if a shop carries different items on different days?** Your stats should handle the case where not every item appears every day.
+
+6. **What's the data path?** Same as Task 4 — make sure the CSV path works when running from the repo root.
 
 ---
 
-## After generating the code
+## Acceptance criteria
+
+Your task is complete when:
+
+- [ ] Running `streamlit run app/pages/shop_profile.py` from the repo root opens the page in a browser with no errors
+- [ ] The page loads and displays content for the default selected shop
+- [ ] Switching between shops updates all content correctly without crashing
+- [ ] The page works for all 5 shops in the CSV
+- [ ] No Python exceptions appear in the terminal while using the page normally
+
+---
+
+## After writing the code
 
 1. Save the generated code to `app/pages/shop_profile.py`
-2. You don't need to edit `app/main.py` — the IT Lead will wire the tab in.
+2. You don't need to touch `app/main.py` — the IT Lead will wire the tab in after review.
 
 ---
 
@@ -96,10 +86,10 @@ Use st.set_page_config with title = "Shop Profiles" and layout = "wide".
 git checkout main && git pull origin main
 git checkout -b feature/shop-profile-page
 
-# save generated code to app/pages/shop_profile.py
+# save your file to app/pages/shop_profile.py
 
 git add app/pages/shop_profile.py
-git commit -m "feat: add shop profile page with stats and price comparison table"
+git commit -m "feat: add shop profile page"
 git push origin feature/shop-profile-page
 # open Pull Request on GitHub
 ```
@@ -108,10 +98,8 @@ git push origin feature/shop-profile-page
 
 ## How to verify it works
 
-From the repo root (with conda env active):
-
 ```bash
 streamlit run app/pages/shop_profile.py
 ```
 
-A browser tab should open. Select different shops from the sidebar and confirm the metrics and table update correctly.
+Cycle through all 5 shops and confirm the page updates correctly each time with no errors.

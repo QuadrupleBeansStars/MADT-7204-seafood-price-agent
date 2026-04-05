@@ -2,7 +2,6 @@
 
 **Branch:** `feature/tool-order-cost`
 **File to edit:** `agent/tools/seafood_prices.py` and `agent/tools/__init__.py`
-**Difficulty:** Beginner (vibe code friendly)
 
 ---
 
@@ -60,50 +59,54 @@ Transport fee = `base_fee + (item_subtotal × oil_surcharge_pct)`
 
 ---
 
-## Vibe-code prompt
+## Thinking steps
 
-Copy this and paste it into Claude or Gemini:
+Before you ask an AI to write the code, think through these questions first. Your answers will help you write a much better prompt.
 
-```
-I'm building a LangChain tool for a seafood price comparison agent.
-The tool is called calculate_order_cost.
+1. **What does the input look like?** The `items` parameter is a string. How do you split it into individual items? What if there's extra whitespace? What if the user types `"shrimp:2"` vs `"shrimp : 2"` — should both work?
 
-Here is the existing code in agent/tools/seafood_prices.py:
-[paste the full file content here]
+2. **How do you match item names?** The user types `"white shrimp"` but the CSV has `"White Shrimp (Large)"`. Should the match be exact, or partial? Case-sensitive or not?
 
-Please add a new @tool function with this signature:
-calculate_order_cost(items: str, shop: str | None = None, target_date: str | None = None) -> str
+3. **What if a shop is given?** If `shop = "Makro"`, you only calculate for that one shop. But what if the user types `"makro"` in lowercase — does it still find it?
 
-- items: comma-separated string like "white shrimp:2, sea bass:1" (item name : kg quantity)
-- shop: optional — if given, show only that shop; if None, rank all shops cheapest-first
-- target_date: optional YYYY-MM-DD, defaults to latest date in CSV
+4. **What if an item is out of stock at a shop?** Can you still include that shop in the total, or should you skip it and warn the user?
 
-Use this transport fee config (hardcode it above the function):
-TRANSPORT_FEES = {
-    "Talad Thai":               {"base_fee": 80,  "oil_surcharge_pct": 0.10},
-    "Or Tor Kor Market":        {"base_fee": 60,  "oil_surcharge_pct": 0.08},
-    "Makro":                    {"base_fee": 50,  "oil_surcharge_pct": 0.07},
-    "Thai Market Bangkapi":     {"base_fee": 70,  "oil_surcharge_pct": 0.09},
-    "Chatuchak Fish Market":    {"base_fee": 65,  "oil_surcharge_pct": 0.08},
-}
+5. **What order should the output be in?** If no shop is specified, how do you rank them? Cheapest grand total first?
 
-Transport fee = base_fee + (item_subtotal * oil_surcharge_pct)
+6. **What should the output look like?** Think about what a user would want to see: item-by-item breakdown, subtotal, transport fee, grand total.
 
-Output format (per shop):
-  Shop Name
-    - white shrimp (2kg): ฿XXX
-    - sea bass (1kg): ฿XXX
-    Subtotal: ฿XXX | Transport: ฿XXX | TOTAL: ฿XXX
-
-Rank shops cheapest total first. Mark out-of-stock items clearly.
-Use the existing _load_prices() helper function.
-```
+Once you've thought through these, you're ready to write your vibe-code prompt and ask the AI to build it.
 
 ---
 
-## After generating the code
+## Acceptance criteria
 
-1. Paste the new function into `agent/tools/seafood_prices.py` (add it at the bottom)
+Your task is complete when all of the following work correctly:
+
+**Basic cases:**
+- [ ] Single item, no shop → returns cost breakdown for all 5 shops, ranked cheapest first
+- [ ] Multiple items, no shop → sums all items per shop, adds transport, ranks correctly
+- [ ] Single item, specific shop → returns only that shop's breakdown
+- [ ] Multiple items, specific shop → returns only that shop's breakdown with correct totals
+
+**Edge cases:**
+- [ ] Item name doesn't exist in CSV → returns a helpful message like `"Item 'lobster' not found. Did you mean: ...?"` or lists available items
+- [ ] One item in the list doesn't exist, others do → calculates what it can, warns about the missing item
+- [ ] Shop name doesn't exist → returns a helpful message listing the valid shop names
+- [ ] Shop name is given in wrong case (e.g. `"makro"` instead of `"Makro"`) → still finds it (case-insensitive match)
+- [ ] An item is out of stock at some shops → marks those shops clearly, still shows their price if available, or skips them with a note
+- [ ] Items string has extra spaces or inconsistent formatting → still parses correctly
+
+**Output quality:**
+- [ ] Grand total per shop includes both item cost and transport fee
+- [ ] Transport fee is visible separately (not hidden in the total)
+- [ ] Oil surcharge % is mentioned so users understand why transport isn't flat
+
+---
+
+## After writing the code
+
+1. Paste the new function into `agent/tools/seafood_prices.py` (add at the bottom)
 2. Open `agent/tools/__init__.py` and add `calculate_order_cost` to the import and `ALL_TOOLS` list:
 
 ```python
@@ -120,7 +123,7 @@ ALL_TOOLS = [query_seafood_prices, calculate_order_cost]
 git checkout main && git pull origin main
 git checkout -b feature/tool-order-cost
 
-# paste your generated code, save files
+# save your file changes
 
 git add agent/tools/seafood_prices.py agent/tools/__init__.py
 git commit -m "feat: add calculate_order_cost tool with oil surcharge transport fee"
@@ -132,13 +135,25 @@ git push origin feature/tool-order-cost
 
 ## How to verify it works
 
-Run this in terminal (from the repo root, with conda env active):
+Run these test cases from the terminal (repo root, conda env active):
 
 ```bash
 python -c "
 from agent.tools.seafood_prices import calculate_order_cost
+
+# Basic: single item, all shops
+print(calculate_order_cost.invoke({'items': 'white shrimp:2'}))
+print('---')
+# Multiple items, all shops
 print(calculate_order_cost.invoke({'items': 'white shrimp:2, sea bass:1'}))
+print('---')
+# Specific shop
+print(calculate_order_cost.invoke({'items': 'white shrimp:2', 'shop': 'Makro'}))
+print('---')
+# Item not found
+print(calculate_order_cost.invoke({'items': 'dragon fish:1'}))
+print('---')
+# Shop not found
+print(calculate_order_cost.invoke({'items': 'white shrimp:1', 'shop': 'Big C'}))
 "
 ```
-
-You should see a ranked table with item costs + transport fees + totals per shop.
