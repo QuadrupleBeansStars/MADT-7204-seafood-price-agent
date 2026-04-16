@@ -1,7 +1,10 @@
-import streamlit as st
+from pathlib import Path
+
 import pandas as pd
 import plotly.express as px
-import os
+import streamlit as st
+
+DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "seafood_prices_sample.csv"
 
 # --- 1. Page Configuration ---
 st.set_page_config(page_title="Shop Profile Report", layout="wide")
@@ -14,33 +17,19 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. Robust Data Loading (แก้ปัญหาจอขาว) ---
+# --- 3. Data Loading ---
 def load_data():
-    # รายชื่อ Path ที่เป็นไปได้ทั้งหมด
-    possible_paths = [
-        "data/raw/seafood_prices_sample.csv",
-        "app/data/raw/seafood_prices_sample.csv",
-        "../data/raw/seafood_prices_sample.csv",
-        "../../data/raw/seafood_prices_sample.csv"
-    ]
-    
-    for path in possible_paths:
-        if os.path.exists(path):
-            try:
-                df = pd.read_csv(path)
-                df['date'] = pd.to_datetime(df['date'])
-                df['price_per_kg'] = df['price_per_kg'].round(0).astype(int)
-                return df
-            except Exception as e:
-                st.error(f"Error reading CSV at {path}: {e}")
-    return None
+    if not DATA_PATH.exists():
+        return None
+    df = pd.read_csv(DATA_PATH)
+    df['date'] = pd.to_datetime(df['date'])
+    df['price_per_kg'] = df['price_per_kg'].round(0).astype(int)
+    return df
 
 df = load_data()
 
-# ตรวจสอบว่าโหลดข้อมูลได้ไหม ถ้าไม่ได้ให้โชว์ Error แทนจอขาว
 if df is None:
-    st.error("❌ ไม่พบไฟล์ข้อมูล! กรุณาตรวจสอบว่าไฟล์ 'seafood_prices_sample.csv' อยู่ในโฟลเดอร์ data/raw/")
-    st.info(f"ตำแหน่งปัจจุบันที่โปรแกรมทำงานอยู่คือ: {os.getcwd()}")
+    st.error(f"❌ ไม่พบไฟล์ข้อมูลที่ {DATA_PATH}")
 else:
     # --- 4. Sidebar: Shop Selection ---
     st.sidebar.title("🏪 Shop Profiles")

@@ -1,7 +1,10 @@
-import streamlit as st
+from pathlib import Path
+
 import pandas as pd
 import plotly.express as px
-import os
+import streamlit as st
+
+DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "seafood_prices_sample.csv"
 
 # --- 1. Page Configuration ---
 st.set_page_config(
@@ -27,23 +30,22 @@ st.markdown("""
 
 # --- 3. Data Loading & Cleaning ---
 def load_data():
-    path = "data/raw/seafood_prices_sample.csv"
-    if os.path.exists(path):
-        df = pd.read_csv(path)
-        df['date'] = pd.to_datetime(df['date'])
-        # ปัดเศษทศนิยมออกทั้งหมด
-        df['price_per_kg'] = df['price_per_kg'].round(0).astype(int)
-        return df
-    return None
+    if not DATA_PATH.exists():
+        return None
+    df = pd.read_csv(DATA_PATH)
+    df['date'] = pd.to_datetime(df['date'])
+    df['price_per_kg'] = df['price_per_kg'].round(0).astype(int)
+    return df
 
 df = load_data()
 
 if df is not None:
     latest_date = df['date'].max()
     previous_date = df[df['date'] < latest_date]['date'].max()
-    
+    has_prev = pd.notna(previous_date)
+
     df_latest = df[df['date'] == latest_date]
-    df_prev = df[df['date'] == previous_date]
+    df_prev = df[df['date'] == previous_date] if has_prev else df_latest.iloc[0:0]
 
     st.title("🌊 Seafood Strategic Intelligence Hub")
     st.markdown(f"**Data Update:** {latest_date.strftime('%d %B %Y')}")
@@ -70,33 +72,32 @@ if df is not None:
         </div>
         """, unsafe_allow_html=True)
 
-    # --- 📊 2. TOP INSIGHTS (Metric 4 ช่องที่หายไป) ---
-    m1, m2, m3, m4 = st.columns(4)
-    
+    # --- 📊 2. TOP INSIGHTS ---
+    m1, m2, m3 = st.columns(3)
+
     # 🥇 ถูกสุดวันนี้
     if not df_latest.empty:
         top_deal = df_latest.sort_values('price_per_kg').iloc[0]
         m1.metric("🥇 ถูกสุดวันนี้", f"{top_deal['price_per_kg']:,} THB", f"{top_deal['item_name']}")
 
-    # 📉 ราคาลงแรง (เทียบวันก่อนหน้า)
-    merged = df_latest.merge(df_prev[['sku', 'price_per_kg']], on='sku', suffixes=('', '_prev'))
-    merged['diff'] = merged['price_per_kg'] - merged['price_per_kg_prev']
+    # 📉 ราคาลงแรง / ⚠️ ราคาพุ่ง (เทียบวันก่อนหน้า — ต้องมีข้อมูลมากกว่า 1 วัน)
+    if has_prev:
+        merged = df_latest.merge(df_prev[['sku', 'price_per_kg']], on='sku', suffixes=('', '_prev'))
+        merged['diff'] = merged['price_per_kg'] - merged['price_per_kg_prev']
+    else:
+        merged = df_latest.iloc[0:0].assign(diff=0)
+
     price_drop = merged.loc[merged['diff'].idxmin()] if not merged.empty else None
-    
     if price_drop is not None and price_drop['diff'] < 0:
         m2.metric("📉 ราคาลงแรง", f"{price_drop['price_per_kg']:,} THB", f"ลดลง {abs(price_drop['diff'])} THB", delta_color="normal")
     else:
         m2.metric("📉 ราคาลงแรง", "-", "ไม่มีสินค้าลดราคา")
 
-    # 🔥 ของที่คนซื้อเยอะ (แนะนำจาก Stock)
-    m3.metric("🔥 ของดีแนะนำ", "กุ้งขาว (L)", "ความต้องการสูง")
-
-    # ⚠️ กำลังจะแพงขึ้น
     price_up = merged.loc[merged['diff'].idxmax()] if not merged.empty else None
     if price_up is not None and price_up['diff'] > 0:
-        m4.metric("⚠️ ระวังราคาพุ่ง", f"{price_up['price_per_kg']:,} THB", f"เพิ่มขึ้น {price_up['diff']} THB", delta_color="inverse")
+        m3.metric("⚠️ ระวังราคาพุ่ง", f"{price_up['price_per_kg']:,} THB", f"เพิ่มขึ้น {price_up['diff']} THB", delta_color="inverse")
     else:
-        m4.metric("⚠️ ระวังราคาพุ่ง", "-", "ราคายังนิ่ง")
+        m3.metric("⚠️ ระวังราคาพุ่ง", "-", "ราคายังนิ่ง")
 
     st.divider()
 
