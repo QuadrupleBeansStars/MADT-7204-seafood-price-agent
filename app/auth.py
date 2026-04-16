@@ -33,6 +33,16 @@ def require_login() -> None:
         )
         st.stop()
 
+    st.markdown(
+        """
+        <style>
+        [data-testid="stSidebar"],
+        [data-testid="stSidebarCollapsedControl"] { display: none !important; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     _, center, _ = st.columns([1, 2, 1])
     with center:
         st.markdown("# 🐟 Seafood Price Advisor")
