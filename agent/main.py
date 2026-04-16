@@ -20,12 +20,12 @@ from langgraph.prebuilt import ToolNode
 from typing_extensions import TypedDict
 
 from agent.prompts.system import SYSTEM_PROMPT
-from agent.tools.seafood_prices import compare_prices, query_seafood_prices
+from agent.tools import ALL_TOOLS
 
 load_dotenv()
 
 # All tools available to the agent
-TOOLS = [query_seafood_prices, compare_prices]
+TOOLS = ALL_TOOLS
 
 
 # --- State ---
