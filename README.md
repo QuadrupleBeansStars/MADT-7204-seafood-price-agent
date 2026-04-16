@@ -23,20 +23,20 @@ This agent solves that by scraping daily seafood prices from multiple Bangkok ma
 This project uses a **LangGraph ReAct agent** with a tool-calling feedback loop and **Langfuse** for full observability.
 
 - **Framework**: LangGraph (graph-based agent with cycles)
-- **LLM**: Gemini 2.0 Flash (via LangChain)
+- **LLM**: Anthropic Claude Sonnet 4.5 (via LangChain)
 - **Observability**: Langfuse (self-hosted, auto-tracing every LLM call and tool use)
-- **UI**: Streamlit (planned Week 4)
+- **UI**: Streamlit chatbot with password gate + auto-mounted dashboards
 
 ### How It Works
 
 ```
-User asks: "Compare shrimp prices across all shops today"
+User asks: "What are today's best seafood deals?"
   → Agent reasons about the question
-  → Calls compare_prices tool with item="shrimp"
+  → Calls get_best_deals tool
   → Tool queries the price database (Pandas on CSV)
-  → Returns ranked results to the LLM
+  → Returns top deals >10% below market average
   → Agent formulates a recommendation
-  → User sees: best price, price spread, availability
+  → User sees: best price, shop, % saved vs market
 ```
 
 ### Tools
@@ -44,7 +44,17 @@ User asks: "Compare shrimp prices across all shops today"
 | Tool | Description |
 |------|-------------|
 | `query_seafood_prices` | Query prices by item, shop, and date |
-| `compare_prices` | Compare a specific item across all shops, ranked by price |
+| `get_best_deals` | Find items priced >10% below the market average (top 5) |
+| `get_price_trend` | Show price history for an item across shops over the last N days |
+
+### Example prompts that exercise tool calls
+
+- **`query_seafood_prices`** → *"How much is white shrimp at Makro today?"*
+- **`get_best_deals`** → *"What are today's top seafood bargains?"*
+- **`get_price_trend`** → *"Has salmon gone up this week?"*
+- **Multi-step** → *"Compare white shrimp across all shops today and tell me if the cheapest one is a genuine deal or just normal pricing."* (chains `query_seafood_prices` → `get_best_deals`)
+
+In the Streamlit chat, expand the **🔧 Tool calls** panel under each assistant reply to see which tools ran and their raw output.
 
 ### Data Pipeline
 
@@ -76,14 +86,37 @@ pip install -r requirements.txt
 
 # 4. Set up environment variables
 cp .env.example .env
-# Edit .env with your Google API key and Langfuse credentials
+# Edit .env — set ANTHROPIC_API_KEY (from console.anthropic.com) and
+# optional LANGFUSE_* keys. APP_PASSWORD is the fallback login password
+# when .streamlit/secrets.toml isn't present (useful for local dev).
 
-# 5. Generate sample data
+# 5. Set the Streamlit login password (and optionally mirror secrets)
+cp .streamlit/secrets.toml.example .streamlit/secrets.toml
+# Edit .streamlit/secrets.toml — at minimum change app_password.
+# ANTHROPIC_API_KEY can live in either .env or secrets.toml; env wins
+# if both are set. For local dev .env is fine; for Streamlit Cloud
+# deploy the key must go in secrets (see next section).
+
+# 6. Generate sample data
 python data/scripts/generate_sample_data.py
 
-# 6. Run the agent (CLI)
+# 7a. Run the agent (CLI)
 python -m agent.main
+
+# 7b. Or run the Streamlit chatbot UI
+streamlit run app/main.py
 ```
+
+### Deploying to Streamlit Community Cloud
+
+1. Push to GitHub.
+2. Create the app at [share.streamlit.io](https://share.streamlit.io/), pointing to `app/main.py`.
+3. In the app's **Secrets** section, paste:
+   ```toml
+   app_password = "your-shared-password"
+   ANTHROPIC_API_KEY = "sk-ant-..."
+   ```
+4. The password gate protects the chat **and** the auto-mounted dashboards — visitors can't reach `/dashboard` or `/shop_profile` without logging in.
 
 ## Vibe-Coding Tools Used
 
@@ -94,5 +127,5 @@ python -m agent.main
 ## Known Limitations
 
 - Currently uses synthetic sample data (real scraping in Week 2)
-- CLI-only interface (Streamlit UI planned for Week 4)
-- 2 tools implemented (more planned: availability check, price trends, order cost calculator)
+- Login is a single shared password (good enough for a class demo; swap to per-user auth before any production use)
+- 3 tools implemented (`calculate_order_cost` on an in-flight feature branch)

@@ -2,6 +2,9 @@
 .env
 .env.local
 
+# Streamlit secrets (keep only the .example template in git)
+.streamlit/secrets.toml
+
 # Python
 __pycache__/
 *.py[cod]
