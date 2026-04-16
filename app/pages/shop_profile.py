@@ -6,9 +6,6 @@ import streamlit as st
 
 DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "seafood_prices_sample.csv"
 
-# --- 1. Page Configuration ---
-st.set_page_config(page_title="Shop Profile Report", layout="wide")
-
 # --- 2. Custom Styling ---
 st.markdown("""
 <style>

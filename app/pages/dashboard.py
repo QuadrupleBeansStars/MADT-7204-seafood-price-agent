@@ -6,13 +6,6 @@ import streamlit as st
 
 DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "seafood_prices_sample.csv"
 
-# --- 1. Page Configuration ---
-st.set_page_config(
-    page_title="Seafood Strategic Intelligence Hub",
-    page_icon="🌊",
-    layout="wide"
-)
-
 # --- 2. Custom CSS (Corporate & Actionable Style) ---
 st.markdown("""
 <style>

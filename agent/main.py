@@ -13,7 +13,7 @@ from typing import Annotated
 
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
@@ -37,9 +37,9 @@ class AgentState(TypedDict):
 # --- Nodes ---
 
 def get_llm():
-    """Initialize Gemini LLM bound with tools."""
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.0-flash",
+    """Initialize Claude LLM bound with tools."""
+    llm = ChatAnthropic(
+        model="claude-sonnet-4-5",
         temperature=0,
     )
     return llm.bind_tools(TOOLS)
@@ -105,8 +105,8 @@ def get_langfuse_handler():
 def main():
     """Interactive CLI loop for the seafood price agent."""
     # Check for API key
-    if not os.getenv("GOOGLE_API_KEY"):
-        print("ERROR: GOOGLE_API_KEY not set. Copy .env.example to .env and add your key.")
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        print("ERROR: ANTHROPIC_API_KEY not set. Copy .env.example to .env and add your key.")
         sys.exit(1)
 
     graph = build_graph()
