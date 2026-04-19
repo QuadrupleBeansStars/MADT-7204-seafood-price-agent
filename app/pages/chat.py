@@ -23,13 +23,10 @@ from agent.prompts.system import SYSTEM_PROMPT
 
 
 EXAMPLE_PROMPTS = [
-    ("🦐 Today's best deals", "What are today's best seafood deals?"),
-    ("🐟 Shrimp at Makro", "How much is white shrimp at Makro today?"),
-    ("📈 Salmon trend", "Has salmon gone up this week?"),
-    (
-        "🛒 Build a basket",
-        "Compare white shrimp across all shops today and tell me if the cheapest one is a genuine deal.",
-    ),
+    ("🦐 ดีลวันนี้", "วันนี้อาหารทะเลอะไรราคาดีบ้าง?"),
+    ("🐟 Compare shrimp", "เปรียบเทียบราคากุ้งลายเสือทุกร้าน"),
+    ("📊 Best deals", "What are the best seafood deals today?"),
+    ("🛒 ปลาแซลมอน", "ปลาแซลมอนร้านไหนถูกที่สุด?"),
 ]
 
 
