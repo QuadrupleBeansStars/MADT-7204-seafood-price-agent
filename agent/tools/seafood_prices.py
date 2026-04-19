@@ -2,74 +2,82 @@
 Tools for querying and comparing seafood prices.
 
 These tools are bound to the LangGraph agent and called dynamically
-based on user questions.
+based on user questions.  They read from the unified data layer
+(``data.loader``) which handles both the registry CSV and scraped data.
 """
-
-from datetime import date
-from pathlib import Path
 
 import pandas as pd
 from langchain_core.tools import tool
 
-DATA_PATH = Path(__file__).parent.parent.parent / "data" / "raw" / "seafood_prices_sample.csv"
+from data.loader import (
+    CATEGORY_MAP,
+    CATEGORY_TH,
+    VALID_CATEGORIES,
+    has_historical_data,
+    load_seafood_data,
+)
 
-VALID_CATEGORIES = {"fish", "shrimp", "squid", "crab", "shellfish"}
+
+def _match_item(df: pd.DataFrame, item: str) -> pd.DataFrame:
+    """Return rows matching *item* across all name/category columns."""
+    q = item.strip()
+    mask = (
+        df["group_en"].str.contains(q, case=False, na=False)
+        | df["group_th"].str.contains(q, case=False, na=False)
+        | df["item_name_website"].str.contains(q, case=False, na=False)
+        | df["category"].str.contains(q, case=False, na=False)
+        | df["category_th"].str.contains(q, case=False, na=False)
+    )
+    return df[mask]
 
 
-def _load_prices() -> pd.DataFrame:
-    """Load the seafood prices CSV into a DataFrame."""
-    df = pd.read_csv(DATA_PATH)
-    df["date"] = pd.to_datetime(df["date"]).dt.date
-    df["available"] = df["available"].astype(bool)
-    return df
+def _format_row(row: pd.Series) -> str:
+    """Format a single product row for the agent's text response."""
+    name = f"{row['group_th']} ({row['group_en']})"
+    option_str = f" | {row['option']}" if row["option"] != "-" else ""
+    if pd.notna(row["price_per_kg"]):
+        price_str = f"฿{row['price_per_kg']:,.0f}/kg"
+    else:
+        price_str = f"฿{row['selling_price']:,.0f} (pack)"
+    link_str = f"\n  🔗 {row['link']}" if row["link"] else ""
+    return f"  {row['source']:25s} | {name}{option_str} | {price_str}{link_str}"
 
 
 @tool
 def query_seafood_prices(
     item: str,
     shop: str | None = None,
-    target_date: str | None = None,
 ) -> str:
-    """Query seafood prices by item name, optionally filtered by shop and date.
+    """Query seafood prices by item name, optionally filtered by shop.
 
-    Use this tool when the user asks about prices for a specific seafood item.
+    Use this tool when the user asks about prices for a specific seafood
+    item.  Searches across English names, Thai names, and categories.
 
     Args:
-        item: Seafood item to search for (e.g. 'shrimp', 'salmon', 'crab').
-              Matches against item_name (case-insensitive partial match).
-        shop: Optional shop name to filter by (e.g. 'Talad Thai', 'Makro').
-        target_date: Optional date string in YYYY-MM-DD format. Defaults to latest date.
+        item: Seafood item to search for (e.g. 'shrimp', 'salmon', 'กุ้ง',
+              'ปลาแซลมอน').  Case-insensitive partial match.
+        shop: Optional shop/source name to filter by (e.g. 'PPNSeafood',
+              'ไต้ก๋ง').  Case-insensitive partial match.
     """
-    df = _load_prices()
-
-    mask = df["item_name"].str.contains(item, case=False, na=False)
-    result = df[mask]
+    df = load_seafood_data()
+    result = _match_item(df, item)
 
     if result.empty:
-        return f"No results found for '{item}'. Available categories: shrimp, fish, squid, crab, shellfish."
+        cats = ", ".join(sorted(VALID_CATEGORIES))
+        return (
+            f"No results found for '{item}'. "
+            f"Try searching by category ({cats}) or Thai name."
+        )
 
     if shop:
-        shop_mask = result["shop"].str.contains(shop, case=False, na=False)
+        shop_mask = result["source"].str.contains(shop, case=False, na=False)
         result = result[shop_mask]
         if result.empty:
             return f"No results for '{item}' at shop matching '{shop}'."
 
-    if target_date:
-        result = result[result["date"] == date.fromisoformat(target_date)]
-    else:
-        latest_date = result["date"].max()
-        result = result[result["date"] == latest_date]
-
-    if result.empty:
-        return "No data found for the specified date."
-
-    lines = [f"Seafood prices for '{item}' ({result.iloc[0]['date']}):\n"]
+    lines = [f"Seafood prices for '{item}':\n"]
     for _, row in result.iterrows():
-        status = "In Stock" if row["available"] else "OUT OF STOCK"
-        lines.append(
-            f"  {row['shop']:25s} | {row['item_name']:25s} | "
-            f"฿{row['price_per_kg']:>8.1f}/{row['unit']} | {status}"
-        )
+        lines.append(_format_row(row))
 
     return "\n".join(lines)
 
@@ -77,73 +85,85 @@ def query_seafood_prices(
 @tool
 def get_best_deals(
     category: str | None = None,
-    target_date: str | None = None,
 ) -> str:
-    """Find seafood deals priced >10% below the market average.
+    """Find seafood items priced well below the group average across shops.
 
-    Use this when the user asks for today's best deals, bargains, or biggest
-    discounts. Returns up to 5 deals sorted by largest discount first.
+    Use this when the user asks for today's best deals, bargains, or
+    biggest discounts.  Returns up to 5 deals sorted by largest discount.
 
     Args:
-        category: Optional category filter (fish, shrimp, squid, crab, shellfish).
-        target_date: Optional date string in YYYY-MM-DD format. Defaults to latest date.
+        category: Optional category filter.  One of: fish, shrimp, squid,
+                  crab, shellfish.  Also accepts Thai equivalents
+                  (ปลา, กุ้ง, หมึก, ปู, หอย).
     """
-    if category and category.lower() not in VALID_CATEGORIES:
-        return f"Error: '{category}' is an invalid category. Please choose from: {', '.join(sorted(VALID_CATEGORIES))}."
-
-    df = _load_prices()
-
-    if target_date:
-        query_date = date.fromisoformat(target_date)
-        if query_date not in df["date"].values:
-            return f"Notice: No market data available for {target_date}. Please try another date."
-    else:
-        query_date = df["date"].max()
-
-    mask = (df["date"] == query_date) & df["available"]
+    # Resolve Thai category names to English
     if category:
-        mask &= df["category"].str.lower() == category.lower()
+        cat_lower = category.strip().lower()
+        # Check if it's a Thai category name
+        th_to_en = {v: k for k, v in CATEGORY_TH.items()}
+        if cat_lower in th_to_en:
+            cat_lower = th_to_en[cat_lower]
+        if cat_lower not in VALID_CATEGORIES:
+            return (
+                f"Error: '{category}' is an invalid category. "
+                f"Please choose from: {', '.join(sorted(VALID_CATEGORIES))} "
+                f"(or Thai: {', '.join(CATEGORY_TH[c] for c in sorted(VALID_CATEGORIES))})."
+            )
+    else:
+        cat_lower = None
 
-    daily_df = df[mask].copy()
+    df = load_seafood_data()
 
-    if daily_df.empty:
+    # Only rows with price_per_kg for fair comparison
+    df = df[df["price_per_kg"].notna()].copy()
+
+    if cat_lower:
+        df = df[df["category"] == cat_lower]
+
+    if df.empty:
         cat_msg = f" for category '{category}'" if category else ""
-        return f"Notice: No available inventory found on {query_date}{cat_msg}."
+        return f"No available inventory found{cat_msg}."
 
-    market_stats = daily_df.groupby(["sku", "item_name"])["price_per_kg"].agg(
-        market_average="mean",
-        shop_count="count",
-    ).reset_index()
+    # Compute group average price_per_kg across sources
+    group_avg = (
+        df.groupby("group_en")["price_per_kg"]
+        .agg(market_average="mean", shop_count="count")
+        .reset_index()
+    )
 
-    competitive_items = market_stats[market_stats["shop_count"] > 1]
+    # Only groups with 2+ sources for meaningful comparison
+    competitive = group_avg[group_avg["shop_count"] > 1]
+    if competitive.empty:
+        return "No major deals found. Not enough cross-shop competition."
 
-    if competitive_items.empty:
-        return f"No major deals found on {query_date}. Not enough cross-shop competition today."
-
-    analysis_df = pd.merge(daily_df, competitive_items[["sku", "market_average"]], on="sku")
-    analysis_df["pct_below_avg"] = (
-        (analysis_df["market_average"] - analysis_df["price_per_kg"])
-        / analysis_df["market_average"]
+    analysis = df.merge(competitive[["group_en", "market_average"]], on="group_en")
+    analysis["pct_below_avg"] = (
+        (analysis["market_average"] - analysis["price_per_kg"])
+        / analysis["market_average"]
     ) * 100
 
-    deals_df = analysis_df[analysis_df["pct_below_avg"] > 10]
+    deals = analysis[analysis["pct_below_avg"] > 10]
+    if deals.empty:
+        return "No major deals found. Prices are quite stable across shops!"
 
-    if deals_df.empty:
-        return f"No major deals found on {query_date}. Prices are quite stable across the board today!"
+    top_deals = deals.sort_values("pct_below_avg", ascending=False).head(5)
 
-    top_deals = deals_df.sort_values(by="pct_below_avg", ascending=False).head(5)
-
-    cat_str = category.lower() if category else "all categories"
-    lines = [f"Found {len(deals_df)} deals today ({query_date}) across {cat_str} — showing top 5.\n"]
-    lines.append("Top Best Deals:")
-    lines.append("-" * 50)
+    cat_str = cat_lower if cat_lower else "all categories"
+    lines = [
+        f"Found {len(deals)} deals across {cat_str} — showing top 5.\n",
+        "Top Best Deals:",
+        "-" * 50,
+    ]
 
     for _, row in top_deals.iterrows():
+        name = f"{row['group_th']} ({row['group_en']})"
+        option_str = f" {row['option']}" if row["option"] != "-" else ""
+        link_str = f"\n  🔗 {row['link']}" if row.get("link") else ""
         lines.append(
-            f"• {row['item_name']} at {row['shop']} | "
-            f"Price: ฿{row['price_per_kg']:.2f}/{row['unit']} | "
-            f"Mkt Avg: ฿{row['market_average']:.2f} | "
-            f"Save: {row['pct_below_avg']:.1f}%"
+            f"• {name}{option_str} at {row['source']} | "
+            f"Price: ฿{row['price_per_kg']:,.0f}/kg | "
+            f"Avg: ฿{row['market_average']:,.0f}/kg | "
+            f"Save: {row['pct_below_avg']:.1f}%{link_str}"
         )
 
     return "\n".join(lines)
@@ -158,48 +178,86 @@ def get_price_trend(item: str, days: int = 7) -> str:
 
     Args:
         item: Seafood item name (case-insensitive partial match).
-        days: Number of most-recent days to include. Defaults to 7.
+              Accepts English or Thai names.
+        days: Number of most-recent days to include.  Defaults to 7.
     """
     if days <= 0:
-        return "days must be a positive number"
+        return "days must be a positive number."
 
-    df = _load_prices()
+    if not has_historical_data():
+        # Fall back: show price spread across shops as a proxy
+        df = load_seafood_data()
+        matched = _match_item(df, item)
+        if matched.empty:
+            return f"Item '{item}' not found."
 
-    df_filtered = df[df["item_name"].str.contains(item, case=False, na=False)]
+        with_price = matched[matched["price_per_kg"].notna()]
+        if with_price.empty:
+            return f"No price-per-kg data available for '{item}'."
 
-    if df_filtered.empty:
+        group_name = with_price.iloc[0]["group_en"]
+        group_th = with_price.iloc[0]["group_th"]
+
+        lines = [
+            f"📊 Price comparison for {group_th} ({group_name})\n",
+            "⚠️ Historical trend data requires multiple daily scrapes. "
+            "Showing current price spread across shops instead.\n",
+        ]
+        for _, row in with_price.iterrows():
+            option_str = f" ({row['option']})" if row["option"] != "-" else ""
+            link_str = f" 🔗 {row['link']}" if row["link"] else ""
+            lines.append(
+                f"  {row['source']:25s} | {option_str:20s} | "
+                f"฿{row['price_per_kg']:,.0f}/kg{link_str}"
+            )
+
+        prices = with_price["price_per_kg"]
+        lines.append(f"\nMin: ฿{prices.min():,.0f}/kg | Max: ฿{prices.max():,.0f}/kg | "
+                      f"Spread: ฿{prices.max() - prices.min():,.0f}")
+        return "\n".join(lines)
+
+    # Historical mode — scraped CSV has multiple dates
+    df = load_seafood_data()
+    matched = _match_item(df, item)
+    if matched.empty:
         return f"Item '{item}' not found."
 
-    unique_dates = sorted(df_filtered["date"].unique())[-days:]
-    df_filtered = df_filtered[df_filtered["date"].isin(unique_dates)]
+    if "scrape_date" not in matched.columns:
+        return "No date information available in the data."
 
-    table = df_filtered.pivot_table(
-        index="date",
-        columns="shop",
+    matched["scrape_date"] = pd.to_datetime(matched["scrape_date"]).dt.date
+    unique_dates = sorted(matched["scrape_date"].unique())[-days:]
+    matched = matched[matched["scrape_date"].isin(unique_dates)]
+
+    table = matched.pivot_table(
+        index="scrape_date",
+        columns="source",
         values="price_per_kg",
         aggfunc="mean",
     ).sort_index()
 
     summary = []
-    for shop in table.columns:
-        prices = table[shop].dropna()
+    for source in table.columns:
+        prices = table[source].dropna()
         if len(prices) < 2:
             continue
         change_pct = ((prices.iloc[-1] - prices.iloc[0]) / prices.iloc[0]) * 100
-        summary.append((shop, change_pct))
+        summary.append((source, change_pct))
+
+    group_name = matched.iloc[0]["group_en"]
+    group_th = matched.iloc[0]["group_th"]
+
+    result = f"📊 Price trend for {group_th} ({group_name}) — last {days} days\n\n"
+    result += table.fillna("N/A").to_string()
 
     if summary:
         max_up = max(summary, key=lambda x: x[1])
         max_down = min(summary, key=lambda x: x[1])
-        summary_text = (
-            f"\n📈 Highest increase: {max_up[0]} ({max_up[1]:.1f}%)"
-            f"\n📉 Biggest decrease: {max_down[0]} ({max_down[1]:.1f}%)"
+        result += (
+            f"\n\n📈 Highest increase: {max_up[0]} ({max_up[1]:+.1f}%)"
+            f"\n📉 Biggest decrease: {max_down[0]} ({max_down[1]:+.1f}%)"
         )
     else:
-        summary_text = "\nNo sufficient data for summary"
-
-    result = f"📊 Price trend for '{item}' (last {days} days)\n\n"
-    result += table.fillna("N/A").to_string()
-    result += summary_text
+        result += "\n\nNot enough data points for trend summary."
 
     return result

@@ -1,12 +1,17 @@
+import sys
 from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-DATA_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "seafood_prices_sample.csv"
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-# --- 2. Custom Styling ---
+from data.loader import load_seafood_data
+
+# --- Custom Styling ---
 st.markdown("""
 <style>
     .metric-card { background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
@@ -14,97 +19,151 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. Data Loading ---
-def load_data():
-    if not DATA_PATH.exists():
-        return None
-    df = pd.read_csv(DATA_PATH)
-    df['date'] = pd.to_datetime(df['date'])
-    df['price_per_kg'] = df['price_per_kg'].round(0).astype(int)
-    return df
+# --- Data Loading ---
+df = load_seafood_data()
 
-df = load_data()
-
-if df is None:
-    st.error(f"❌ ไม่พบไฟล์ข้อมูลที่ {DATA_PATH}")
+if df is None or df.empty:
+    st.error("No data found!")
 else:
-    # --- 4. Sidebar: Shop Selection ---
+    # Only rows with price_per_kg for comparisons
+    df_priced = df[df["price_per_kg"].notna()].copy()
+
+    # --- Sidebar: Shop Selection ---
     st.sidebar.title("🏪 Shop Profiles")
-    all_shops = sorted(df['shop'].unique())
-    selected_shop = st.sidebar.selectbox("เลือกซัพพลายเออร์:", all_shops)
+    all_shops = sorted(df["source"].unique())
+    selected_shop = st.sidebar.selectbox("Select a shop:", all_shops)
 
-    # กรองข้อมูล
-    shop_df = df[df['shop'] == selected_shop]
-    latest_date = shop_df['date'].max()
-    shop_latest = shop_df[shop_df['date'] == latest_date]
+    # Filter data for selected shop
+    shop_df = df[df["source"] == selected_shop]
+    shop_priced = shop_df[shop_df["price_per_kg"].notna()]
 
-    # --- 5. Header Area ---
+    # --- Header Area ---
     st.markdown(f"""
     <div class="shop-header">
         <h1 style='margin:0; color: white;'>🏪 {selected_shop}</h1>
-        <p style='margin:0; opacity: 0.8;'>วิเคราะห์ประสิทธิภาพและระดับราคาเปรียบเทียบกับตลาด</p>
+        <p style='margin:0; opacity: 0.8;'>Product range and price positioning vs market</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # --- 6. SHOP REPORT CARD (KPIs) ---
+    # --- KPIs ---
     col1, col2, col3, col4 = st.columns(4)
-    
-    total_skus = shop_latest['item_name'].nunique()
-    col1.metric("สินค้าทั้งหมด", f"{total_skus} รายการ")
 
-    availability_rate = (shop_df['available'].sum() / len(shop_df)) * 100
-    col2.metric("ความแม่นยำสต็อก", f"{availability_rate:.0f}%")
+    total_products = shop_df["group_en"].nunique()
+    col1.metric("Product Groups", f"{total_products}")
 
-    # คำนวณราคาเทียบตลาด
-    market_avg_today = df[df['date'] == latest_date].groupby('item_name')['price_per_kg'].mean()
-    shop_prices = shop_latest.set_index('item_name')['price_per_kg']
-    # หาค่าเฉลี่ยส่วนต่าง
-    diffs = shop_prices - market_avg_today
-    avg_diff = diffs.mean()
-    
-    col3.metric("ราคาเทียบตลาดเฉลี่ย", 
-                f"{'+' if avg_diff > 0 else ''}{int(avg_diff)} THB", 
-                delta_color="inverse")
+    total_items = len(shop_df)
+    col2.metric("Total Items (incl. options)", f"{total_items}")
 
-    col4.metric("ข้อมูลล่าสุดเมื่อ", latest_date.strftime('%d %b'))
+    # Price vs market average
+    if not shop_priced.empty:
+        market_avg = df_priced.groupby("group_en")["price_per_kg"].mean()
+        shop_avg = shop_priced.groupby("group_en")["price_per_kg"].mean()
+        common_groups = shop_avg.index.intersection(market_avg.index)
+        if len(common_groups) > 0:
+            diffs = shop_avg[common_groups] - market_avg[common_groups]
+            avg_diff = diffs.mean()
+            col3.metric(
+                "Avg vs Market",
+                f"{'+'if avg_diff > 0 else ''}{avg_diff:,.0f} ฿/kg",
+                delta_color="inverse",
+            )
+        else:
+            col3.metric("Avg vs Market", "N/A")
+    else:
+        col3.metric("Avg vs Market", "N/A")
+
+    # Categories covered
+    cats = shop_df["category"].nunique()
+    col4.metric("Categories", f"{cats}/5")
 
     st.divider()
 
-    # --- 7. ANALYSIS TABS ---
-    tab1, tab2, tab3 = st.tabs(["📊 Price Positioning", "📈 Price History", "📋 Inventory Detail"])
+    # --- ANALYSIS TABS ---
+    tab1, tab2, tab3 = st.tabs(["📊 Price Positioning", "📦 Product Range", "📋 Full Catalog"])
 
     with tab1:
-        st.subheader("Price vs Market Average (Today)")
-        comparison_df = shop_latest[['item_name', 'price_per_kg']].copy()
-        comparison_df['Market Average'] = comparison_df['item_name'].map(market_avg_today.to_dict())
-        
-        fig_bar = px.bar(
-            comparison_df, x='item_name', y=['price_per_kg', 'Market Average'],
-            barmode='group',
-            labels={'value': 'ราคา (THB)', 'item_name': 'สินค้า'},
-            color_discrete_map={'price_per_kg': '#1E3A8A', 'Market Average': '#E5E7EB'}
-        )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.subheader("Price vs Market Average")
+        if not shop_priced.empty and len(common_groups) > 0:
+            comparison = pd.DataFrame({
+                "group_en": common_groups,
+                "Shop Price (avg)": shop_avg[common_groups].values,
+                "Market Average": market_avg[common_groups].values,
+            })
+            # Add Thai names
+            group_th_map = df.drop_duplicates("group_en").set_index("group_en")["group_th"]
+            comparison["label"] = comparison["group_en"].map(
+                lambda g: f"{group_th_map.get(g, '')} ({g})"
+            )
+
+            fig_bar = px.bar(
+                comparison,
+                x="label",
+                y=["Shop Price (avg)", "Market Average"],
+                barmode="group",
+                labels={"value": "Price (฿/kg)", "label": ""},
+                color_discrete_map={
+                    "Shop Price (avg)": "#1E3A8A",
+                    "Market Average": "#E5E7EB",
+                },
+                template="plotly_white",
+            )
+            fig_bar.update_yaxes(ticksuffix=" ฿")
+            st.plotly_chart(fig_bar, use_container_width=True)
+        else:
+            st.info("Not enough per-kg price data for this shop to compare with market.")
 
     with tab2:
-        st.subheader("ประวัติราคาสินค้าในร้านนี้")
-        target_item = st.selectbox("เลือกสินค้า:", sorted(shop_df['item_name'].unique()))
-        item_trend = shop_df[shop_df['item_name'] == target_item].sort_values('date')
-        
-        fig_line = px.line(
-            item_trend, x='date', y='price_per_kg',
-            markers=True, line_shape="spline"
+        st.subheader("Products by Category")
+        cat_counts = shop_df.groupby(["category", "category_th"]).size().reset_index(name="count")
+        cat_counts["label"] = cat_counts.apply(
+            lambda r: f"{r['category_th']} ({r['category']})", axis=1
         )
-        fig_line.update_yaxes(ticksuffix=" THB")
-        st.plotly_chart(fig_line, use_container_width=True)
+        fig_pie = px.pie(
+            cat_counts,
+            values="count",
+            names="label",
+            title=f"Product distribution at {selected_shop}",
+            template="plotly_white",
+        )
+        st.plotly_chart(fig_pie, use_container_width=True)
+
+        # Price range per group
+        if not shop_priced.empty:
+            st.subheader("Price Range by Product Group")
+            group_stats = shop_priced.groupby("group_en")["price_per_kg"].agg(["min", "max", "mean"]).reset_index()
+            group_stats["group_th"] = group_stats["group_en"].map(
+                df.drop_duplicates("group_en").set_index("group_en")["group_th"]
+            )
+            group_stats["label"] = group_stats.apply(
+                lambda r: f"{r['group_th']} ({r['group_en']})", axis=1
+            )
+            fig_range = px.bar(
+                group_stats.sort_values("mean"),
+                x="label",
+                y="mean",
+                error_y=group_stats.sort_values("mean")["max"] - group_stats.sort_values("mean")["mean"],
+                error_y_minus=group_stats.sort_values("mean")["mean"] - group_stats.sort_values("mean")["min"],
+                labels={"mean": "Avg Price (฿/kg)", "label": ""},
+                template="plotly_white",
+            )
+            fig_range.update_yaxes(ticksuffix=" ฿")
+            st.plotly_chart(fig_range, use_container_width=True)
 
     with tab3:
-        st.subheader("รายการสต็อกปัจจุบัน")
+        st.subheader("Full Product Catalog")
+        catalog_cols = ["group_th", "group_en", "item_name_website", "option", "selling_price", "price_per_kg", "link"]
+        available_cols = [c for c in catalog_cols if c in shop_df.columns]
         st.dataframe(
-            shop_latest[['item_name', 'category', 'price_per_kg', 'available']],
+            shop_df[available_cols],
             column_config={
-                "price_per_kg": st.column_config.NumberColumn("ราคา", format="%d THB"),
-                "available": st.column_config.CheckboxColumn("พร้อมส่ง")
+                "group_th": "ชื่อกลุ่ม",
+                "group_en": "Group",
+                "item_name_website": "Item Name",
+                "option": "Option/Size",
+                "selling_price": st.column_config.NumberColumn("Price (฿)", format="฿%,.0f"),
+                "price_per_kg": st.column_config.NumberColumn("฿/kg", format="฿%,.0f"),
+                "link": st.column_config.LinkColumn("🔗 Link", display_text="View"),
             },
-            use_container_width=True, hide_index=True
+            use_container_width=True,
+            hide_index=True,
         )

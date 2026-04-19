@@ -13,10 +13,10 @@ import streamlit as st
 
 def _expected_password() -> str | None:
     try:
-        pw = st.secrets.get("app_password")
+        pw = st.secrets["app_password"]
         if pw:
-            return pw
-    except (FileNotFoundError, st.errors.StreamlitSecretNotFoundError):
+            return str(pw)
+    except Exception:
         pass
     return os.getenv("APP_PASSWORD")
 
