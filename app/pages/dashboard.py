@@ -49,25 +49,27 @@ if df is not None and not df.empty:
     # --- 1. BIG DECISION CARD ---
     if not df_priced.empty:
         best_deal = df_priced.sort_values("price_per_kg").iloc[0]
-        st.markdown(f"""
-        <div class="decision-box">
-            <h3 style='margin-top:0; color: #1E3A8A;'>🎯 Best Deal Right Now</h3>
-            <div style='display: flex; justify-content: space-between; align-items: center;'>
-                <div>
-                    <span style='font-size: 1.8rem; font-weight: bold;'>{best_deal['group_th']} ({best_deal['group_en']})</span><br>
-                    <span style='font-size: 1.1rem;'>Shop: <b>{best_deal['source']}</b></span>
-                    {f"<br><span style='font-size: 0.9rem; color: gray;'>Option: {best_deal['option']}</span>" if best_deal['option'] != '-' else ''}
-                </div>
-                <div style='text-align: right;'>
-                    <span style='font-size: 2.2rem; font-weight: bold; color: #28a745;'>฿{best_deal['price_per_kg']:,.0f}</span><br>
-                    <span style='color: gray;'>per kg</span>
-                </div>
-            </div>
-            <hr>
-            <p style='font-size: 1rem;'>✅ <b>Insight:</b> This item has the lowest price per kg across all shops.
-            {f'<a href="{best_deal["link"]}" target="_blank">🔗 View product</a>' if best_deal['link'] else ''}</p>
-        </div>
-        """, unsafe_allow_html=True)
+        option_html = f"<br><span style='font-size:0.9rem;color:gray;'>Option: {best_deal['option']}</span>" if best_deal['option'] != '-' else ''
+        link_html = f' <a href="{best_deal["link"]}" target="_blank">🔗 View product</a>' if best_deal['link'] else ''
+        st.markdown(
+            f'<div class="decision-box">'
+            f'<h3 style="margin-top:0;color:#1E3A8A;">🎯 Best Deal Right Now</h3>'
+            f'<div style="display:flex;justify-content:space-between;align-items:center;">'
+            f'<div>'
+            f'<span style="font-size:1.8rem;font-weight:bold;">{best_deal["group_th"]} ({best_deal["group_en"]})</span><br>'
+            f'<span style="font-size:1.1rem;">Shop: <b>{best_deal["source"]}</b></span>'
+            f'{option_html}'
+            f'</div>'
+            f'<div style="text-align:right;">'
+            f'<span style="font-size:2.2rem;font-weight:bold;color:#28a745;">฿{best_deal["price_per_kg"]:,.0f}</span><br>'
+            f'<span style="color:gray;">per kg</span>'
+            f'</div>'
+            f'</div>'
+            f'<hr>'
+            f'<p style="font-size:1rem;">✅ <b>Insight:</b> This item has the lowest price per kg across all shops.{link_html}</p>'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
 
     # --- 2. TOP INSIGHTS ---
     m1, m2, m3 = st.columns(3)
