@@ -1,0 +1,40 @@
+name: Daily Seafood Price Scrape
+
+on:
+  schedule:
+    # 8:00 AM Bangkok time (ICT = UTC+7) → 1:00 AM UTC
+    - cron: "0 1 * * *"
+  workflow_dispatch: # manual trigger from GitHub UI
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install scraper dependencies
+        run: pip install beautifulsoup4 requests pandas
+
+      - name: Run scraper
+        run: python data/scripts/scraper.py
+
+      - name: Commit and push updated prices
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/raw/seafood_prices.csv
+          # Only commit if the CSV actually changed
+          git diff --cached --quiet && echo "No price changes today" || {
+            git commit -m "data: daily price scrape $(date -u +%Y-%m-%d)"
+            git push
+          }
