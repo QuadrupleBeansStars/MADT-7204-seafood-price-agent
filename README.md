@@ -14,61 +14,86 @@
 
 ## Problem Statement
 
-Thailand's oil price crisis has driven up fuel and cold-chain logistics costs, making seafood prices volatile across Bangkok markets. Restaurants, wholesalers, and households struggle to find the best deals as prices shift daily across vendors.
+Thailand's oil price crisis has driven up fuel and cold-chain logistics costs, making seafood prices volatile across Bangkok vendors. Restaurants, wholesalers, and households struggle to find the best deals as prices shift daily across online shops.
 
-This agent solves that by scraping daily seafood prices from multiple Bangkok markets, comparing them across shops and SKUs, and recommending where to buy — saving time and money for anyone purchasing seafood in bulk.
+This agent solves that by scraping daily seafood prices from 7 real Bangkok seafood e-commerce websites, comparing them across shops and product options, and recommending where to buy — saving time and money for anyone purchasing seafood in bulk.
 
 ## Agent Design
 
-This project uses a **LangGraph ReAct agent** with a tool-calling feedback loop and **Langfuse** for full observability.
+This project uses a **LangGraph ReAct agent** with a tool-calling feedback loop, powered by **Anthropic Claude Sonnet 4.5** and observed with **Langfuse**.
 
 - **Framework**: LangGraph (graph-based agent with cycles)
 - **LLM**: Anthropic Claude Sonnet 4.5 (via LangChain)
-- **Observability**: Langfuse (self-hosted, auto-tracing every LLM call and tool use)
-- **UI**: Streamlit chatbot with password gate + auto-mounted dashboards
+- **Observability**: Langfuse (auto-tracing every LLM call and tool use)
+- **UI**: Streamlit with 3 pages — Chat (agent), Price Dashboard, Shop Profiles
+- **Language**: Fully bilingual (Thai and English) — the agent responds in the same language the user writes in
 
 ### How It Works
 
 ```
-User asks: "What are today's best seafood deals?"
-  → Agent reasons about the question
+User asks: "วันนี้อาหารทะเลอะไรราคาดีบ้าง?"
+  → Agent reasons about the question (Thai → Thai response)
   → Calls get_best_deals tool
-  → Tool queries the price database (Pandas on CSV)
-  → Returns top deals >10% below market average
-  → Agent formulates a recommendation
-  → User sees: best price, shop, % saved vs market
+  → Tool queries real scraped price data (Pandas on CSV)
+  → Returns top deals >10% below market average with product links
+  → Agent formulates a Thai recommendation with order table
+  → User sees: best prices, shops, % saved, clickable order links
 ```
 
 ### Tools
 
 | Tool | Description |
 |------|-------------|
-| `query_seafood_prices` | Query prices by item, shop, and date |
-| `get_best_deals` | Find items priced >10% below the market average (top 5) |
-| `get_price_trend` | Show price history for an item across shops over the last N days |
+| `query_seafood_prices(item, shop?)` | Query prices by item name (EN/TH), optionally filtered by shop |
+| `get_best_deals(category?)` | Find items priced >10% below market average (top 5 deals) |
+| `get_price_trend(item, days?)` | Show price trend across shops over last N days (or price spread if only snapshot data) |
+| `calculate_order_cost(items, shop?)` | Calculate total order cost for a shopping list including transport fees *(feature branch)* |
 
-### Example prompts that exercise tool calls
+### Example prompts
 
-- **`query_seafood_prices`** → *"How much is white shrimp at Makro today?"*
-- **`get_best_deals`** → *"What are today's top seafood bargains?"*
-- **`get_price_trend`** → *"Has salmon gone up this week?"*
-- **Multi-step** → *"Compare white shrimp across all shops today and tell me if the cheapest one is a genuine deal or just normal pricing."* (chains `query_seafood_prices` → `get_best_deals`)
+| Tool exercised | English | Thai |
+|---|---|---|
+| `query_seafood_prices` | "How much is tiger prawn?" | "กุ้งลายเสือราคาเท่าไหร่?" |
+| `get_best_deals` | "What are today's best seafood deals?" | "วันนี้ซีฟู้ดอะไรดีลเด็ดบ้าง?" |
+| `get_price_trend` | "Compare salmon prices across all shops" | "เปรียบเทียบราคาแซลมอนทุกร้าน" |
+| Multi-step | "I need 2kg tiger prawn and 1kg sea bass — which shop is cheapest?" | "ฉันต้องการกุ้งลายเสือ 2 กก. ร้านไหนถูกที่สุด?" |
 
-In the Streamlit chat, expand the **🔧 Tool calls** panel under each assistant reply to see which tools ran and their raw output.
-
-### Data Pipeline
-
-Daily scraped seafood prices are stored in CSV format with columns:
-`date`, `shop`, `sku`, `item_name`, `category`, `price_per_kg`, `unit`, `available`
-
-Currently using synthetic sample data (5 shops, 16 SKUs, 7 days). Real scraping targets to be identified by the management team.
+In the Streamlit chat, expand the **Tool calls** panel under each assistant reply to see which tools ran and their raw output.
 
 ## Data Sources
 
-| Source | Type | Usage |
-|--------|------|-------|
-| Bangkok seafood markets | Scraped (daily) | Price comparison across shops |
-| Sample data generator | Synthetic | Development and demo |
+| Source | Type | Products | Usage |
+|--------|------|----------|-------|
+| [ไต้ก๋ง ซีฟู้ด (Taikong Seafood)](https://taikongseafood.com) | Scraped (daily) | 30 | WooCommerce, variant pricing |
+| [Sawasdee Seafood](https://www.sawasdeeseafood.com) | Scraped (daily) | 18 | WooCommerce, single-SKU |
+| [HENG HENG Seafood](https://www.henghengseafood.com) | Registry (static) | 46 | JS-only pricing, falls back to registry |
+| [PPNSeafood](https://www.ppnseafoodwishing.com) | Scraped (daily) | 55 | WooCommerce, variant pricing |
+| [Supreme Seafoods](https://supremeseafoods.net) | Scraped (daily) | 44 | Page365 JSON API |
+| [Sirirat Seafood](https://siriratseafood.com) | Scraped (daily) | 26 | WooCommerce, variant pricing |
+| [Sirin Farm](https://www.sirinfarm.com) | Scraped (daily) | 10 | WooCommerce, single-SKU |
+
+**Total**: ~229 products across 5 categories (shrimp, fish, squid, crab, shellfish) with both Thai and English names.
+
+### Data Pipeline
+
+```
+Google Sheet CSV (registry)                Scraper (daily via GitHub Actions)
+  เอเจ้นหาปลา - working sheet.csv           data/scripts/scraper.py
+           │                                          │
+           └──── fallback for failed sources ─────────┤
+                                                      ▼
+                                          data/raw/seafood_prices.csv
+                                                      │
+                                                      ▼
+                                             data/loader.py
+                                          (unified data layer)
+                                                      │
+                              ┌────────────┬──────────┼──────────┐
+                              ▼            ▼          ▼          ▼
+                         agent/tools   dashboard  shop_profile  chat
+```
+
+The scraper runs daily at 8:00 AM Bangkok time via GitHub Actions. It visits known product URLs from the registry, extracts current prices, and appends timestamped rows to `seafood_prices.csv`. History is kept for the last 30 scrape dates to support price trend analysis.
 
 ## Setup
 
@@ -97,8 +122,9 @@ cp .streamlit/secrets.toml.example .streamlit/secrets.toml
 # if both are set. For local dev .env is fine; for Streamlit Cloud
 # deploy the key must go in secrets (see next section).
 
-# 6. Generate sample data
-python data/scripts/generate_sample_data.py
+# 6. Run the scraper to get fresh price data
+python data/scripts/scraper.py          # full scrape (~3 min)
+python data/scripts/scraper.py --test   # quick test (1 URL per site)
 
 # 7a. Run the agent (CLI)
 python -m agent.main
@@ -117,15 +143,18 @@ streamlit run app/main.py
    ANTHROPIC_API_KEY = "sk-ant-..."
    ```
 4. The password gate protects the chat **and** the auto-mounted dashboards — visitors can't reach `/dashboard` or `/shop_profile` without logging in.
+5. Daily price updates are handled by GitHub Actions — the workflow commits fresh data to the repo, and Streamlit Cloud auto-redeploys.
 
 ## Vibe-Coding Tools Used
 
 | Tool | Used For |
 |------|----------|
-| Claude Code | Agent architecture scaffolding, code generation, project planning |
+| Claude Code (CLI) | Agent architecture design, code generation, scraper development, project planning, debugging |
+| Claude (claude.ai) | System prompt iteration, bilingual prompt engineering |
 
 ## Known Limitations
 
-- Currently uses synthetic sample data (real scraping in Week 2)
-- Login is a single shared password (good enough for a class demo; swap to per-user auth before any production use)
-- 3 tools implemented (`calculate_order_cost` on an in-flight feature branch)
+- HENG HENG Seafood uses JS-rendered pricing that can't be scraped via BeautifulSoup — falls back to static registry data from the Google Sheet
+- Login is a single shared password (sufficient for class demo; swap to per-user auth before production)
+- Price trend requires 2+ days of scrape history — first day shows cross-shop price spread as fallback
+- `calculate_order_cost` tool is on a feature branch (not yet merged to main)

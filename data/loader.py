@@ -146,26 +146,47 @@ def _load_registry() -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
+def _prepare_scraped(scraped: pd.DataFrame) -> pd.DataFrame:
+    """Normalise dtypes and add category columns to scraped data."""
+    scraped["weight_kg"] = _clean_numeric(scraped["weight_kg"])
+    scraped["selling_price"] = _clean_numeric(scraped["selling_price"])
+    scraped["price_per_kg"] = _clean_numeric(scraped["price_per_kg"])
+    scraped["option"] = scraped["option"].fillna("-")
+    scraped["link"] = scraped["link"].fillna("")
+    if "category" not in scraped.columns:
+        scraped["category"] = scraped["group_en"].map(CATEGORY_MAP).fillna("other")
+        scraped["category_th"] = scraped["category"].map(CATEGORY_TH)
+    return scraped
+
+
 def load_seafood_data() -> pd.DataFrame:
     """Return the best available seafood price DataFrame.
 
     Prefers accumulated scrape data (``data/raw/seafood_prices.csv``) when
-    it exists and is non-empty; otherwise falls back to the Google-Sheet
-    registry export.
+    it exists.  For sources that failed to scrape (e.g. JS-only pricing),
+    fills in missing products from the registry CSV so no shop disappears
+    from the dataset.
     """
     if SCRAPED_CSV.exists() and SCRAPED_CSV.stat().st_size > 100:
         try:
             scraped = pd.read_csv(SCRAPED_CSV)
             if not scraped.empty:
-                # Ensure consistent dtypes
-                scraped["weight_kg"] = _clean_numeric(scraped["weight_kg"])
-                scraped["selling_price"] = _clean_numeric(scraped["selling_price"])
-                scraped["price_per_kg"] = _clean_numeric(scraped["price_per_kg"])
-                scraped["option"] = scraped["option"].fillna("-")
-                scraped["link"] = scraped["link"].fillna("")
-                if "category" not in scraped.columns:
-                    scraped["category"] = scraped["group_en"].map(CATEGORY_MAP).fillna("other")
-                    scraped["category_th"] = scraped["category"].map(CATEGORY_TH)
+                scraped = _prepare_scraped(scraped)
+
+                # Fill gaps: add registry rows for sources missing from scrape
+                registry = _load_registry()
+                scraped_sources = set(scraped["source"].unique())
+                registry_sources = set(registry["source"].unique())
+                missing_sources = registry_sources - scraped_sources
+
+                if missing_sources:
+                    fallback = registry[registry["source"].isin(missing_sources)].copy()
+                    logger.info(
+                        "Filling %d rows from registry for sources missing in scrape: %s",
+                        len(fallback), missing_sources,
+                    )
+                    scraped = pd.concat([scraped, fallback], ignore_index=True)
+
                 return scraped
         except Exception:
             logger.warning("Failed to load scraped CSV, falling back to registry", exc_info=True)
