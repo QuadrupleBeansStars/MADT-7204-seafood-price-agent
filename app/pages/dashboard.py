@@ -11,31 +11,23 @@ if str(REPO_ROOT) not in sys.path:
 
 from data.loader import VALID_CATEGORIES, CATEGORY_TH, load_seafood_data
 
-# --- Custom CSS ---
-st.markdown("""
-<style>
-    .stMetric { background-color: #ffffff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .decision-box {
-        background-color: #ffffff;
-        border-left: 10px solid #1E3A8A;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        margin-bottom: 25px;
-    }
-</style>
-""", unsafe_allow_html=True)
+
+@st.cache_data(ttl="5m")
+def _load_data():
+    return load_seafood_data()
+
 
 # --- Data Loading ---
-df = load_seafood_data()
+df = _load_data()
 
 if df is not None and not df.empty:
-    st.title("🌊 Seafood Strategic Intelligence Hub")
+    st.title("Seafood price dashboard")
     st.caption("Real-time price comparison across 7 Bangkok seafood shops")
 
-    # --- Category filter ---
-    cat_options = ["All"] + [f"{c} ({CATEGORY_TH[c]})" for c in sorted(VALID_CATEGORIES)]
-    selected_cat = st.selectbox("Filter by category:", cat_options)
+    # --- Category filter in sidebar ---
+    with st.sidebar:
+        cat_options = ["All"] + [f"{c} ({CATEGORY_TH[c]})" for c in sorted(VALID_CATEGORIES)]
+        selected_cat = st.selectbox("Filter by category", cat_options)
 
     if selected_cat != "All":
         cat_key = selected_cat.split(" (")[0]
@@ -46,64 +38,55 @@ if df is not None and not df.empty:
     # Only rows with price_per_kg for fair comparison
     df_priced = df_filtered[df_filtered["price_per_kg"].notna()].copy()
 
-    # --- 1. BIG DECISION CARD ---
+    # --- 1. BEST DEAL CARD ---
     if not df_priced.empty:
         best_deal = df_priced.sort_values("price_per_kg").iloc[0]
-        option_html = f"<br><span style='font-size:0.9rem;color:gray;'>Option: {best_deal['option']}</span>" if best_deal['option'] != '-' else ''
-        link_html = f' <a href="{best_deal["link"]}" target="_blank">🔗 View product</a>' if best_deal['link'] else ''
-        st.markdown(
-            f'<div class="decision-box">'
-            f'<h3 style="margin-top:0;color:#1E3A8A;">🎯 Best Deal Right Now</h3>'
-            f'<div style="display:flex;justify-content:space-between;align-items:center;">'
-            f'<div>'
-            f'<span style="font-size:1.8rem;font-weight:bold;">{best_deal["group_th"]} ({best_deal["group_en"]})</span><br>'
-            f'<span style="font-size:1.1rem;">Shop: <b>{best_deal["source"]}</b></span>'
-            f'{option_html}'
-            f'</div>'
-            f'<div style="text-align:right;">'
-            f'<span style="font-size:2.2rem;font-weight:bold;color:#28a745;">฿{best_deal["price_per_kg"]:,.0f}</span><br>'
-            f'<span style="color:gray;">per kg</span>'
-            f'</div>'
-            f'</div>'
-            f'<hr>'
-            f'<p style="font-size:1rem;">✅ <b>Insight:</b> This item has the lowest price per kg across all shops.{link_html}</p>'
-            f'</div>',
-            unsafe_allow_html=True,
-        )
+        with st.container(border=True):
+            st.subheader("Best deal right now", divider="blue")
+            deal_cols = st.columns([3, 1])
+            with deal_cols[0]:
+                st.markdown(f"**{best_deal['group_th']} ({best_deal['group_en']})**")
+                st.caption(f"Shop: {best_deal['source']}"
+                           + (f" | Option: {best_deal['option']}" if best_deal['option'] != '-' else ''))
+                if best_deal['link']:
+                    st.markdown(f"[View product]({best_deal['link']})")
+            with deal_cols[1]:
+                st.metric("Price", f"฿{best_deal['price_per_kg']:,.0f}/kg", border=True)
 
     # --- 2. TOP INSIGHTS ---
-    m1, m2, m3 = st.columns(3)
-
     if not df_priced.empty:
         cheapest = df_priced.sort_values("price_per_kg").iloc[0]
-        m1.metric(
-            "🥇 Cheapest Item",
-            f"฿{cheapest['price_per_kg']:,.0f}/kg",
-            f"{cheapest['group_th']} at {cheapest['source']}",
-        )
-
-        # Most expensive
         priciest = df_priced.sort_values("price_per_kg", ascending=False).iloc[0]
-        m2.metric(
-            "💎 Premium Item",
-            f"฿{priciest['price_per_kg']:,.0f}/kg",
-            f"{priciest['group_th']} at {priciest['source']}",
-        )
 
-        # Number of shops
-        m3.metric("🏪 Shops Tracked", f"{df['source'].nunique()}", f"{len(df_priced)} items with price/kg")
-
-    st.divider()
+        with st.container(horizontal=True):
+            st.metric(
+                "Cheapest item",
+                f"฿{cheapest['price_per_kg']:,.0f}/kg",
+                f"{cheapest['group_th']} at {cheapest['source']}",
+                border=True,
+            )
+            st.metric(
+                "Premium item",
+                f"฿{priciest['price_per_kg']:,.0f}/kg",
+                f"{priciest['group_th']} at {priciest['source']}",
+                border=True,
+            )
+            st.metric(
+                "Shops tracked",
+                f"{df['source'].nunique()}",
+                f"{len(df_priced)} items with price/kg",
+                border=True,
+            )
 
     # --- 3. PRICE COMPARISON BY GROUP ---
-    st.subheader("📈 Price Comparison Across Shops")
+    st.subheader("Price comparison across shops")
 
     groups_with_data = sorted(df_priced["group_en"].unique())
     if groups_with_data:
         # Map to bilingual display
         group_display = {g: f"{df_priced[df_priced['group_en']==g].iloc[0]['group_th']} ({g})" for g in groups_with_data}
         selected_display = st.selectbox(
-            "Select product group:",
+            "Select product group",
             [group_display[g] for g in groups_with_data],
         )
         selected_group = [g for g, d in group_display.items() if d == selected_display][0]
@@ -114,34 +97,33 @@ if df is not None and not df.empty:
             axis=1,
         )
 
-        fig = px.bar(
-            group_data.sort_values("price_per_kg"),
-            x="label",
-            y="price_per_kg",
-            color="source",
-            title=f"Price per kg: {selected_display}",
-            labels={"price_per_kg": "Price (฿/kg)", "label": ""},
-            template="plotly_white",
-        )
-        fig.update_yaxes(ticksuffix=" ฿")
-        st.plotly_chart(fig, use_container_width=True)
+        with st.container(border=True):
+            fig = px.bar(
+                group_data.sort_values("price_per_kg"),
+                x="label",
+                y="price_per_kg",
+                color="source",
+                title=f"Price per kg: {selected_display}",
+                labels={"price_per_kg": "Price (฿/kg)", "label": ""},
+                template="plotly_white",
+            )
+            fig.update_yaxes(ticksuffix=" ฿")
+            st.plotly_chart(fig, use_container_width=True)
 
         # Action insight
         prices = group_data["price_per_kg"]
         min_p, max_p = prices.min(), prices.max()
         spread_pct = ((max_p - min_p) / min_p * 100) if min_p > 0 else 0
 
-        col_insight1, col_insight2 = st.columns(2)
-        col_insight1.metric("Lowest", f"฿{min_p:,.0f}/kg")
-        col_insight2.metric("Price Spread", f"{spread_pct:.0f}%", f"฿{max_p - min_p:,.0f} range")
-
-    st.divider()
+        with st.container(horizontal=True):
+            st.metric("Lowest", f"฿{min_p:,.0f}/kg", border=True)
+            st.metric("Price spread", f"{spread_pct:.0f}%", f"฿{max_p - min_p:,.0f} range", border=True)
 
     # --- 4. COMPARE MODE & CATALOG ---
-    st.subheader("📋 Product Comparison & Catalog")
+    st.subheader("Product comparison & catalog")
 
     sources = sorted(df_filtered["source"].unique())
-    sel_sources = st.multiselect("Select shops to compare:", sources, default=sources[:2])
+    sel_sources = st.multiselect("Select shops to compare", sources, default=sources[:2])
 
     if len(sel_sources) >= 2:
         # Pivot: group_en × source, showing min price_per_kg per cell
@@ -153,13 +135,12 @@ if df is not None and not df.empty:
             aggfunc="min",
         )
         if not pivot.empty:
-            st.markdown("**Side-by-Side Comparison (green = cheapest)**")
-            st.dataframe(
-                pivot.style.highlight_min(axis=1, color="#d4edda").format("฿{:,.0f}"),
-                use_container_width=True,
-            )
-
-    st.markdown("---")
+            with st.container(border=True):
+                st.caption("Side-by-side comparison (green = cheapest)")
+                st.dataframe(
+                    pivot.style.highlight_min(axis=1, color="#d4edda").format("฿{:,.0f}"),
+                    use_container_width=True,
+                )
 
     # Full catalog
     catalog_cols = ["group_th", "group_en", "source", "option", "price_per_kg", "selling_price", "link"]
@@ -178,7 +159,7 @@ if df is not None and not df.empty:
         column_config={
             "฿/kg": st.column_config.NumberColumn(format="฿%,.0f"),
             "Price (pack)": st.column_config.NumberColumn(format="฿%,.0f"),
-            "Link": st.column_config.LinkColumn("🔗 Link", display_text="View"),
+            "Link": st.column_config.LinkColumn("Link", display_text="View"),
         },
         use_container_width=True,
         hide_index=True,

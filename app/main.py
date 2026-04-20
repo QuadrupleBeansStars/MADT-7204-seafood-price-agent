@@ -53,29 +53,22 @@ require_login()
 
 def _render_sidebar() -> None:
     with st.sidebar:
-        st.markdown("### 🐟 Seafood Price Advisor")
+        st.markdown("### Seafood Price Advisor")
         st.caption("Your AI guide to Bangkok seafood markets.")
-        st.markdown(
-            '<span style="background:#E0E7FF;color:#1E3A8A;padding:2px 8px;'
-            'border-radius:12px;font-size:0.8rem;">'
-            "Powered by Claude Sonnet 4.5</span>",
-            unsafe_allow_html=True,
-        )
-        st.divider()
+        st.badge("Claude Sonnet 4.5", icon=":material/smart_toy:", color="blue")
 
-        if st.button("🧹 Clear chat history", use_container_width=True):
+        if st.button("Clear chat history", icon=":material/delete:", use_container_width=True):
             st.session_state.pop("messages", None)
             st.session_state.pop("last_error", None)
-            st.toast("Chat history cleared.", icon="🧹")
+            st.toast("Chat history cleared.", icon=":material/check:")
             st.rerun()
 
         st.markdown(
-            "📖 [Usage guide](https://github.com/QuadrupleBeansStars/"
+            "[Usage guide](https://github.com/QuadrupleBeansStars/"
             "MADT-7204-seafood-price-agent/blob/main/docs/chatbot_usage.md)"
         )
 
-        st.divider()
-        if st.button("Log out", use_container_width=True):
+        if st.button("Log out", icon=":material/logout:", use_container_width=True):
             st.session_state.clear()
             st.rerun()
 
@@ -83,18 +76,18 @@ def _render_sidebar() -> None:
 chat_page = st.Page(
     "pages/chat.py",
     title="Chat",
-    icon="💬",
+    icon=":material/chat:",
     default=True,
 )
 dashboard_page = st.Page(
     "pages/dashboard.py",
     title="Dashboard",
-    icon="📊",
+    icon=":material/bar_chart:",
 )
 shop_page = st.Page(
     "pages/shop_profile.py",
     title="Shop Profile",
-    icon="🏪",
+    icon=":material/storefront:",
 )
 
 nav = st.navigation([chat_page, dashboard_page, shop_page])

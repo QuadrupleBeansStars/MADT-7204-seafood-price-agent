@@ -33,19 +33,9 @@ def require_login() -> None:
         )
         st.stop()
 
-    st.markdown(
-        """
-        <style>
-        [data-testid="stSidebar"],
-        [data-testid="stSidebarCollapsedControl"] { display: none !important; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
     _, center, _ = st.columns([1, 2, 1])
     with center:
-        st.markdown("# 🐟 Seafood Price Advisor")
+        st.title("Seafood Price Advisor")
         st.caption(
             "Your AI guide to Bangkok seafood markets. "
             "Sign in with the team password to continue."
@@ -53,7 +43,9 @@ def require_login() -> None:
 
         with st.form("login_form"):
             pw = st.text_input("Password", type="password")
-            submitted = st.form_submit_button("Sign in", use_container_width=True)
+            submitted = st.form_submit_button(
+                "Sign in", use_container_width=True, icon=":material/login:",
+            )
 
         if submitted:
             if pw == expected:

@@ -68,8 +68,8 @@ def _format_tool_result(content) -> str:
 def _render_tool_expander(tool_calls: list[dict], tool_results: dict[str, ToolMessage]) -> None:
     if not tool_calls:
         return
-    label = f"🔧 Used {len(tool_calls)} tool{'s' if len(tool_calls) != 1 else ''}"
-    with st.expander(label, expanded=False):
+    label = f"Used {len(tool_calls)} tool{'s' if len(tool_calls) != 1 else ''}"
+    with st.expander(label, expanded=False, icon=":material/build:"):
         for call in tool_calls:
             st.markdown(f"**`{call['name']}`**")
             args = call.get("args") or {}
@@ -136,7 +136,7 @@ def _render_history(messages: list) -> None:
 
 def _render_welcome() -> None:
     st.markdown(
-        "#### 🐟 Ask me about Bangkok seafood prices.\n"
+        "#### Ask me about Bangkok seafood prices\n"
         "I can check prices at specific shops, spot today's best deals, "
         "or show you a 7-day trend. Try one of these to get started:"
     )
@@ -167,7 +167,7 @@ def _invoke_agent(user_text: str) -> None:
 
 # --- Page body ---------------------------------------------------------------
 
-st.title("Bangkok Seafood Price Advisor 🐟")
+st.title("Bangkok Seafood Price Advisor")
 st.caption("Ask me about seafood prices, best deals, or build a shopping list.")
 
 if "messages" not in st.session_state:

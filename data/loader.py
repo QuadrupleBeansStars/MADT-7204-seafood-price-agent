@@ -173,17 +173,31 @@ def load_seafood_data() -> pd.DataFrame:
             if not scraped.empty:
                 scraped = _prepare_scraped(scraped)
 
-                # Fill gaps: add registry rows for sources missing from scrape
+                # Fill gaps from registry for sources that are either:
+                # 1. Completely missing from scrape, or
+                # 2. Present but with zero prices (e.g. JS-only sites like HENG HENG)
                 registry = _load_registry()
                 scraped_sources = set(scraped["source"].unique())
                 registry_sources = set(registry["source"].unique())
                 missing_sources = registry_sources - scraped_sources
 
-                if missing_sources:
-                    fallback = registry[registry["source"].isin(missing_sources)].copy()
+                # Check for sources with 0 priced rows
+                priceless_sources = set()
+                for src in scraped_sources & registry_sources:
+                    src_df = scraped[scraped["source"] == src]
+                    if src_df["selling_price"].notna().sum() == 0:
+                        priceless_sources.add(src)
+
+                fallback_sources = missing_sources | priceless_sources
+
+                if fallback_sources:
+                    # Remove priceless scraped rows before replacing with registry
+                    if priceless_sources:
+                        scraped = scraped[~scraped["source"].isin(priceless_sources)]
+                    fallback = registry[registry["source"].isin(fallback_sources)].copy()
                     logger.info(
-                        "Filling %d rows from registry for sources missing in scrape: %s",
-                        len(fallback), missing_sources,
+                        "Filling %d rows from registry for sources: %s",
+                        len(fallback), fallback_sources,
                     )
                     scraped = pd.concat([scraped, fallback], ignore_index=True)
 
