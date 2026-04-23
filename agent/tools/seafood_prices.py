@@ -232,12 +232,25 @@ def get_price_trend(item: str, days: int = 7) -> str:
     unique_dates = sorted(matched["scrape_date"].unique())[-days:]
     matched = matched[matched["scrape_date"].isin(unique_dates)]
 
+    # Prefer price_per_kg; fall back to selling_price for pack-only items (e.g. crab)
+    has_ppkg = matched["price_per_kg"].notna().any()
+    price_col = "price_per_kg" if has_ppkg else "selling_price"
+    price_label = "฿/kg" if has_ppkg else "฿/pack"
+
     table = matched.pivot_table(
         index="scrape_date",
         columns="source",
-        values="price_per_kg",
+        values=price_col,
         aggfunc="mean",
     ).sort_index()
+
+    if table.empty or table.isna().all().all():
+        group_name = matched.iloc[0]["group_en"]
+        group_th = matched.iloc[0]["group_th"]
+        return (
+            f"📊 {group_th} ({group_name}) was found but has no numeric price data in the scrape. "
+            f"The shop may not publish prices publicly."
+        )
 
     summary = []
     for source in table.columns:
@@ -250,7 +263,7 @@ def get_price_trend(item: str, days: int = 7) -> str:
     group_name = matched.iloc[0]["group_en"]
     group_th = matched.iloc[0]["group_th"]
 
-    result = f"📊 Price trend for {group_th} ({group_name}) — last {days} days\n\n"
+    result = f"📊 Price trend for {group_th} ({group_name}) ({price_label}) — last {days} days\n\n"
     result += table.fillna("N/A").to_string()
 
     if summary:
