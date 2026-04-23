@@ -225,7 +225,10 @@ def get_price_trend(item: str, days: int = 7) -> str:
     if "scrape_date" not in matched.columns:
         return "No date information available in the data."
 
-    matched["scrape_date"] = pd.to_datetime(matched["scrape_date"]).dt.date
+    matched["scrape_date"] = pd.to_datetime(matched["scrape_date"], errors="coerce").dt.date
+    matched = matched[matched["scrape_date"].notna()]  # drop registry-only rows (no scrape date)
+    if matched.empty:
+        return f"No historical scrape data found for '{item}'. Try querying current prices instead."
     unique_dates = sorted(matched["scrape_date"].unique())[-days:]
     matched = matched[matched["scrape_date"].isin(unique_dates)]
 
