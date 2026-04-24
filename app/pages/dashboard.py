@@ -10,6 +10,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from data.loader import VALID_CATEGORIES, CATEGORY_TH, load_seafood_data
+from data.transport_rates import TRANSPORT_RATES, estimate_transport
 
 
 @st.cache_data(ttl="5m")
@@ -22,11 +23,15 @@ df = _load_data()
 
 if df is not None and not df.empty:
     st.title("Seafood price dashboard")
-    st.caption("Real-time price comparison across 7 Bangkok seafood shops")
+    st.caption(
+        f"Comparing Gulf of Thailand seafood shops delivering to Bangkok"
+        f" — {df['source'].nunique()} shops tracked"
+    )
 
-    # --- Category filter in sidebar ---
-    with st.sidebar:
-        cat_options = ["All"] + [f"{c} ({CATEGORY_TH[c]})" for c in sorted(VALID_CATEGORIES)]
+    # --- Category filter on main page ---
+    cat_options = ["All"] + [f"{c} ({CATEGORY_TH[c]})" for c in sorted(VALID_CATEGORIES)]
+    filter_col, _ = st.columns([2, 3])
+    with filter_col:
         selected_cat = st.selectbox("Filter by category", cat_options)
 
     if selected_cat != "All":
@@ -82,6 +87,7 @@ if df is not None and not df.empty:
     st.subheader("Price comparison across shops")
 
     groups_with_data = sorted(df_priced["group_en"].unique())
+    selected_group = None
     if groups_with_data:
         # Map to bilingual display
         group_display = {g: f"{df_priced[df_priced['group_en']==g].iloc[0]['group_th']} ({g})" for g in groups_with_data}
@@ -164,5 +170,58 @@ if df is not None and not df.empty:
         use_container_width=True,
         hide_index=True,
     )
+
+    # --- 5. TRANSPORT COST ESTIMATOR ---
+    st.subheader("Transport cost estimator")
+    st.caption("Placeholder rates — update with actual shop shipping policies once confirmed.")
+
+    qty_col, _ = st.columns([1, 4])
+    with qty_col:
+        qty_kg = st.number_input("Quantity (kg)", min_value=0.5, max_value=200.0, value=2.0, step=0.5)
+
+    # Base price source: selected product group if active, else cheapest per shop overall
+    transport_rows = []
+    for shop, rates in TRANSPORT_RATES.items():
+        shop_data = df_priced[df_priced["source"] == shop]
+        if selected_group is not None:
+            group_shop_data = shop_data[shop_data["group_en"] == selected_group]
+            best_price = group_shop_data["price_per_kg"].min() if not group_shop_data.empty else None
+        else:
+            best_price = shop_data["price_per_kg"].min() if not shop_data.empty else None
+
+        if best_price is None or pd.isna(best_price):
+            continue
+
+        order_value = best_price * qty_kg
+        transport_cost, note = estimate_transport(shop, order_value, qty_kg)
+        transport_per_kg = transport_cost / qty_kg
+        total_per_kg = best_price + transport_per_kg
+
+        transport_rows.append({
+            "Shop": shop,
+            "Best ฿/kg": best_price,
+            "Delivery (฿)": transport_cost,
+            "Delivery per kg (฿)": transport_per_kg,
+            "Total ฿/kg incl. delivery": total_per_kg,
+            "Delivery policy": note,
+        })
+
+    if transport_rows:
+        transport_df = pd.DataFrame(transport_rows).sort_values("Total ฿/kg incl. delivery")
+        with st.container(border=True):
+            st.dataframe(
+                transport_df,
+                column_config={
+                    "Best ฿/kg": st.column_config.NumberColumn(format="฿%,.0f"),
+                    "Delivery (฿)": st.column_config.NumberColumn(format="฿%,.0f"),
+                    "Delivery per kg (฿)": st.column_config.NumberColumn(format="฿%,.1f"),
+                    "Total ฿/kg incl. delivery": st.column_config.NumberColumn(format="฿%,.0f"),
+                },
+                use_container_width=True,
+                hide_index=True,
+            )
+    else:
+        st.info("Select a product group above to see transport cost estimates.")
+
 else:
     st.error("No data found!")

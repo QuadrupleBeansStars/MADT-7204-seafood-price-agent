@@ -1,4 +1,4 @@
-"""Unified data-loading layer for the Bangkok Seafood Price Advisor.
+"""Unified data-loading layer for the Seafood Price Advisor.
 
 All tools and Streamlit pages import from here instead of hardcoding CSV
 paths.  The module handles column renaming, category mapping, bilingual
@@ -200,6 +200,15 @@ def load_seafood_data() -> pd.DataFrame:
                         len(fallback), fallback_sources,
                     )
                     scraped = pd.concat([scraped, fallback], ignore_index=True)
+
+                # Merge in synthetic demo shops
+                try:
+                    from data.mock_shops import generate_mock_rows
+                    mock_rows = generate_mock_rows(scraped)
+                    if not mock_rows.empty:
+                        scraped = pd.concat([scraped, mock_rows], ignore_index=True)
+                except Exception:
+                    logger.warning("Could not generate mock shop rows", exc_info=True)
 
                 return scraped
         except Exception:

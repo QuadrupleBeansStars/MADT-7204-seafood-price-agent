@@ -54,7 +54,7 @@ require_login()
 def _render_sidebar() -> None:
     with st.sidebar:
         st.markdown("### Seafood Price Advisor")
-        st.caption("Your AI guide to Bangkok seafood markets.")
+        st.caption("Your AI guide to Gulf seafood shops delivering to Bangkok.")
         st.badge("Claude Sonnet 4.5", icon=":material/smart_toy:", color="blue")
 
         if st.button("Clear chat history", icon=":material/delete:", use_container_width=True):
