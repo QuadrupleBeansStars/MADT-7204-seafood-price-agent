@@ -26,11 +26,11 @@ else:
     # Only rows with price_per_kg for comparisons
     df_priced = df[df["price_per_kg"].notna()].copy()
 
-    # --- Sidebar: Shop Selection ---
-    with st.sidebar:
-        st.markdown("**Shop selector**")
-        all_shops = sorted(df["source"].unique())
-        selected_shop = st.selectbox("Select a shop", all_shops, label_visibility="collapsed")
+    # --- Shop Selection ---
+    all_shops = sorted(df["source"].unique())
+    sel_col, _ = st.columns([2, 3])
+    with sel_col:
+        selected_shop = st.selectbox("Select a shop", all_shops)
 
     # Filter data for selected shop
     shop_df = df[df["source"] == selected_shop]

@@ -33,11 +33,16 @@ def require_login() -> None:
         )
         st.stop()
 
+    st.markdown(
+        "<style>[data-testid='stSidebar']{display:none}</style>",
+        unsafe_allow_html=True,
+    )
+
     _, center, _ = st.columns([1, 2, 1])
     with center:
         st.title("Seafood Price Advisor")
         st.caption(
-            "Your AI guide to Bangkok seafood markets. "
+            "Your AI guide to Gulf seafood shops delivering to Bangkok. "
             "Sign in with the team password to continue."
         )
 
