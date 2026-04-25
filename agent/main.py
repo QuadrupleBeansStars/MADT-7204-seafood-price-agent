@@ -9,7 +9,7 @@ Usage:
 
 import os
 import sys
-from typing import Annotated
+from typing import Annotated, Optional
 
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -32,6 +32,9 @@ TOOLS = ALL_TOOLS
 
 class AgentState(TypedDict):
     messages: Annotated[list, add_messages]
+    pending_clarification: Optional[dict]   # {question, options} — set by reason_node
+    current_plan: Optional[list]            # list[str] — set by reason_node
+    last_thinking: Optional[str]            # extended thinking text — set by reason_node
 
 
 # --- Nodes ---
@@ -46,13 +49,21 @@ def get_llm():
 
 
 def agent_node(state: AgentState) -> dict:
-    """LLM reasoning node — decides whether to call a tool or respond."""
+    """LLM reasoning node — executes the plan produced by reason_node."""
     llm = get_llm()
-    messages = state["messages"]
+    messages = list(state["messages"])
 
-    # Ensure system prompt is first message
+    plan = state.get("current_plan")
     if not messages or not isinstance(messages[0], SystemMessage):
         messages = [SystemMessage(content=SYSTEM_PROMPT)] + messages
+    else:
+        messages = [SystemMessage(content=SYSTEM_PROMPT)] + messages[1:]
+
+    if plan:
+        plan_text = "Execution plan (follow these steps in order):\n" + "\n".join(
+            f"{i+1}. {step}" for i, step in enumerate(plan)
+        )
+        messages = [messages[0], SystemMessage(content=plan_text)] + messages[1:]
 
     response = llm.invoke(messages)
     return {"messages": [response]}
@@ -69,17 +80,23 @@ def should_continue(state: AgentState) -> str:
 # --- Graph ---
 
 def build_graph():
-    """Build the LangGraph ReAct agent graph."""
+    """Build the LangGraph agent with reason → (clarify | plan → tools) flow."""
+    from agent.reason import reason_node, route_reason
+
     graph = StateGraph(AgentState)
 
-    # Add nodes
+    graph.add_node("reason", reason_node)
     graph.add_node("agent", agent_node)
     graph.add_node("tools", ToolNode(TOOLS))
 
-    # Add edges
-    graph.add_edge(START, "agent")
+    graph.add_edge(START, "reason")
+    graph.add_conditional_edges(
+        "reason",
+        route_reason,
+        {END: END, "agent": "agent"},
+    )
     graph.add_conditional_edges("agent", should_continue, {"tools": "tools", END: END})
-    graph.add_edge("tools", "agent")  # Loop back after tool execution
+    graph.add_edge("tools", "agent")
 
     return graph.compile()
 
