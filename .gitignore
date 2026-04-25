@@ -35,3 +35,4 @@ data/raw/*.gz
 
 # Assignment brief
 vibe-coding-agentic-brief.pdf
+.worktrees/
