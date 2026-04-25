@@ -54,16 +54,17 @@ def agent_node(state: AgentState) -> dict:
     messages = list(state["messages"])
 
     plan = state.get("current_plan")
-    if not messages or not isinstance(messages[0], SystemMessage):
-        messages = [SystemMessage(content=SYSTEM_PROMPT)] + messages
-    else:
-        messages = [SystemMessage(content=SYSTEM_PROMPT)] + messages[1:]
-
+    system_content = SYSTEM_PROMPT
     if plan:
-        plan_text = "Execution plan (follow these steps in order):\n" + "\n".join(
+        plan_text = "\n\nExecution plan (follow these steps in order):\n" + "\n".join(
             f"{i+1}. {step}" for i, step in enumerate(plan)
         )
-        messages = [messages[0], SystemMessage(content=plan_text)] + messages[1:]
+        system_content = SYSTEM_PROMPT + plan_text
+
+    if not messages or not isinstance(messages[0], SystemMessage):
+        messages = [SystemMessage(content=system_content)] + messages
+    else:
+        messages = [SystemMessage(content=system_content)] + messages[1:]
 
     response = llm.invoke(messages)
     return {"messages": [response]}

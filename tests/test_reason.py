@@ -107,6 +107,20 @@ class TestReasonNode:
         assert result["pending_clarification"] is None
         assert result["current_plan"] is None
 
+    def test_falls_back_when_llm_raises_exception(self):
+        """If the LLM call raises, reason_node returns all-None state (routes to agent)."""
+        from agent.reason import reason_node
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.side_effect = Exception("API timeout")
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+        assert result["current_plan"] is None
+        assert result["last_thinking"] is None
+
 
 # ── route_reason ──────────────────────────────────────────────────────────────
 

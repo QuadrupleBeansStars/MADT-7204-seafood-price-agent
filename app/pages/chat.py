@@ -107,7 +107,8 @@ def _render_clarification(clarification: dict | None) -> None:
         cols = st.columns(len(clarification["options"]))
         for idx, option in enumerate(clarification["options"]):
             with cols[idx]:
-                if st.button(option, use_container_width=True, key=f"clarify_{idx}_{option}"):
+                round_id = st.session_state.get("clarification_round", 0)
+                if st.button(option, use_container_width=True, key=f"clarify_{round_id}_{idx}_{option}"):
                     st.session_state["pending_clarification"] = None
                     st.session_state["pending_prompt"] = option
                     st.rerun()
@@ -201,6 +202,8 @@ def _invoke_agent(user_text: str) -> None:
         st.session_state["pending_clarification"] = result.get("pending_clarification")
         st.session_state["current_plan"] = result.get("current_plan")
         st.session_state["last_thinking"] = result.get("last_thinking")
+        if result.get("pending_clarification"):
+            st.session_state["clarification_round"] = st.session_state.get("clarification_round", 0) + 1
         st.session_state.pop("last_error", None)
     except Exception as exc:
         st.session_state["last_error"] = repr(exc)
@@ -241,5 +244,6 @@ if user_input := st.chat_input("e.g. Which shop has cheapest white shrimp today?
     st.session_state["pending_clarification"] = None
     st.session_state["current_plan"] = None
     st.session_state["last_thinking"] = None
+    st.session_state["clarification_round"] = 0
     _invoke_agent(user_input)
     st.rerun()
