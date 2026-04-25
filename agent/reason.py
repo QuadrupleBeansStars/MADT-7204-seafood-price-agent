@@ -5,7 +5,6 @@ or to produce an execution plan (create_plan). Never answers the user directly
 and never calls data tools.
 """
 import logging
-from typing import Optional
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import SystemMessage
