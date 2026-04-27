@@ -83,6 +83,37 @@ def _render_tool_expander(tool_calls: list[dict], tool_results: dict[str, ToolMe
             st.divider()
 
 
+def _render_thinking_expander(thinking: str | None) -> None:
+    if not thinking:
+        return
+    with st.expander("Reasoning", expanded=False, icon=":material/psychology:"):
+        st.markdown(thinking)
+
+
+def _render_plan_expander(plan: list | None) -> None:
+    if not plan:
+        return
+    with st.expander("Action plan", expanded=False, icon=":material/list:"):
+        for i, step in enumerate(plan, 1):
+            st.markdown(f"{i}. {step}")
+
+
+def _render_clarification(clarification: dict | None) -> None:
+    """Render the clarifying question and clickable option buttons."""
+    if not clarification:
+        return
+    with st.chat_message("assistant"):
+        st.markdown(f"**{clarification['question']}**")
+        cols = st.columns(len(clarification["options"]))
+        for idx, option in enumerate(clarification["options"]):
+            with cols[idx]:
+                round_id = st.session_state.get("clarification_round", 0)
+                if st.button(option, use_container_width=True, key=f"clarify_{round_id}_{idx}_{option}"):
+                    st.session_state["pending_clarification"] = None
+                    st.session_state["pending_prompt"] = option
+                    st.rerun()
+
+
 def _render_history(messages: list) -> None:
     """Render the message list, merging each assistant turn into one bubble.
 
@@ -153,27 +184,40 @@ def _invoke_agent(user_text: str) -> None:
     handler = _langfuse()
     config = {"callbacks": [handler]} if handler else {}
 
-    messages = st.session_state["messages"]
+    messages = st.session_state.get("messages", [SystemMessage(content=SYSTEM_PROMPT)])
     messages.append(HumanMessage(content=user_text))
 
     try:
-        with st.spinner("🐟 Consulting Bangkok markets..."):
-            result = graph.invoke({"messages": messages}, config=config)
+        with st.spinner("🐟 Thinking..."):
+            result = graph.invoke(
+                {
+                    "messages": messages,
+                    "pending_clarification": None,
+                    "current_plan": None,
+                    "last_thinking": None,
+                },
+                config=config,
+            )
         st.session_state["messages"] = result["messages"]
+        st.session_state["pending_clarification"] = result.get("pending_clarification")
+        st.session_state["current_plan"] = result.get("current_plan")
+        st.session_state["last_thinking"] = result.get("last_thinking")
+        if result.get("pending_clarification"):
+            st.session_state["clarification_round"] = st.session_state.get("clarification_round", 0) + 1
         st.session_state.pop("last_error", None)
-    except Exception as exc:  # surface to UI, keep running
+    except Exception as exc:
         st.session_state["last_error"] = repr(exc)
 
 
 # --- Page body ---------------------------------------------------------------
 
 st.title("Bangkok Seafood Price Advisor")
-st.caption("Ask me about seafood prices, best deals, or build a shopping list.")
+st.caption("Ask me anything — I'll clarify if needed, then find the best answer.")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [SystemMessage(content=SYSTEM_PROMPT)]
 
-# Consume a queued example-prompt click, if any.
+# Consume a queued prompt (example button click or clarification button click)
 if prompt := st.session_state.pop("pending_prompt", None):
     _invoke_agent(prompt)
 
@@ -183,11 +227,23 @@ if not non_system:
 else:
     _render_history(st.session_state["messages"])
 
+# Render reasoning and plan expanders after the history
+_render_thinking_expander(st.session_state.get("last_thinking"))
+_render_plan_expander(st.session_state.get("current_plan"))
+
+# Render clarification buttons (if agent is waiting for user input)
+_render_clarification(st.session_state.get("pending_clarification"))
+
 if err := st.session_state.get("last_error"):
     st.error("Something went wrong while contacting the agent.")
     with st.expander("Details"):
         st.code(err)
 
 if user_input := st.chat_input("e.g. Which shop has cheapest white shrimp today?"):
+    # Clear previous reasoning state before new query
+    st.session_state["pending_clarification"] = None
+    st.session_state["current_plan"] = None
+    st.session_state["last_thinking"] = None
+    st.session_state["clarification_round"] = 0
     _invoke_agent(user_input)
     st.rerun()
