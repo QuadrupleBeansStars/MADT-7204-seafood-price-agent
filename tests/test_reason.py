@@ -36,7 +36,7 @@ class TestReasonNode:
         from agent.reason import reason_node
         mock_response = _ai_with_tool_call(
             "request_clarification",
-            {"question": "Which fish?", "options": ["Salmon", "Sea Bass", "Grouper"]},
+            {"reasoning": "User said 'fish' but did not specify which type.", "question": "Which fish?", "options": ["Salmon", "Sea Bass", "Grouper"]},
         )
         with patch("agent.reason._build_reason_llm") as mock_llm_factory:
             mock_llm = MagicMock()
@@ -55,7 +55,7 @@ class TestReasonNode:
         from agent.reason import reason_node
         mock_response = _ai_with_tool_call(
             "create_plan",
-            {"steps": ["query salmon prices", "rank by price_per_kg", "return best deal"]},
+            {"reasoning": "User asked for salmon prices — item and intent are clear.", "steps": ["query salmon prices", "rank by price_per_kg", "return best deal"]},
         )
         with patch("agent.reason._build_reason_llm") as mock_llm_factory:
             mock_llm = MagicMock()
@@ -76,7 +76,7 @@ class TestReasonNode:
         from agent.reason import reason_node
         mock_response = _ai_with_tool_call(
             "create_plan",
-            {"steps": ["query tiger prawn prices"]},
+            {"reasoning": "Enough context now.", "steps": ["query tiger prawn prices"]},
         )
         stale_state = _make_state(
             pending_clarification={"question": "old Q", "options": ["A"]},
@@ -91,6 +91,22 @@ class TestReasonNode:
 
         assert result["pending_clarification"] is None
         assert result["current_plan"] == ["query tiger prawn prices"]
+
+    def test_reasoning_field_stored_as_last_thinking(self):
+        """reasoning arg from tool call is surfaced as last_thinking for the UI."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "create_plan",
+            {"reasoning": "Item and intent are clear.", "steps": ["query salmon prices"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["last_thinking"] == "Item and intent are clear."
 
     def test_falls_back_gracefully_when_no_tool_called(self):
         """If Claude returns plain text (no tool call), state has no plan/clarification."""

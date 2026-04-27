@@ -17,11 +17,13 @@ logger = logging.getLogger(__name__)
 # ── Internal tool schemas ─────────────────────────────────────────────────────
 
 class _ClarifyInput(BaseModel):
+    reasoning: str = Field(description="One sentence explaining what information is missing and why it matters")
     question: str = Field(description="The single most important clarifying question to ask")
     options: list[str] = Field(description="3 to 5 short answer options for the user")
 
 
 class _PlanInput(BaseModel):
+    reasoning: str = Field(description="One sentence explaining why you have enough information to proceed")
     steps: list[str] = Field(
         description="Ordered list of concrete steps using query_seafood_prices, "
                     "get_best_deals, or get_price_trend"
@@ -29,13 +31,13 @@ class _PlanInput(BaseModel):
 
 
 @tool(args_schema=_ClarifyInput)
-def request_clarification(question: str, options: list[str]) -> str:
+def request_clarification(reasoning: str, question: str, options: list[str]) -> str:
     """Ask the user one clarifying question with selectable answer options."""
     return "clarification_requested"
 
 
 @tool(args_schema=_PlanInput)
-def create_plan(steps: list[str]) -> str:
+def create_plan(reasoning: str, steps: list[str]) -> str:
     """Commit to an execution plan before calling data tools."""
     return "plan_created"
 
@@ -65,9 +67,11 @@ Read the conversation and decide ONE of two things:
 
 ## Hard rules
 - You MUST call exactly one tool per response: either request_clarification or create_plan
-- Never answer the user directly
+- Never answer the user directly in text — always use a tool
 - Never call data tools yourself
-- If in doubt, create a plan — do not over-clarify
+- Always fill in the `reasoning` field to explain your decision in one sentence
+- Clarify when the query is genuinely ambiguous (missing item, missing intent, missing key parameter)
+- Do NOT clarify for simple lookups where the item and intent are obvious
 - After 3 clarification exchanges in the conversation, you MUST call create_plan regardless
 
 ## Available shops
@@ -84,8 +88,7 @@ shrimp (กุ้ง), fish (ปลา), squid (หมึก), crab (ปู), sh
 def _build_reason_llm():
     llm = ChatAnthropic(
         model="claude-sonnet-4-5",
-        temperature=1,
-        thinking={"type": "enabled", "budget_tokens": 1500},
+        temperature=0,
     )
     return llm.bind_tools(_INTERNAL_TOOLS, tool_choice="any")
 
@@ -114,16 +117,6 @@ def reason_node(state: dict) -> dict:
         logger.warning("reason_node: LLM call failed, falling back to agent", exc_info=True)
         return updates  # both None → route_reason sends to agent
 
-    # Extract extended thinking text if present
-    if isinstance(response.content, list):
-        thinking_parts = [
-            b.get("thinking", "")
-            for b in response.content
-            if isinstance(b, dict) and b.get("type") == "thinking"
-        ]
-        if thinking_parts:
-            updates["last_thinking"] = "\n\n".join(thinking_parts)
-
     # Parse tool call
     tool_calls = getattr(response, "tool_calls", []) or []
     if not tool_calls:
@@ -131,6 +124,8 @@ def reason_node(state: dict) -> dict:
         return updates
 
     call = tool_calls[0]
+    updates["last_thinking"] = call["args"].get("reasoning")
+
     if call["name"] == "request_clarification":
         updates["pending_clarification"] = {
             "question": call["args"]["question"],
