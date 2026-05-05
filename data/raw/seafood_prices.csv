@@ -3329,3 +3329,225 @@ scrape_date,source,item_name_website,group_en,group_th,option,weight_kg,selling_
 2026-05-04,sirinfarm,"หัวปลากะพงรวมหาง 800-1,000 กรัม",Sea Bass,ปลากะพง,-,,,,https://www.sirinfarm.com/th/product/sea-bass-head-and-tail-800-1000g/
 2026-05-04,sirinfarm,เนื้อปูม้าแกะ (150กรัม),Blue Swimmer Crab,ปูม้า,-,,,,https://www.sirinfarm.com/th/product/blue-swimming-crab-meat-150g/
 2026-05-04,sirinfarm,เนื้อหอยแกะลายต้ม (200กรัม),Blue Swimmer Crab,ปูม้า,-,,115.0,,https://www.sirinfarm.com/th/product/cooked-clams-200g/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลากระบอก ปลาล้อบัน (ปลาลอบัน),Mullet,ปลากระบอก,300 กรัม,0.3,100.0,333,https://taikongseafood.com/product/mullet/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลากระบอก ปลาล้อบัน (ปลาลอบัน),Mullet,ปลากระบอก,1.1 กิโลกรัม,,300.0,,https://taikongseafood.com/product/mullet/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกไข่ หมึกกล้วยไข่,Squid,หมึก,L: 7-10 ตัวโล,,400.0,,https://taikongseafood.com/product/squid-eggs/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกไข่ หมึกกล้วยไข่,Squid,หมึก,XL: 4-6 ตัวโล,,450.0,,https://taikongseafood.com/product/squid-eggs/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกไข่ หมึกกล้วยไข่,Squid,หมึก,M: 12-18 ตัวโล,,350.0,,https://taikongseafood.com/product/squid-eggs/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งแกะเปลือก กุ้งแชบ๊วย กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,-,0.25,220.0,880,https://taikongseafood.com/product/shrimp-ready-to-cook/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,10-12 ตัวโล,1.0,850.0,850,https://taikongseafood.com/product/tiger-prawn/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,13-16 ตัวโล,1.0,800.0,800,https://taikongseafood.com/product/tiger-prawn/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,20-25 ตัวโล,1.0,650.0,650,https://taikongseafood.com/product/tiger-prawn/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,26-30 ตัวโล,1.0,550.0,550,https://taikongseafood.com/product/tiger-prawn/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,31-35 ตัวโล,1.0,450.0,450,https://taikongseafood.com/product/tiger-prawn/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งแชบ๊วย,Banana Prawn,กุ้งแชบ๊วย,17-20 ตัวโล,1.0,650.0,650,https://taikongseafood.com/product/banana-shrimp/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งแชบ๊วย,Banana Prawn,กุ้งแชบ๊วย,21-25 ตัวโล,1.0,550.0,550,https://taikongseafood.com/product/banana-shrimp/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งแชบ๊วย,Banana Prawn,กุ้งแชบ๊วย,26-30 ตัวโล,1.0,520.0,520,https://taikongseafood.com/product/banana-shrimp/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,กุ้งแชบ๊วย,Banana Prawn,กุ้งแชบ๊วย,31-35 ตัวโล,1.0,450.0,450,https://taikongseafood.com/product/banana-shrimp/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาสำลี,Black-banded Trevally,ปลาสำลี,-,1.0,380.0,380,https://taikongseafood.com/product/%E0%B8%9B%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B8%B3%E0%B8%A5%E0%B8%B5
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาแดง หรือ ปลาทรายแดง,Sand Whiting,ปลาทราย,-,1.0,250.0,250,https://taikongseafood.com/product/red-fish/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาอินทรีย์เค็ม,Spanish Mackerel,ปลาอินทรี,อินทรีย์จุด,,280.0,,https://taikongseafood.com/product/salted-dry-fish/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาอินทรีย์เค็ม,Spanish Mackerel,ปลาอินทรี,อินทรีย์บั้ง,,350.0,,https://taikongseafood.com/product/salted-dry-fish/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,XXL : 2-3 ตัวโล,0.5,490.0,980,https://taikongseafood.com/product/small-squid/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,XL : 4-6 ตัวโล,0.5,450.0,900,https://taikongseafood.com/product/small-squid/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,L : 7-10 ตัวโล,0.5,400.0,800,https://taikongseafood.com/product/small-squid/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,M : 11-20 ตัวโล,0.5,380.0,760,https://taikongseafood.com/product/small-squid/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,S : 21-30 ตัวโล,0.5,350.0,700,https://taikongseafood.com/product/small-squid/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,หมึกกะตอย,,300.0,,https://taikongseafood.com/product/small-squid/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาทู ปลาทูสด,Short-bodied Mackerel,ปลาทู,-,1.0,230.0,230,https://taikongseafood.com/product/short-mackerel/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาเหลืองญี่ปุ่น หางเหลือง,Yellowtail,หางเหลือง,M : 600-700 กรัม,0.6,280.0,467,https://taikongseafood.com/product/yellow-tail-fusilier/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาเหลืองญี่ปุ่น หางเหลือง,Yellowtail,หางเหลือง,L : 700-800 กรัม,0.6,290.0,483,https://taikongseafood.com/product/yellow-tail-fusilier/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาเก๋าดอกแดง,Grouper,ปลาเก๋า,แล่ชิ้นหนา 500 กรัม,0.5,450.0,900,https://taikongseafood.com/product/orange-spotted-grouper/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาเก๋าดอกแดง,Grouper,ปลาเก๋า,แล่ชิ้นบาง 250 กรัม,0.25,200.0,800,https://taikongseafood.com/product/orange-spotted-grouper/
+2026-05-05,ไต้ก๋ง ซีฟู้ด,ปลาเก๋าดอกแดง,Grouper,ปลาเก๋า,ชุดหัว กระดูก 500 กรัม,,250.0,,https://taikongseafood.com/product/orange-spotted-grouper/
+2026-05-05,Sawasdee Seafood,กุ้งแม่น้ำใหญ่ สด ๆ แบบแช่เย็น (1 กิโลกรัม),Prawn,กุ้งแม่น้ำ,กุ้งขนาด-3-ตัว-กิโลกรัม,,1250.0,,https://www.sawasdeeseafood.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%a1%e0%b9%88%e0%b8%99%e0%b9%89%e0%b8%b3%e0%b9%83%e0%b8%ab%e0%b8%8d%e0%b9%88-1%e0%b8%81%e0%b8%81/
+2026-05-05,Sawasdee Seafood,กุ้งแม่น้ำใหญ่ สด ๆ แบบแช่เย็น (1 กิโลกรัม),Prawn,กุ้งแม่น้ำ,กุ้งขนาด-4-ตัว-กิโลกรัม,,1050.0,,https://www.sawasdeeseafood.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%a1%e0%b9%88%e0%b8%99%e0%b9%89%e0%b8%b3%e0%b9%83%e0%b8%ab%e0%b8%8d%e0%b9%88-1%e0%b8%81%e0%b8%81/
+2026-05-05,Sawasdee Seafood,กุ้งแม่น้ำใหญ่ สด ๆ แบบแช่เย็น (1 กิโลกรัม),Prawn,กุ้งแม่น้ำ,กุ้งขนาด-5-ตัว-กิโลกรัม,,950.0,,https://www.sawasdeeseafood.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%a1%e0%b9%88%e0%b8%99%e0%b9%89%e0%b8%b3%e0%b9%83%e0%b8%ab%e0%b8%8d%e0%b9%88-1%e0%b8%81%e0%b8%81/
+2026-05-05,Sawasdee Seafood,กุ้งแม่น้ำใหญ่ สด ๆ แบบแช่เย็น (1 กิโลกรัม),Prawn,กุ้งแม่น้ำ,กุ้งขนาด-6-8-ตัว-กิโลกรัม,,750.0,,https://www.sawasdeeseafood.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%a1%e0%b9%88%e0%b8%99%e0%b9%89%e0%b8%b3%e0%b9%83%e0%b8%ab%e0%b8%8d%e0%b9%88-1%e0%b8%81%e0%b8%81/
+2026-05-05,Sawasdee Seafood,กุ้งแม่น้ำใหญ่ สด ๆ แบบแช่เย็น (1 กิโลกรัม),Prawn,กุ้งแม่น้ำ,กุ้งขนาด-8-10-ตัว-กิโลกรัม,,700.0,,https://www.sawasdeeseafood.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%a1%e0%b9%88%e0%b8%99%e0%b9%89%e0%b8%b3%e0%b9%83%e0%b8%ab%e0%b8%8d%e0%b9%88-1%e0%b8%81%e0%b8%81/
+2026-05-05,Sawasdee Seafood,ท้องแซลมอน แบบแช่แข็ง แพ็คละ 500 กรัม,Salmon,แซลมอน,-,0.5,250.0,500,https://www.sawasdeeseafood.com/product/salmon-belly/
+2026-05-05,Sawasdee Seafood,ปลากระพงผ่าผีเสื้อแบบติดก้าง แบบแช่แข็ง ขนาด 600-700 กรัมต่อตัว,Sea Bass,ปลากะพง,-,0.6,220.0,367,https://www.sawasdeeseafood.com/product/frozen-sea-bass/
+2026-05-05,Sawasdee Seafood,ปลาอินทรีย์แดดเดียว ขนาด 300 กรัม ต่อแพ็ค,Spanish Mackerel,ปลาอินทรี,-,0.3,250.0,833,https://www.sawasdeeseafood.com/product/sun-dried-king-mackerel/
+2026-05-05,Sawasdee Seafood,หมึกหอมเซลล์ แบบแช่แข็ง เกรดซาซิมิ ขนาด 3-4 ตัวโล จำนวน 1 กิโลกรัม,Squid,หมึก,-,1.0,470.0,470,https://www.sawasdeeseafood.com/product/cuttlefish/
+2026-05-05,Sawasdee Seafood,หมึกไข่แดดเดียว ขนาด 500 กรัมต่อแพ็ค,Squid,หมึก,-,0.5,250.0,500,https://www.sawasdeeseafood.com/product/sun-dried-squid/
+2026-05-05,Sawasdee Seafood,หอยนางรมเกาหลีฝาเดียว แบบแช่แข็ง เกรดซาซิมิ ขนาด 10-12 CM  (ไซส์ L) แพ็คละ 10ตัว,Oyster,หอยนางรม,-,,350.0,,https://www.sawasdeeseafood.com/product/korean-oyster/
+2026-05-05,Sawasdee Seafood,หอยหวานแช่แข็ง ขนาด 30-50 ตัว/กิโลกรัม,Spotted Babylon,หอยหวาน,1-กิโลกรัม,,190.0,,https://www.sawasdeeseafood.com/product/spotted-babylon/
+2026-05-05,Sawasdee Seafood,หอยหวานแช่แข็ง ขนาด 30-50 ตัว/กิโลกรัม,Spotted Babylon,หอยหวาน,2-กิโลกรัม,,380.0,,https://www.sawasdeeseafood.com/product/spotted-babylon/
+2026-05-05,Sawasdee Seafood,หอยเชลล์ฝาเดียว แบบแช่แข็ง แพ็คละ 20 ฝา,Scallops,หอยเชลล์,-,,220.0,,https://www.sawasdeeseafood.com/product/scallops/
+2026-05-05,HENG HENG Seafood,ปูไข่,Crab Meat,เนื้อปูแกะ,-,,,,https://www.henghengseafood.com/product/179674-175895/ปูไข่
+2026-05-05,HENG HENG Seafood,ปูเนื้อ,Crab Meat,เนื้อปูแกะ,-,,,,https://www.henghengseafood.com/product/179673-175894/ปูเนื้อ
+2026-05-05,HENG HENG Seafood,กรรเชียงพาย,Crab Meat,เนื้อปูแกะ,-,,,,https://www.henghengseafood.com/product/179672/กรรเชียงพาย
+2026-05-05,HENG HENG Seafood,ปูก้อนเกรด A,Crab Meat,เนื้อปูแกะ,-,,,,https://www.henghengseafood.com/product/179671/ปูก้อนเกรด-a
+2026-05-05,HENG HENG Seafood,ปูก้อนพรีเมียม,Crab Meat,เนื้อปูแกะ,-,,,,https://www.henghengseafood.com/product/179670/ปูก้อนพรีเมียม
+2026-05-05,HENG HENG Seafood,ปูไข่ดอง น้ำปลากวน,Pickled Crab,ปูดอง,-,,,,https://www.henghengseafood.com/product/179669-175887/ปูไข่ดอง-น้ำปลากวน
+2026-05-05,HENG HENG Seafood,ปูม้านึ่ง,Blue Swimmer Crab,ปูม้า,-,,,,https://www.henghengseafood.com/product/179668-175886/ปูม้านึ่ง
+2026-05-05,HENG HENG Seafood,ปูม้า,Blue Swimmer Crab,ปูม้า,-,,,,https://www.henghengseafood.com/product/179667-175885/ปูม้า
+2026-05-05,HENG HENG Seafood,หิมะส่วนหาง,Snow Fish,ปลาหิมะ,-,,,,https://www.henghengseafood.com/product/179666-175884/หิมะส่วนหาง
+2026-05-05,HENG HENG Seafood,หิมะ Fillet,Snow Fish,ปลาหิมะ,-,,,,https://www.henghengseafood.com/product/179665-175883/หิมะ-fillet
+2026-05-05,HENG HENG Seafood,หิมะเบบี้,Snow Fish,ปลาหิมะ,-,,,,https://www.henghengseafood.com/product/179664-175882/หิมะเบบี้
+2026-05-05,HENG HENG Seafood,หิมะแว่น,Snow Fish,ปลาหิมะ,-,,,,https://www.henghengseafood.com/product/179663-175881/หิมะแว่น
+2026-05-05,HENG HENG Seafood,แซลมอนพรีเมียม,Salmon,แซลมอน,-,,,,https://www.henghengseafood.com/product/179661/แซลมอนพรีเมียม
+2026-05-05,HENG HENG Seafood,แซลมอนซาซิมิ,Salmon,แซลมอน,-,,,,https://www.henghengseafood.com/product/179659/แซลมอนซาซิมิ
+2026-05-05,HENG HENG Seafood,แซลมอนเบบี้,Salmon,แซลมอน,-,,,,https://www.henghengseafood.com/product/179658-175871/แซลมอนเบบี้
+2026-05-05,HENG HENG Seafood,แซลมอน Pack 5,Salmon,แซลมอน,-,,,,https://www.henghengseafood.com/product/179657-175870/แซลมอน-pack-5
+2026-05-05,HENG HENG Seafood,แซลมอน Fillet 2ขีด,Salmon,แซลมอน,-,,,,https://www.henghengseafood.com/product/179656/แซลมอน-fillet-2ขีด
+2026-05-05,HENG HENG Seafood,ปลาสำลี,Black-banded Trevally,ปลาสำลี,-,,,,https://www.henghengseafood.com/product/179655-175867/ปลาสำลี
+2026-05-05,HENG HENG Seafood,ปลากระบอกวัง,Mullet,ปลากระบอก,-,,,,https://www.henghengseafood.com/product/179654-175866/ปลากระบอกวัง
+2026-05-05,HENG HENG Seafood,ปลาทราย,Sand Whiting,ปลาทราย,-,,,,https://www.henghengseafood.com/product/179653-175865/ปลาทราย
+2026-05-05,HENG HENG Seafood,ปลาอินทรีย์สด หั่นแว่น,Spanish Mackerel,ปลาอินทรี,-,,,,https://www.henghengseafood.com/product/179652/ปลาอินทรีย์สด-หั่นแว่น
+2026-05-05,HENG HENG Seafood,ปลาอินทรีย์แดดเดียว,Spanish Mackerel,ปลาอินทรี,-,,,,https://www.henghengseafood.com/product/179651-175862/ปลาอินทรีย์แดดเดียว
+2026-05-05,HENG HENG Seafood,ปลาจาระเม็ด,Pomfret,ปลาจาระเม็ด,-,,,,https://www.henghengseafood.com/product/179643/ปลาจาระเม็ด
+2026-05-05,HENG HENG Seafood,ปลาใบขนุน (อังนั้ม),White Fish,ปลาใบขนุน,-,,,,https://www.henghengseafood.com/product/179641/ปลาใบขนุน-อังนั้ม
+2026-05-05,HENG HENG Seafood,กะพงแดงแล่ชิ้น,Sea Bass,ปลากะพง,-,,,,https://www.henghengseafood.com/product/179639-175839/กะพงแดงแล่ชิ้น
+2026-05-05,HENG HENG Seafood,เก๋าแดงแล่ชิ้น,Grouper,ปลาเก๋า,-,,,,https://www.henghengseafood.com/product/179634-175834/เก๋าแดงแล่ชิ้น
+2026-05-05,HENG HENG Seafood,เก๋าแล่ชิ้น,Grouper,ปลาเก๋า,-,,,,https://www.henghengseafood.com/product/179629-175829/เก๋าแล่ชิ้น
+2026-05-05,HENG HENG Seafood,เก๋า Fillet,Grouper,ปลาเก๋า,-,,,,https://www.henghengseafood.com/product/179628-175828/เก๋า-fillet
+2026-05-05,HENG HENG Seafood,เก๋าแล่สเต็ก 2 ขีด,Grouper,ปลาเก๋า,-,,,,https://www.henghengseafood.com/product/179627-175827/เก๋าแล่สเต็ก-2-ขีด
+2026-05-05,HENG HENG Seafood,กะพงแล่ชิ้น,Sea Bass,ปลากะพง,-,,,,https://www.henghengseafood.com/product/179626-175826/กะพงแล่ชิ้น
+2026-05-05,HENG HENG Seafood,กะพง Fillet,Sea Bass,ปลากะพง,-,,,,https://www.henghengseafood.com/product/179625/กะพง-fillet
+2026-05-05,HENG HENG Seafood,กะพงแล่สเต็ก 2 ขีด,Sea Bass,ปลากะพง,-,,,,https://www.henghengseafood.com/product/179624-175823/กะพงแล่สเต็ก-2-ขีด
+2026-05-05,HENG HENG Seafood,เก๋ายักษ์แล่,Grouper,ปลาเก๋า,-,,,,https://www.henghengseafood.com/product/179623/เก๋ายักษ์แล่
+2026-05-05,HENG HENG Seafood,กะพงยักษ์แล่,Sea Bass,ปลากะพง,-,,,,https://www.henghengseafood.com/product/179622/กะพงยักษ์แล่
+2026-05-05,HENG HENG Seafood,กุ้งลายเสือแกะ,Tiger Prawn,กุ้งลายเสือ,-,,,,https://www.henghengseafood.com/product/179617-175814/กุ้งลายเสือแกะ
+2026-05-05,HENG HENG Seafood,กุ้งขาวแกะ L,Vannamei Shrimp,กุ้งขาว,-,,,,https://www.henghengseafood.com/product/179616-175813/กุ้งขาวแกะ-l
+2026-05-05,HENG HENG Seafood,กุ้งขาวแกะ XL,Vannamei Shrimp,กุ้งขาว,-,,,,https://www.henghengseafood.com/product/179615-175812/กุ้งขาวแกะ-xl
+2026-05-05,HENG HENG Seafood,กุ้งขาวแกะผ่าผีเสื้อ,Vannamei Shrimp,กุ้งขาว,-,,,,https://www.henghengseafood.com/product/179614-175811/กุ้งขาวแกะผ่าผีเสื้อ
+2026-05-05,HENG HENG Seafood,กุ้งแชบ๊วยจัมโบ้แกะ,Banana Prawn,กุ้งแชบ๊วย,-,,,,https://www.henghengseafood.com/product/179613/กุ้งแชบ๊วยจัมโบ้แกะ
+2026-05-05,HENG HENG Seafood,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,-,,,,https://www.henghengseafood.com/product/179612/กุ้งลายเสือ
+2026-05-05,HENG HENG Seafood,กุ้งขาว,Vannamei Shrimp,กุ้งขาว,-,,,,https://www.henghengseafood.com/product/179610/กุ้งขาว
+2026-05-05,HENG HENG Seafood,กุ้งแชบ๊วย,Banana Prawn,กุ้งแชบ๊วย,-,,,,https://www.henghengseafood.com/product/179609/กุ้งแชบ๊วย
+2026-05-05,HENG HENG Seafood,กุ้งแม่น้ำ To Go,Prawn,กุ้งแม่น้ำ,-,,,,https://www.henghengseafood.com/product/179608/กุ้งแม่น้ำ-to-go
+2026-05-05,HENG HENG Seafood,กุ้งแม่น้ำสด,Prawn,กุ้งแม่น้ำ,-,,,,https://www.henghengseafood.com/product/179607/กุ้งแม่น้ำสด
+2026-05-05,PPNSeafood,เนื้อหอยนางรม(200 กรัม),Oyster,หอยนางรม,-,,45.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b8%99%e0%b8%b2%e0%b8%87%e0%b8%a3%e0%b8%a1/
+2026-05-05,PPNSeafood,กุ้งขาวแกะ(280 กรัม),Vannamei Shrimp,กุ้งขาว,26-35 ตัว (280กรัม),,250.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%82%e0%b8%b2%e0%b8%a7%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,กุ้งขาวแกะ(280 กรัม),Vannamei Shrimp,กุ้งขาว,35-45 ตัว (280กรัม),,190.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%82%e0%b8%b2%e0%b8%a7%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,เนื้อปลากะพงหั่นแช่แข็ง(800 กรัม),Sea Bass,ปลากะพง,-,,360.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%b0%e0%b8%9e%e0%b8%87%e0%b8%ab%e0%b8%b1%e0%b9%88%e0%b8%99-800-%e0%b8%81%e0%b8%a3%e0%b8%b1%e0%b8%a1/
+2026-05-05,PPNSeafood,ปลาหิมะพอร์ชั่น(200 กรัม),Snow Fish,ปลาหิมะ,-,,500.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%b4%e0%b8%a1%e0%b8%b0%e0%b8%9e%e0%b8%ad%e0%b8%a3%e0%b9%8c%e0%b8%8a%e0%b8%b1%e0%b9%88%e0%b8%99200%e0%b8%81%e0%b8%a3%e0%b8%b1%e0%b8%a1%e0%b8%8a%e0%b8%b4/
+2026-05-05,PPNSeafood,กุ้งก้ามกราม,Prawn,กุ้งก้ามกราม,8-12 ตัว (กก),,500.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%81%e0%b9%89%e0%b8%b2%e0%b8%a1%e0%b8%81%e0%b8%a3%e0%b8%b2%e0%b8%a1/
+2026-05-05,PPNSeafood,กุ้งก้ามกราม,Prawn,กุ้งก้ามกราม,16-20 ตัว (กก),,400.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%81%e0%b9%89%e0%b8%b2%e0%b8%a1%e0%b8%81%e0%b8%a3%e0%b8%b2%e0%b8%a1/
+2026-05-05,PPNSeafood,กุ้งขาว,Vannamei Shrimp,กุ้งขาว,21-30 ตัว (กก),,480.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%82%e0%b8%b2%e0%b8%a7/
+2026-05-05,PPNSeafood,กุ้งขาว,Vannamei Shrimp,กุ้งขาว,41-50 ตัว (กก),,380.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%82%e0%b8%b2%e0%b8%a7/
+2026-05-05,PPNSeafood,กุ้งขาว,Vannamei Shrimp,กุ้งขาว,61-80 ตัว (กก),,350.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%82%e0%b8%b2%e0%b8%a7/
+2026-05-05,PPNSeafood,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,10-20 ตัว (กก),,900.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%a5%e0%b8%b2%e0%b8%a2%e0%b9%80%e0%b8%aa%e0%b8%b7%e0%b8%ad/
+2026-05-05,PPNSeafood,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,21-30 ตัว (กก),,600.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%a5%e0%b8%b2%e0%b8%a2%e0%b9%80%e0%b8%aa%e0%b8%b7%e0%b8%ad/
+2026-05-05,PPNSeafood,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,31-40 ตัว (กก),,480.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%a5%e0%b8%b2%e0%b8%a2%e0%b9%80%e0%b8%aa%e0%b8%b7%e0%b8%ad/
+2026-05-05,PPNSeafood,เนื้อปลากะพงหั่นสด(500 กรัม),Sea Bass,ปลากะพง,-,,300.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%b0%e0%b8%9e%e0%b8%87%e0%b8%ab%e0%b8%b1%e0%b9%88%e0%b8%99%e0%b8%aa%e0%b8%94/
+2026-05-05,PPNSeafood,กุ้งแชบ๊วย(500 กรัม),Banana Prawn,กุ้งแชบ๊วย,-,,480.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%8a%e0%b8%9a%e0%b9%8a%e0%b8%a7%e0%b8%a2/
+2026-05-05,PPNSeafood,กุ้งก้ามกรามแกะ(300 กรัม),Prawn,กุ้งก้ามกราม,-,,260.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%81%e0%b9%89%e0%b8%b2%e0%b8%a1%e0%b8%81%e0%b8%a3%e0%b8%b2%e0%b8%a1%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,กุ้งลายเสือแกะ(280 กรัม),Tiger Prawn,กุ้งลายเสือ,-,,240.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%a5%e0%b8%b2%e0%b8%a2%e0%b9%80%e0%b8%aa%e0%b8%b7%e0%b8%ad%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,กุ้งแชบ๊วยแกะ(280 กรัม),Banana Prawn,กุ้งแชบ๊วย,-,,400.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b9%81%e0%b8%8a%e0%b8%9a%e0%b9%8a%e0%b8%a7%e0%b8%a2%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,กุ้งขาวตาข่ายไซส์ L(500 กรัม),Vannamei Shrimp,กุ้งขาว,-,,350.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%82%e0%b8%b2%e0%b8%a7%e0%b8%95%e0%b8%b2%e0%b8%82%e0%b9%88%e0%b8%b2%e0%b8%a2%e0%b9%84%e0%b8%8b%e0%b8%aa%e0%b9%8c-l/
+2026-05-05,PPNSeafood,ปลาเก๋า,Grouper,ปลาเก๋า,5 ขีด/ตัว,,270.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b9%80%e0%b8%81%e0%b9%8b%e0%b8%b2/
+2026-05-05,PPNSeafood,ปลาเก๋า,Grouper,ปลาเก๋า,7 ขีด-1 กก/ตัว,,360.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b9%80%e0%b8%81%e0%b9%8b%e0%b8%b2/
+2026-05-05,PPNSeafood,ปลากะพง,Sea Bass,ปลากะพง,5 ขีด/ตัว,,180.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%b0%e0%b8%9e%e0%b8%87/
+2026-05-05,PPNSeafood,ปลากะพง,Sea Bass,ปลากะพง,1 กก/ตัว,,220.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%b0%e0%b8%9e%e0%b8%87/
+2026-05-05,PPNSeafood,ปลาสำลี(500-700 กรัม),Black-banded Trevally,ปลาสำลี,-,,300.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%aa%e0%b8%b3%e0%b8%a5%e0%b8%b5/
+2026-05-05,PPNSeafood,ปลาจาระเม็ดขาว(1 กก.),Pomfret,ปลาจาระเม็ด,-,,920.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%88%e0%b8%b2%e0%b8%a3%e0%b8%b0%e0%b9%80%e0%b8%a1%e0%b9%87%e0%b8%94%e0%b8%82%e0%b8%b2%e0%b8%a7/
+2026-05-05,PPNSeafood,ปลาทราย(1 กก.),Sand Whiting,ปลาทราย,-,,310.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%97%e0%b8%a3%e0%b8%b2%e0%b8%a2/
+2026-05-05,PPNSeafood,ปลานํ้าดอกไม้(1 กก.),Barracuda,ปลานํ้าดอกไม้,-,,450.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%99%e0%b9%8d%e0%b9%89%e0%b8%b2%e0%b8%94%e0%b8%ad%e0%b8%81%e0%b9%84%e0%b8%a1%e0%b9%89/
+2026-05-05,PPNSeafood,เนื้อปลาเก๋า(1 กก.),Grouper,ปลาเก๋า,-,,850.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b9%80%e0%b8%81%e0%b9%8b%e0%b8%b2/
+2026-05-05,PPNSeafood,เนื้อปลากะพง(1 กก.),Sea Bass,ปลากะพง,-,,500.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%b0%e0%b8%9e%e0%b8%87-1-%e0%b8%81%e0%b8%81/
+2026-05-05,PPNSeafood,เนื้อปลากะพงแดง(1 กก.),Sea Bass,ปลากะพง,-,,950.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%b0%e0%b8%9e%e0%b8%87%e0%b9%81%e0%b8%94%e0%b8%87/
+2026-05-05,PPNSeafood,เนื้อปลาเก๋าหั่น(400 กรัม),Grouper,ปลาเก๋า,-,,400.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b9%80%e0%b8%81%e0%b9%8b%e0%b8%b2%e0%b8%ab%e0%b8%b1%e0%b9%88%e0%b8%99/
+2026-05-05,PPNSeafood,เนื้อปลาอินทรีย์หั่น(500 กรัม),Spanish Mackerel,ปลาอินทรี,-,,320.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ad%e0%b8%b4%e0%b8%99%e0%b8%97%e0%b8%a3%e0%b8%b5%e0%b8%a2%e0%b9%8c%e0%b8%ab%e0%b8%b1%e0%b9%88%e0%b8%99/
+2026-05-05,PPNSeafood,เนื้อปลากราย(1 กก.),Minced Featherback Fish,เนื้อปลากราย,-,,330.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%81%e0%b8%a3%e0%b8%b2%e0%b8%a2/
+2026-05-05,PPNSeafood,ปลาแซลมอนฟินเลย์(1 ชิ้น),Salmon,แซลมอน,-,,950.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b9%81%e0%b8%8b%e0%b8%a5%e0%b8%a1%e0%b8%ad%e0%b8%99%e0%b8%9f%e0%b8%b4%e0%b8%99%e0%b9%80%e0%b8%a5%e0%b8%a2%e0%b9%8c/
+2026-05-05,PPNSeafood,ปลาแซลมอนสเต็ก(800 กรัม),Salmon,แซลมอน,-,,430.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b9%81%e0%b8%8b%e0%b8%a5%e0%b8%a1%e0%b8%ad%e0%b8%99%e0%b8%aa%e0%b9%80%e0%b8%95%e0%b9%87%e0%b8%81/
+2026-05-05,PPNSeafood,ปลาทูสด(1 กก.),Short-bodied Mackerel,ปลาทู,-,,220.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%97%e0%b8%b9%e0%b8%aa%e0%b8%94/
+2026-05-05,PPNSeafood,ปลาดอลลี่(1 กก.),Dory Fillet,ปลาดอลลี่,-,,100.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%94%e0%b8%ad%e0%b8%a5%e0%b8%a5%e0%b8%b5%e0%b9%88/
+2026-05-05,PPNSeafood,ปลาหมึกหอม(1 ตัว),Squid,หมึก,-,,100.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%ab%e0%b8%ad%e0%b8%a1/
+2026-05-05,PPNSeafood,ปลาหมึกหอม(1 กก.),Squid,หมึก,-,,420.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%ab%e0%b8%ad%e0%b8%a1-2-3%e0%b8%95%e0%b8%b1%e0%b8%a7-1-%e0%b8%81%e0%b8%b4%e0%b9%82%e0%b8%a5%e0%b8%81%e0%b8%a3%e0%b8%b1%e0%b8%a1/
+2026-05-05,PPNSeafood,ปลาหมึกหั่นวง(500 กรัม),Squid,หมึก,-,,250.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%ab%e0%b8%b1%e0%b9%88%e0%b8%99%e0%b8%a7%e0%b8%87/
+2026-05-05,PPNSeafood,หมึกกรอบหั่น(1 กก.),Squid,หมึก,-,,130.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%81%e0%b8%a3%e0%b8%ad%e0%b8%9a%e0%b8%ab%e0%b8%b1%e0%b9%88%e0%b8%99/
+2026-05-05,PPNSeafood,ปลาหมึกกล้วย,Squid,หมึก,6-8ตัว(กก),,450.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%81%e0%b8%a5%e0%b9%89%e0%b8%a7%e0%b8%a2/
+2026-05-05,PPNSeafood,ปลาหมึกกล้วย,Squid,หมึก,ไม่ลอก6-8ตัว(กก),,450.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%81%e0%b8%a5%e0%b9%89%e0%b8%a7%e0%b8%a2/
+2026-05-05,PPNSeafood,ปลาหมึกกล้วย,Squid,หมึก,10-20ตัว(กก),,380.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%81%e0%b8%a5%e0%b9%89%e0%b8%a7%e0%b8%a2/
+2026-05-05,PPNSeafood,กรรเชียงปู(500 กรัม),Crab Meat,เนื้อปูแกะ,-,,1600.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%81%e0%b8%a3%e0%b8%a3%e0%b9%80%e0%b8%8a%e0%b8%b5%e0%b8%a2%e0%b8%87%e0%b8%9b%e0%b8%b9/
+2026-05-05,PPNSeafood,ปูม้าเป็น,Blue Swimmer Crab,ปูม้า,3-4ตัว(กก),,800.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%b9%e0%b8%a1%e0%b9%89%e0%b8%b2%e0%b9%80%e0%b8%9b%e0%b9%87%e0%b8%99/
+2026-05-05,PPNSeafood,ปูม้าเป็น,Blue Swimmer Crab,ปูม้า,5-6ตัว(กก),,650.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%9b%e0%b8%b9%e0%b8%a1%e0%b9%89%e0%b8%b2%e0%b9%80%e0%b8%9b%e0%b9%87%e0%b8%99/
+2026-05-05,PPNSeafood,เนื้อปูแกะ,Crab Meat,เนื้อปูแกะ,กลาง500กรัม,,1500.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%b9%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,เนื้อปูแกะ,Crab Meat,เนื้อปูแกะ,จัมโบ้500กรัม,,2000.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%b9%e0%b9%81%e0%b8%81%e0%b8%b0/
+2026-05-05,PPNSeafood,หอยแมลงภู่นิวซีแลนด์(1 กก.),Mussels,หอยแมลงภู่,-,,420.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b9%81%e0%b8%a1%e0%b8%a5%e0%b8%87%e0%b8%a0%e0%b8%b9%e0%b9%88%e0%b8%99%e0%b8%b4%e0%b8%a7%e0%b8%8b%e0%b8%b5%e0%b9%81%e0%b8%a5%e0%b8%99%e0%b8%94%e0%b9%8c/
+2026-05-05,PPNSeafood,หอยหวาน(1 กก.),Spotted Babylon,หอยหวาน,-,,250.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b8%ab%e0%b8%a7%e0%b8%b2%e0%b8%99/
+2026-05-05,PPNSeafood,หอยแมลงภู่(1 กก.),Mussels,หอยแมลงภู่,-,,120.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b9%81%e0%b8%a1%e0%b8%a5%e0%b8%87%e0%b8%a0%e0%b8%b9%e0%b9%88/
+2026-05-05,PPNSeafood,หอยลาย(1 กก.),Baby Clams,หอยลาย,-,,225.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b8%a5%e0%b8%b2%e0%b8%a2/
+2026-05-05,PPNSeafood,หอยตลับ(1 กก.),Hard Clams,หอยตลับ,-,,90.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b8%95%e0%b8%a5%e0%b8%b1%e0%b8%9a/
+2026-05-05,PPNSeafood,หอยเชลล์ญี่ปุ่นฝาเดียว(800 กรัม),Scallops,หอยเชลล์,-,,400.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b9%80%e0%b8%8a%e0%b8%a5%e0%b8%a5%e0%b9%8c%e0%b8%8d%e0%b8%b5%e0%b9%88%e0%b8%9b%e0%b8%b8%e0%b9%88%e0%b8%99%e0%b8%9d%e0%b8%b2%e0%b9%80%e0%b8%94%e0%b8%b5%e0%b8%a2%e0%b8%a7/
+2026-05-05,PPNSeafood,หอยเชลล์ไทย(250 กรัม),Scallops,หอยเชลล์,-,,250.0,,https://www.ppnseafoodwishing.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b9%80%e0%b8%8a%e0%b8%a5%e0%b8%a5%e0%b9%8c%e0%b9%84%e0%b8%97%e0%b8%a2/
+2026-05-05,PPNSeafood,เนื้อหอยลาย(1 กก.),Baby Clams,หอยลาย,-,,220.0,,https://www.ppnseafoodwishing.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b8%a5%e0%b8%b2%e0%b8%a2/
+2026-05-05,supreme seafoods,หมึกหอม5-7ตัวต่อกิโล,Squid,หมึก,-,,480.0,,https://supremeseafoods.net/products/80617286
+2026-05-05,supreme seafoods,ปูแป้นดองน้ำปลา 200 กรัม,Pickled Crab,ปูดอง,-,,265.0,,https://supremeseafoods.net/products/80446930
+2026-05-05,supreme seafoods,แมงกะพรุนกระสุนล้างจืด 900G,Jellyfish,แมงกะพรุน,-,,890.0,,https://supremeseafoods.net/products/80370248
+2026-05-05,supreme seafoods,หอยงวงช้างแช่แข็ง,Geoduck,หอยงวงช้าง,3-4 ขีด,,500.0,,https://supremeseafoods.net/products/80243053
+2026-05-05,supreme seafoods,หอยงวงช้างแช่แข็ง,Geoduck,หอยงวงช้าง,7ขีด,,990.0,,https://supremeseafoods.net/products/80243053
+2026-05-05,supreme seafoods,แก้มปลาฮามาจิ (ใหม่) ,Hamachi Kama,ปลาฮามาจิ,500 กรัม,,490.0,,https://supremeseafoods.net/products/80241242
+2026-05-05,supreme seafoods,แก้มปลาฮามาจิ (ใหม่) ,Hamachi Kama,ปลาฮามาจิ,600 กรัม,,590.0,,https://supremeseafoods.net/products/80241242
+2026-05-05,supreme seafoods,หมึกสายไข่แดดเดียว 250 กรัม,Squid,หมึก,-,,390.0,,https://supremeseafoods.net/products/79801127
+2026-05-05,supreme seafoods,ฮามาจิแผ่น 1.7 kg,Hamachi Kama,ปลาฮามาจิ,-,,2490.0,,https://supremeseafoods.net/products/78746049
+2026-05-05,supreme seafoods,เนื้อหอยเชลล์ไทย (1 กิโลกรัม),Scallops,หอยเชลล์,-,,980.0,,https://supremeseafoods.net/products/77874500
+2026-05-05,supreme seafoods,ปลากุดสลาดกิโลละ1900,Leopard Coral Grouper,ปลากุดสลาด,ปลากุดสลาด 1.3กิโล,,1990.0,,https://supremeseafoods.net/products/76657107
+2026-05-05,supreme seafoods,ปลากุดสลาดกิโลละ1900,Leopard Coral Grouper,ปลากุดสลาด,ปลากุดสลาด1.4,,2660.0,,https://supremeseafoods.net/products/76657107
+2026-05-05,supreme seafoods,ปลากุดสลาดกิโลละ1900,Leopard Coral Grouper,ปลากุดสลาด,ปลากุดสลาด1.6,,3040.0,,https://supremeseafoods.net/products/76657107
+2026-05-05,supreme seafoods,ปลากุดสลาดกิโลละ1900,Leopard Coral Grouper,ปลากุดสลาด,ปลากุดสลาด1.9กิโล,,3600.0,,https://supremeseafoods.net/products/76657107
+2026-05-05,supreme seafoods,ปลากุดสลาดกิโลละ1900,Leopard Coral Grouper,ปลากุดสลาด,ปลากุดสลาด2.4กิโล,,4560.0,,https://supremeseafoods.net/products/76657107
+2026-05-05,supreme seafoods,ปลากะพง ไซส์8-9ขีด/ตัว,Sea Bass,ปลากะพง,แบบตัวถอดเกล็ดควักใส้,,265.0,,https://supremeseafoods.net/products/76620765
+2026-05-05,supreme seafoods,ปลากะพง ไซส์8-9ขีด/ตัว,Sea Bass,ปลากะพง,ผ่าผีเสื้อ,,265.0,,https://supremeseafoods.net/products/76620765
+2026-05-05,supreme seafoods,หมึกกล้วยไซส์ใหญ่ ก้อนละ2กิโล,Squid,หมึก,-,,790.0,,https://supremeseafoods.net/products/76505768
+2026-05-05,supreme seafoods,ปลากระบอกไข่ 500กรัม,Mullet,ปลากระบอก,-,,480.0,,https://supremeseafoods.net/products/74987767
+2026-05-05,supreme seafoods,ปลาหิมะkirimi 100กรัม,Snow Fish,ปลาหิมะ,-,,290.0,,https://supremeseafoods.net/products/74962894
+2026-05-05,supreme seafoods,กั้งไข่จัมโบ้ แพ็คผ่าหลัง,Mantish Shrimp,กั้ง,-,,380.0,,https://supremeseafoods.net/products/74851124
+2026-05-05,supreme seafoods,กั้งจัมโบ้ น็อคบ่อ 3-5 ตัวโล,Mantish Shrimp,กั้ง,-,,890.0,,https://supremeseafoods.net/products/74766585
+2026-05-05,supreme seafoods,ปลาทู 500 กรัม ,Short-bodied Mackerel,ปลาทู,-,,99.0,,https://supremeseafoods.net/products/74106689
+2026-05-05,supreme seafoods,หมึกกล้วย 500กรัม,Squid,หมึก,-,,290.0,,https://supremeseafoods.net/products/73351075
+2026-05-05,supreme seafoods,หมึกกระตอย 500กรัม,Squid,หมึก,-,,290.0,,https://supremeseafoods.net/products/73098861
+2026-05-05,supreme seafoods,หอยเชลล์ 400 กรัม,Scallops,หอยเชลล์,-,,380.0,,https://supremeseafoods.net/products/72650721
+2026-05-05,supreme seafoods,หอยแครงจัมโบ้  10-20 ตัวโล,Blood Cockles,หอยแครง,-,,380.0,,https://supremeseafoods.net/products/72593395
+2026-05-05,supreme seafoods,หอยแมลงภู่ 500กรัม,Mussels,หอยแมลงภู่,-,,155.0,,https://supremeseafoods.net/products/72489285
+2026-05-05,supreme seafoods,หอยลายGiant ,Baby Clams,หอยลาย,-,,280.0,,https://supremeseafoods.net/products/72478627
+2026-05-05,supreme seafoods,เอ็นหอยจอบ 300 กรัม,Scallop Mantle,หอยจอบ,-,,290.0,,https://supremeseafoods.net/products/72453532
+2026-05-05,supreme seafoods,หอยหวาน พรีเมี่ยม,Spotted Babylon,หอยหวาน,-,,1290.0,,https://supremeseafoods.net/products/72355676
+2026-05-05,supreme seafoods,ปูม้า3- 6ตัวโล,Blue Swimmer Crab,ปูม้า,-,,690.0,,https://supremeseafoods.net/products/71951487
+2026-05-05,supreme seafoods,กุ้งแม่น้ำ 4 - 5 ตัวโล,Prawn,กุ้งแม่น้ำ,-,,1090.0,,https://supremeseafoods.net/products/71899241
+2026-05-05,supreme seafoods,หอยน้ำผึ้ง,Honey Snail,หอยน้ำผึ้ง,-,,220.0,,https://supremeseafoods.net/products/71871027
+2026-05-05,supreme seafoods,กุ้งแม่น้ำ 8-10ตัวโล,Prawn,กุ้งแม่น้ำ,-,,690.0,,https://supremeseafoods.net/products/71843732
+2026-05-05,supreme seafoods,กุ้งแชบ๊วย 500 กรัม,Banana Prawn,กุ้งแชบ๊วย,-,,345.0,,https://supremeseafoods.net/products/71813651
+2026-05-05,supreme seafoods,สเต็ก แซลม่อน 160-180g,Salmon,แซลมอน,-,,160.0,,https://supremeseafoods.net/products/71576538
+2026-05-05,supreme seafoods,กุ้งแม่น้ำ 12-16 ตัวโล,Prawn,กุ้งแม่น้ำ,-,,590.0,,https://supremeseafoods.net/products/71500633
+2026-05-05,supreme seafoods,หอยชักตีน,Wing Shells,หอยชักตีน,-,,320.0,,https://supremeseafoods.net/products/71232396
+2026-05-05,supreme seafoods,เป๋าฮื้อธรรมชาติ 500กรัม,Abalone,เป๋าฮื้อ,-,,990.0,,https://supremeseafoods.net/products/71159037
+2026-05-05,supreme seafoods,หมึกหอมสด 1-2 ตัวโล,Squid,หมึก,-,,580.0,,https://supremeseafoods.net/products/71154234
+2026-05-05,supreme seafoods,Kuruma ebi 500g,Tiger Prawn,กุ้งลายเสือ,-,,690.0,,https://supremeseafoods.net/products/71132953
+2026-05-05,supreme seafoods,เนื้อก้ามปูจัมโบ้ น้ำหนัก500กรัม,Crab Meat,เนื้อปูแกะ,-,,690.0,,https://supremeseafoods.net/products/69900001
+2026-05-05,supreme seafoods,ไข่หมึกกล้วย 500กรัม,Squid,หมึก,-,,280.0,,https://supremeseafoods.net/products/70330161
+2026-05-05,supreme seafoods,กุ้งแม่น้ำ 2 - 3 ตัวโล,Prawn,กุ้งแม่น้ำ,-,,1390.0,,https://supremeseafoods.net/products/69609562
+2026-05-05,supreme seafoods,หอยงวงช้าง,Geoduck,หอยงวงช้าง,ขนาด 350-400กรัม,,1890.0,,https://supremeseafoods.net/products/69635630
+2026-05-05,supreme seafoods,หอยงวงช้าง,Geoduck,หอยงวงช้าง,"ขนาด 800-1,000กรัม/ตัว",,3790.0,,https://supremeseafoods.net/products/69635630
+2026-05-05,supreme seafoods,กั้งแก้วแกะเปลือก 400 กรัม,Mantish Shrimp,กั้ง,-,,650.0,,https://supremeseafoods.net/products/69551922
+2026-05-05,supreme seafoods,หมึกหอมสด 3-5 ตัวโล,Squid,หมึก,-,,490.0,,https://supremeseafoods.net/products/69550900
+2026-05-05,supreme seafoods,หมึกไข่ DD 300กรัม,Squid,หมึก,-,,180.0,,https://supremeseafoods.net/products/69550844
+2026-05-05,supreme seafoods,เนื้อหอยเชลล์ 40-60 ตัว/กิโลกรัม,Scallops,หอยเชลล์,-,,380.0,,https://supremeseafoods.net/products/69550042
+2026-05-05,supreme seafoods,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,กุ้งลายเสือขนาด 3 - 6 ตัว/กิโลกรัม,,1590.0,,https://supremeseafoods.net/products/69550021
+2026-05-05,supreme seafoods,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,กุ้งลายเสือขนาด 8 - 12 ตัว/กิโลกรัม,,1390.0,,https://supremeseafoods.net/products/69550021
+2026-05-05,supreme seafoods,กุ้งลายเสือ,Tiger Prawn,กุ้งลายเสือ,กุ้งลายเสือจัมโบ้ (คัดไซส์ 3 ตัวโล),,1790.0,,https://supremeseafoods.net/products/69550021
+2026-05-05,siriratseafood,กุ้งก้ามกราม,Prawn,กุ้งก้ามกราม,-,,320.0,,https://siriratseafood.com/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%81%e0%b9%89%e0%b8%b2%e0%b8%a1%e0%b8%81%e0%b8%a3%e0%b8%b2%e0%b8%a1/
+2026-05-05,siriratseafood,ปลาทรายแดง,Sand Whiting,ปลาทราย,-,,140.0,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%97%e0%b8%a3%e0%b8%b2%e0%b8%a2%e0%b9%81%e0%b8%94%e0%b8%87/
+2026-05-05,siriratseafood,ปลาหมึกกระดองลอก,Squid,หมึก,-,,330.0,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%81%e0%b8%a3%e0%b8%b0%e0%b8%94%e0%b8%ad%e0%b8%87%e0%b8%a5%e0%b8%ad%e0%b8%81/
+2026-05-05,siriratseafood,ปลาหมึกกล้วย,Squid,หมึก,-,,,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%81%e0%b8%a5%e0%b9%89%e0%b8%a7%e0%b8%a2/
+2026-05-05,siriratseafood,ปลาหมึกสายใหญ่,Squid,หมึก,-,,160.0,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ab%e0%b8%a1%e0%b8%b6%e0%b8%81%e0%b8%aa%e0%b8%b2%e0%b8%a2%e0%b9%83%e0%b8%ab%e0%b8%8d%e0%b9%88/
+2026-05-05,siriratseafood,ปลาอินทรี,Spanish Mackerel,ปลาอินทรี,-,,600.0,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%a5%e0%b8%b2%e0%b8%ad%e0%b8%b4%e0%b8%99%e0%b8%97%e0%b8%a3%e0%b8%b5/
+2026-05-05,siriratseafood,ปูม้า,Blue Swimmer Crab,ปูม้า,-,,,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%b9%e0%b8%a1%e0%b9%89%e0%b8%b2-3-4-%e0%b8%95%e0%b8%b1%e0%b8%a7%e0%b9%82%e0%b8%a5/
+2026-05-05,siriratseafood,ปูแสมขาวบ้าน ไซค์กลาง-ใหญ่,Meder's Mangrove Crab,ปูแสม,-,,150.0,,https://siriratseafood.com/product/%e0%b8%9b%e0%b8%b9%e0%b9%81%e0%b8%aa%e0%b8%a1%e0%b8%82%e0%b8%b2%e0%b8%a7%e0%b8%9a%e0%b9%89%e0%b8%b2%e0%b8%99-%e0%b9%84%e0%b8%8b%e0%b8%84%e0%b9%8c%e0%b8%81%e0%b8%a5%e0%b8%b2%e0%b8%87-%e0%b9%83%e0%b8%ab/
+2026-05-05,siriratseafood,หอยนางรม(ถุงละ1กิโล),Oyster,หอยนางรม,-,,230.0,,https://siriratseafood.com/product/%e0%b8%ab%e0%b8%ad%e0%b8%a2%e0%b8%99%e0%b8%b2%e0%b8%87%e0%b8%a3%e0%b8%a1-%e0%b8%96%e0%b8%b8%e0%b8%87%e0%b8%a5%e0%b8%b01%e0%b8%81%e0%b8%b4%e0%b9%82%e0%b8%a5/
+2026-05-05,siriratseafood,เนื้อก้อนแดง,Crab Meat,เนื้อปูแกะ,-,,,,https://siriratseafood.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%81%e0%b9%89%e0%b8%ad%e0%b8%99%e0%b9%81%e0%b8%94%e0%b8%87/
+2026-05-05,siriratseafood,เนื้อปูม้า,Blue Swimmer Crab,ปูม้า,-,,,,https://siriratseafood.com/product/%e0%b9%80%e0%b8%99%e0%b8%b7%e0%b9%89%e0%b8%ad%e0%b8%9b%e0%b8%b9%e0%b8%a1%e0%b9%89%e0%b8%b2/
+2026-05-05,siriratseafood,แมงดาทะเลไข่,horseshoe crab,แมงดาทะเล,-,,50.0,,https://siriratseafood.com/product/%e0%b9%81%e0%b8%a1%e0%b8%87%e0%b8%94%e0%b8%b2%e0%b8%97%e0%b8%b0%e0%b9%80%e0%b8%a5%e0%b9%84%e0%b8%82%e0%b9%88/
+2026-05-05,sirinfarm,กุ้งลายเสือดำ 230-250 กรัม,Tiger Prawn,กุ้งลายเสือ,-,,185.0,,https://www.sirinfarm.com/th/product/%e0%b8%81%e0%b8%b8%e0%b9%89%e0%b8%87%e0%b8%a5%e0%b8%b2%e0%b8%a2%e0%b9%80%e0%b8%aa%e0%b8%b7%e0%b8%ad%e0%b8%94%e0%b8%b3-230-250-%e0%b8%81%e0%b8%a3%e0%b8%b1%e0%b8%a1/
+2026-05-05,sirinfarm,กุ้งลายเสือดำแกะเปลือก 130-150 กรัม,Tiger Prawn,กุ้งลายเสือ,-,,195.0,,https://www.sirinfarm.com/th/product/peeled-tiger-prawn-130-150g/
+2026-05-05,sirinfarm,ปลากะพงขาวหั่นชิ้น 300 กรัม,Sea Bass,ปลากะพง,-,,265.0,,https://www.sirinfarm.com/th/product/sea-bass-chunks-300g/
+2026-05-05,sirinfarm,ปลาทู (200กรัม),Short-bodied Mackerel,ปลาทู,-,,135.0,,https://www.sirinfarm.com/th/product/short-mackerel-200g/
+2026-05-05,sirinfarm,สิรินทร์ฟาร์มกุ้งขาวแกะเปลือก 130-150 กรัม,Vannamei Shrimp,กุ้งขาว,-,,145.0,,https://www.sirinfarm.com/th/product/peeled-whiteleg-shrimps-150g/
+2026-05-05,sirinfarm,สิรินทร์ฟาร์มปลากะพงขาวแล่ 400-500 กรัม,Sea Bass,ปลากะพง,-,,345.0,,https://www.sirinfarm.com/th/product/asian-sea-bass-fillet-500g/
+2026-05-05,sirinfarm,สเต็กปลากะพง 240-300 กรัม,Sea Bass,ปลากะพง,-,,295.0,,https://www.sirinfarm.com/th/product/sea-bass-steak-300g/
+2026-05-05,sirinfarm,"หัวปลากะพงรวมหาง 800-1,000 กรัม",Sea Bass,ปลากะพง,-,,,,https://www.sirinfarm.com/th/product/sea-bass-head-and-tail-800-1000g/
+2026-05-05,sirinfarm,เนื้อปูม้าแกะ (150กรัม),Blue Swimmer Crab,ปูม้า,-,,,,https://www.sirinfarm.com/th/product/blue-swimming-crab-meat-150g/
+2026-05-05,sirinfarm,เนื้อหอยแกะลายต้ม (200กรัม),Blue Swimmer Crab,ปูม้า,-,,115.0,,https://www.sirinfarm.com/th/product/cooked-clams-200g/
