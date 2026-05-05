@@ -213,9 +213,6 @@ def _render_welcome() -> None:
             if st.button(label, use_container_width=True, key=f"ex_{idx}"):
                 st.session_state["pending_prompt"] = prompt
                 st.rerun()
-    st.markdown("---")
-    if st.button("🛢️ Oil Impact Briefing", use_container_width=True, key="oil_briefing_welcome"):
-        _briefing_dialog()
 
 
 def _invoke_agent(user_text: str) -> None:
