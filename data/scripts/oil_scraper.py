@@ -1,9 +1,12 @@
 """Daily scraper for Thai oil retail prices from thaioilgroup.com.
 
-Parses the HTML, pairs each <img alt="..."> with the immediately following
-<p class="oil-price">N</p>, and appends one row per product to
-data/raw/oil_prices.csv. Idempotent — skips if today's source rows already
-exist.
+Parses the HTML, pairs each <img> (carrying the product name in either
+``alt`` or ``atl`` — the live site has a long-standing typo) with the
+immediately following <p class="oil-price">N</p>, and appends one row per
+product to data/raw/oil_prices.csv. Idempotent — skips if today's source
+rows already exist. Duplicates within a single page (the site renders the
+table twice for mobile/desktop) are flattened by date+product on read via
+groupby.
 """
 
 from __future__ import annotations
@@ -29,15 +32,27 @@ def parse_oil_prices(html: str) -> list[dict]:
         raise ValueError("no oil prices found in HTML — page structure may have changed")
 
     rows: list[dict] = []
+    seen: set[tuple[str, float]] = set()
     for p_tag in prices:
-        img = p_tag.find_previous("img", alt=True)
-        if img is None or not img.get("alt"):
+        # Walk backwards through preceding <img> tags until we find one whose
+        # alt OR atl carries a non-empty product name. The page's site-logo img
+        # has alt="" so a naive find_previous("img", alt=True) would match it.
+        product = ""
+        for img in p_tag.find_all_previous("img"):
+            product = (img.get("alt") or img.get("atl") or "").strip()
+            if product:
+                break
+        if not product:
             continue
         try:
             value = float(p_tag.get_text(strip=True))
         except ValueError:
             continue
-        rows.append({"product": img["alt"].strip(), "thb_per_litre": value})
+        key = (product, value)
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append({"product": product, "thb_per_litre": value})
 
     if not rows:
         raise ValueError("no oil prices found — img/p pairing failed")

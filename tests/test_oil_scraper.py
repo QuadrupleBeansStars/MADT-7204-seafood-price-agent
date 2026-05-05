@@ -30,6 +30,30 @@ def test_parse_raises_on_mismatch_between_imgs_and_prices():
         parse_oil_prices(html)
 
 
+def test_parse_handles_atl_typo_on_live_site():
+    """Live thaioilgroup.com has a long-standing typo: <img atl=...> instead of alt=...."""
+    html = (
+        '<img atl="Diesel" src="x.webp"><p class="oil-price">40.80</p>'
+        '<img atl="Premium Diesel" src="y.webp"><p class="oil-price">62.10</p>'
+    )
+    rows = parse_oil_prices(html)
+    assert {"Diesel": 40.80, "Premium Diesel": 62.10} == {
+        r["product"]: r["thb_per_litre"] for r in rows
+    }
+
+
+def test_parse_dedupes_within_one_page():
+    """Live page renders the table twice (mobile + desktop) — same (product, price) pairs
+    should collapse to one row."""
+    html = (
+        '<img atl="Diesel"><p class="oil-price">40.80</p>'
+        '<img atl="Diesel"><p class="oil-price">40.80</p>'
+    )
+    rows = parse_oil_prices(html)
+    assert len(rows) == 1
+    assert rows[0] == {"product": "Diesel", "thb_per_litre": 40.80}
+
+
 def test_already_scraped_today_false_when_file_missing(tmp_path):
     from data.scripts.oil_scraper import already_scraped_today
     from datetime import date
