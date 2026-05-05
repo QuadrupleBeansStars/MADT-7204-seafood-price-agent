@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>Test Feed</title>
+  <item>
+    <title>Diesel prices rise as global oil climbs</title>
+    <link>https://example.com/a</link>
+    <description>Thai diesel rose 0.5 THB/L this week amid Brent gains.</description>
+    <pubDate>Mon, 04 May 2026 10:00:00 +0000</pubDate>
+  </item>
+  <item>
+    <title>Football match preview</title>
+    <link>https://example.com/b</link>
+    <description>Bangkok United faces Buriram tonight.</description>
+    <pubDate>Mon, 04 May 2026 11:00:00 +0000</pubDate>
+  </item>
+  <item>
+    <title>น้ำมันดีเซลขึ้นราคาอีกรอบ</title>
+    <link>https://example.com/c</link>
+    <description>กระทบต้นทุนขนส่งและอาหารทะเล</description>
+    <pubDate>Mon, 04 May 2026 12:00:00 +0000</pubDate>
+  </item>
+</channel></rss>
