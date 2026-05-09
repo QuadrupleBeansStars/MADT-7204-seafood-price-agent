@@ -29,7 +29,6 @@ EXAMPLE_PROMPTS = [
     ("🛒 ปลาแซลมอน", "ปลาแซลมอนร้านไหนถูกที่สุด?"),
 ]
 
-
 @st.cache_resource
 def _graph():
     return build_graph()
@@ -211,7 +210,7 @@ def _invoke_agent(user_text: str) -> None:
 
 # --- Page body ---------------------------------------------------------------
 
-st.title("Bangkok Seafood Price Advisor")
+st.title("Thailand Seafood Price Advisor")
 st.caption("Ask me anything — I'll clarify if needed, then find the best answer.")
 
 if "messages" not in st.session_state:

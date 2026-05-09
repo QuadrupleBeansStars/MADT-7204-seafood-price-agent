@@ -50,16 +50,21 @@ def get_llm():
 
 def agent_node(state: AgentState) -> dict:
     """LLM reasoning node — executes the plan produced by reason_node."""
+    from agent.tools import oil_snapshot_line
+
     llm = get_llm()
     messages = list(state["messages"])
 
     plan = state.get("current_plan")
+    snapshot = oil_snapshot_line()
     system_content = SYSTEM_PROMPT
+    if snapshot:
+        system_content = SYSTEM_PROMPT + "\n\n" + snapshot
     if plan:
         plan_text = "\n\nExecution plan (follow these steps in order):\n" + "\n".join(
             f"{i+1}. {step}" for i, step in enumerate(plan)
         )
-        system_content = SYSTEM_PROMPT + plan_text
+        system_content = system_content + plan_text
 
     if not messages or not isinstance(messages[0], SystemMessage):
         messages = [SystemMessage(content=system_content)] + messages

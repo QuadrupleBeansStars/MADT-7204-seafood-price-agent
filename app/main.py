@@ -89,7 +89,19 @@ shop_page = st.Page(
     title="Shop Profile",
     icon=":material/storefront:",
 )
+market_insights_page = st.Page(
+    "pages/market_insights.py",
+    title="Market Insights",
+    icon=":material/insights:",
+)
+oil_briefing_page = st.Page(
+    "pages/oil_briefing.py",
+    title="Oil Briefing",
+    icon=":material/local_gas_station:",
+)
 
-nav = st.navigation([chat_page, dashboard_page, shop_page])
+nav = st.navigation(
+    [chat_page, dashboard_page, shop_page, market_insights_page, oil_briefing_page]
+)
 _render_sidebar()
 nav.run()
