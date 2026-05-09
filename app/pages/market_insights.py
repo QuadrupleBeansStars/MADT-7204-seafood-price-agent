@@ -17,7 +17,8 @@ from data.oil_loader import diesel_series
 
 LAGS = [0, 7, 14, 21, 28]
 
-st.title("📊 Market Insights — Oil ↔ Seafood")
+st.title("Market insights")
+st.caption("Diesel ↔ seafood price correlation explorer.")
 
 oil = diesel_series()
 seafood_df = load_seafood_data()
@@ -71,20 +72,22 @@ oil_w = oil[oil.index >= cutoff]
 seafood_w = seafood_series[seafood_series.index >= cutoff]
 
 # Dual-axis chart
-fig = go.Figure()
-fig.add_trace(
-    go.Scatter(x=seafood_w.index, y=seafood_w.values, name=f"{species} (THB/kg)", yaxis="y1")
-)
-fig.add_trace(
-    go.Scatter(x=oil_w.index, y=oil_w.values, name="Diesel (THB/L)", yaxis="y2")
-)
-fig.update_layout(
-    yaxis=dict(title=f"{species} (THB/kg)"),
-    yaxis2=dict(title="Diesel (THB/L)", overlaying="y", side="right"),
-    legend=dict(orientation="h"),
-    height=420,
-)
-st.plotly_chart(fig, use_container_width=True)
+with st.container(border=True):
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(x=seafood_w.index, y=seafood_w.values, name=f"{species} (THB/kg)", yaxis="y1")
+    )
+    fig.add_trace(
+        go.Scatter(x=oil_w.index, y=oil_w.values, name="Diesel (THB/L)", yaxis="y2")
+    )
+    fig.update_layout(
+        yaxis=dict(title=f"{species} (THB/kg)"),
+        yaxis2=dict(title="Diesel (THB/L)", overlaying="y", side="right"),
+        legend=dict(orientation="h"),
+        height=420,
+        margin=dict(l=0, r=0, t=10, b=0),
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
 # Lag correlation
 corr = lag_correlation(oil, seafood_series, LAGS)

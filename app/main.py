@@ -56,24 +56,24 @@ require_login()
 
 def _render_sidebar() -> None:
     with st.sidebar:
-        st.markdown("### Seafood Price Advisor")
+        st.markdown("### Seafood price advisor")
         st.caption("Your AI guide to Gulf seafood shops delivering to Bangkok.")
         st.badge("Azure OpenAI · GPT-4o", icon=":material/smart_toy:", color="blue")
 
+        st.write("")
         if st.button("Clear chat history", icon=":material/delete:", use_container_width=True):
             st.session_state.pop("messages", None)
             st.session_state.pop("last_error", None)
             st.toast("Chat history cleared.", icon=":material/check:")
             st.rerun()
-
-        st.markdown(
-            "[Usage guide](https://github.com/QuadrupleBeansStars/"
-            "MADT-7204-seafood-price-agent/blob/main/docs/chatbot_usage.md)"
-        )
-
         if st.button("Log out", icon=":material/logout:", use_container_width=True):
             st.session_state.clear()
             st.rerun()
+
+        st.caption(
+            "[Usage guide](https://github.com/QuadrupleBeansStars/"
+            "MADT-7204-seafood-price-agent/blob/main/docs/chatbot_usage.md)"
+        )
 
 
 chat_page = st.Page(

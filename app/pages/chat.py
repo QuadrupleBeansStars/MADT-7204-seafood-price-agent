@@ -69,17 +69,18 @@ def _render_tool_expander(tool_calls: list[dict], tool_results: dict[str, ToolMe
         return
     label = f"Used {len(tool_calls)} tool{'s' if len(tool_calls) != 1 else ''}"
     with st.expander(label, expanded=False, icon=":material/build:"):
-        for call in tool_calls:
+        for idx, call in enumerate(tool_calls):
+            if idx > 0:
+                st.write("")  # breathing room without a heavy divider
             st.markdown(f"**`{call['name']}`**")
             args = call.get("args") or {}
             if args:
-                st.markdown("_Arguments:_")
+                st.caption("Arguments")
                 st.code(json.dumps(args, indent=2, ensure_ascii=False), language="json")
             result_msg = tool_results.get(call["id"])
             if result_msg is not None:
-                st.markdown("_Result:_")
+                st.caption("Result")
                 st.code(_format_tool_result(result_msg.content), language="json")
-            st.divider()
 
 
 def _render_thinking_expander(thinking: str | None) -> None:
@@ -165,8 +166,8 @@ def _render_history(messages: list) -> None:
 
 
 def _render_welcome() -> None:
-    st.markdown(
-        "#### Ask me about Bangkok seafood prices\n"
+    st.subheader("Ask me about Thailand seafood prices")
+    st.caption(
         "I can check prices at specific shops, spot today's best deals, "
         "or show you a 7-day trend. Try one of these to get started:"
     )
@@ -187,7 +188,7 @@ def _invoke_agent(user_text: str) -> None:
     messages.append(HumanMessage(content=user_text))
 
     try:
-        with st.spinner("🐟 Thinking..."):
+        with st.spinner("Thinking…", show_time=False):
             result = graph.invoke(
                 {
                     "messages": messages,

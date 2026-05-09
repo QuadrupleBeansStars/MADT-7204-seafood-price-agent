@@ -16,11 +16,10 @@ from agent.tools.oil_briefing import generate_oil_briefing
 from data.oil_loader import diesel_series
 
 
-st.title("🛢️ Oil Impact Briefing")
-st.caption("Narrative summary of how recent diesel price moves are affecting seafood costs.")
+st.title("Oil impact briefing")
+st.caption("How recent diesel price moves may be affecting seafood costs.")
 
-# --- Oil price trend ---------------------------------------------------------
-st.subheader("Diesel price trend (THB/L)")
+st.subheader("Diesel price trend")
 
 oil = diesel_series()
 if oil.empty:
@@ -44,20 +43,20 @@ else:
     delta = latest - first
     pct = (delta / first * 100) if first else 0.0
     c1, c2, c3 = st.columns(3)
-    c1.metric("Latest", f"{latest:.2f} THB/L")
-    c2.metric("Change", f"{delta:+.2f} THB/L", f"{pct:+.1f}%")
-    c3.metric("Data points", f"{len(oil_w)}")
+    c1.metric("Latest", f"{latest:.2f} THB/L", border=True)
+    c2.metric("Change", f"{delta:+.2f} THB/L", f"{pct:+.1f}%", border=True)
+    c3.metric("Data points", f"{len(oil_w)}", border=True)
 
-    fig = go.Figure(go.Scatter(x=oil_w.index, y=oil_w.values, mode="lines", name="Diesel"))
-    fig.update_layout(
-        yaxis_title="THB / litre",
-        xaxis_title=None,
-        height=320,
-        margin=dict(l=0, r=0, t=10, b=0),
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with st.container(border=True):
+        fig = go.Figure(go.Scatter(x=oil_w.index, y=oil_w.values, mode="lines", name="Diesel"))
+        fig.update_layout(
+            yaxis_title="THB / litre",
+            xaxis_title=None,
+            height=320,
+            margin=dict(l=0, r=0, t=10, b=0),
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-st.divider()
 st.subheader("Generate briefing")
 
 period_label = st.radio(
@@ -80,6 +79,6 @@ if st.button("Generate briefing", type="primary"):
 
 last = st.session_state.get("oil_briefing_last")
 if last:
-    st.divider()
-    st.markdown(f"**Period:** {last['period']} · **Language:** {last['language']}")
-    st.markdown(last["markdown"])
+    with st.container(border=True):
+        st.caption(f"Period: {last['period']} · Language: {last['language']}")
+        st.markdown(last["markdown"])

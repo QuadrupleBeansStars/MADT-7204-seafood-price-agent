@@ -24,8 +24,8 @@ df = _load_data()
 if df is not None and not df.empty:
     st.title("Seafood price dashboard")
     st.caption(
-        f"Comparing Gulf of Thailand seafood shops delivering to Bangkok"
-        f" — {df['source'].nunique()} shops tracked"
+        f"Comparing Gulf of Thailand seafood shops delivering to Bangkok · "
+        f"{df['source'].nunique()} shops tracked"
     )
 
     # --- Category filter on main page ---
@@ -47,7 +47,7 @@ if df is not None and not df.empty:
     if not df_priced.empty:
         best_deal = df_priced.sort_values("price_per_kg").iloc[0]
         with st.container(border=True):
-            st.subheader("Best deal right now", divider="blue")
+            st.subheader("Best deal right now")
             deal_cols = st.columns([3, 1])
             with deal_cols[0]:
                 st.markdown(f"**{best_deal['group_th']} ({best_deal['group_en']})**")
