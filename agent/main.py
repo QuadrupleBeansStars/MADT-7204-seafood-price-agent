@@ -13,12 +13,12 @@ from typing import Annotated, Optional
 
 from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_anthropic import ChatAnthropic
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
 from typing_extensions import TypedDict
 
+from agent.llm import get_chat_llm
 from agent.prompts.system import SYSTEM_PROMPT
 from agent.tools import ALL_TOOLS
 
@@ -40,12 +40,8 @@ class AgentState(TypedDict):
 # --- Nodes ---
 
 def get_llm():
-    """Initialize Claude LLM bound with tools."""
-    llm = ChatAnthropic(
-        model="claude-sonnet-4-5",
-        temperature=0,
-    )
-    return llm.bind_tools(TOOLS)
+    """Chat LLM bound with the seafood-agent tools."""
+    return get_chat_llm().bind_tools(TOOLS)
 
 
 def agent_node(state: AgentState) -> dict:
@@ -127,9 +123,12 @@ def get_langfuse_handler():
 
 def main():
     """Interactive CLI loop for the seafood price agent."""
-    # Check for API key
-    if not os.getenv("ANTHROPIC_API_KEY"):
-        print("ERROR: ANTHROPIC_API_KEY not set. Copy .env.example to .env and add your key.")
+    # Check for required Azure OpenAI config
+    missing = [k for k in ("AZURE_OPENAI_API_KEY", "AZURE_ENDPOINT", "AZURE_API_VERSION")
+               if not os.getenv(k)]
+    if missing:
+        print(f"ERROR: missing env vars: {', '.join(missing)}. "
+              f"Copy .env.example to .env and fill them in.")
         sys.exit(1)
 
     graph = build_graph()

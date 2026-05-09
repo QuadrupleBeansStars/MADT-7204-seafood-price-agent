@@ -34,7 +34,10 @@ load_dotenv()
 # Langfuse) reads them identically whether running on Streamlit Cloud
 # (secrets.toml / dashboard UI) or local dev (.env). Env wins if set.
 _BRIDGED_SECRETS = (
-    "ANTHROPIC_API_KEY",
+    "AZURE_OPENAI_API_KEY",
+    "AZURE_ENDPOINT",
+    "AZURE_API_VERSION",
+    "AZURE_DEPLOYMENT",
     "LANGFUSE_SECRET_KEY",
     "LANGFUSE_PUBLIC_KEY",
     "LANGFUSE_HOST",
@@ -55,7 +58,7 @@ def _render_sidebar() -> None:
     with st.sidebar:
         st.markdown("### Seafood Price Advisor")
         st.caption("Your AI guide to Gulf seafood shops delivering to Bangkok.")
-        st.badge("Claude Sonnet 4.5", icon=":material/smart_toy:", color="blue")
+        st.badge("Azure OpenAI · GPT-4o", icon=":material/smart_toy:", color="blue")
 
         if st.button("Clear chat history", icon=":material/delete:", use_container_width=True):
             st.session_state.pop("messages", None)
