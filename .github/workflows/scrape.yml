@@ -23,7 +23,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install scraper dependencies
-        run: pip install beautifulsoup4 requests pandas feedparser
+        run: pip install beautifulsoup4 requests pandas feedparser openpyxl
 
       - name: Run seafood scraper
         run: python data/scripts/scraper.py
@@ -34,11 +34,16 @@ jobs:
       - name: Run news scraper
         run: python data/scripts/news_scraper.py
 
+      - name: Run Talaad Thai scraper
+        # Don't fail the whole workflow if Talaad Thai changes their markup.
+        continue-on-error: true
+        run: python data/scripts/talaadthai_scraper.py
+
       - name: Commit and push updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/raw/seafood_prices.csv data/raw/oil_prices.csv data/raw/oil_news.csv data/raw/.oil_news_sentinel
+          git add data/raw/seafood_prices.csv data/raw/oil_prices.csv data/raw/oil_news.csv data/raw/.oil_news_sentinel data/raw/talaadthai_prices.csv
           git diff --cached --quiet && echo "No data changes today" || {
             git commit -m "data: daily scrape $(date -u +%Y-%m-%d)"
             git push
