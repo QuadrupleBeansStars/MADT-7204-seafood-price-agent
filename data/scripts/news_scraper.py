@@ -23,11 +23,22 @@ FEEDS = {
     "krungthep_business": "https://www.bangkokbiznews.com/rss/feed/business",
 }
 
-KEYWORDS = {
-    "oil", "diesel", "fuel", "petrol", "gasoline", "energy", "subsidy",
-    "fishing", "seafood", "logistics", "supply chain",
-    "น้ำมัน", "ดีเซล", "พลังงาน", "ประมง", "อาหารทะเล", "ขนส่ง", "อุดหนุน",
+# Oil-focused. Earlier broader terms ("energy", "logistics", "supply chain")
+# pulled in noise — "energy" matched substring inside "emergency", and the
+# rest caught generic business stories with no oil angle. Thai has no word
+# boundaries so substring match is fine for Thai terms.
+KEYWORDS_EN = {
+    "oil", "diesel", "fuel", "petrol", "gasoline", "crude", "brent", "wti",
+    "opec", "refinery", "refineries", "barrel", "barrels", "gasohol",
+    "petroleum",
 }
+KEYWORDS_TH = {
+    "น้ำมัน", "ดีเซล", "เบนซิน", "แก๊สโซฮอล์", "ปิโตรเลียม", "โอเปก", "ดิบ",
+}
+KEYWORDS = KEYWORDS_EN | KEYWORDS_TH  # kept for back-compat / tests
+
+# Word-boundary regex for English so 'energy' inside 'emergency' doesn't match.
+_EN_RE = re.compile(r"\b(" + "|".join(re.escape(k) for k in KEYWORDS_EN) + r")\b", re.I)
 
 THAI_RE = re.compile(r"[฀-๿]")
 
@@ -37,11 +48,14 @@ def _detect_language(text: str) -> str:
 
 
 def filter_relevant(entries: list) -> list[dict]:
-    """Keep entries whose title or summary contains any KEYWORDS term."""
+    """Keep entries whose title or summary contains an oil-related term.
+
+    English uses word-boundary matching; Thai uses substring.
+    """
     kept = []
     for e in entries:
-        haystack = ((e.get("title") or "") + " " + (e.get("summary") or "")).casefold()
-        if any(kw.casefold() in haystack for kw in KEYWORDS):
+        haystack = (e.get("title") or "") + " " + (e.get("summary") or "")
+        if _EN_RE.search(haystack) or any(kw in haystack for kw in KEYWORDS_TH):
             kept.append(e)
     return kept
 
