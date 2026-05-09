@@ -8,7 +8,6 @@ before render to avoid leaking dict reprs.
 """
 
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -21,7 +20,6 @@ if str(REPO_ROOT) not in sys.path:
 
 from agent.main import build_graph, get_langfuse_handler
 from agent.prompts.system import SYSTEM_PROMPT
-from agent.tools.oil_briefing import generate_oil_briefing
 
 
 EXAMPLE_PROMPTS = [
@@ -30,41 +28,6 @@ EXAMPLE_PROMPTS = [
     ("📊 Best deals", "What are the best seafood deals today?"),
     ("🛒 ปลาแซลมอน", "ปลาแซลมอนร้านไหนถูกที่สุด?"),
 ]
-
-THAI_RE = re.compile(r"[฀-๿]")  # Thai unicode block
-
-
-def _default_briefing_lang() -> str:
-    """Infer language from the most recent user message in chat history.
-
-    Returns 'th' if the latest user message contains Thai characters, else 'en'.
-    """
-    msgs = st.session_state.get("messages", [])
-    for m in reversed(msgs):
-        if isinstance(m, HumanMessage):
-            return "th" if THAI_RE.search(str(m.content) or "") else "en"
-    return "en"
-
-
-@st.dialog("Oil Impact Briefing")
-def _briefing_dialog():
-    period_label = st.radio("Time range", ["Weekly (last 7 days)", "Monthly (last 30 days)"])
-    default_lang = _default_briefing_lang()
-    lang_label = st.radio(
-        "Language",
-        ["English", "ไทย"],
-        index=0 if default_lang == "en" else 1,
-    )
-    if st.button("Generate"):
-        period = "weekly" if "Weekly" in period_label else "monthly"
-        language = "en" if lang_label == "English" else "th"
-        with st.spinner("Generating briefing…"):
-            markdown = generate_oil_briefing.invoke({"period": period, "language": language})
-        st.session_state.setdefault("messages", []).append(
-            AIMessage(content=f"**Oil Impact Briefing ({period}, {language})**\n\n{markdown}")
-        )
-        st.rerun()
-
 
 @st.cache_resource
 def _graph():
@@ -247,7 +210,7 @@ def _invoke_agent(user_text: str) -> None:
 
 # --- Page body ---------------------------------------------------------------
 
-st.title("Bangkok Seafood Price Advisor")
+st.title("Thailand Seafood Price Advisor")
 st.caption("Ask me anything — I'll clarify if needed, then find the best answer.")
 
 if "messages" not in st.session_state:
@@ -274,9 +237,6 @@ if err := st.session_state.get("last_error"):
     st.error("Something went wrong while contacting the agent.")
     with st.expander("Details"):
         st.code(err)
-
-if st.button("🛢️ Oil Impact Briefing", key="oil_briefing_main"):
-    _briefing_dialog()
 
 if user_input := st.chat_input("e.g. Which shop has cheapest white shrimp today?"):
     # Clear previous reasoning state before new query

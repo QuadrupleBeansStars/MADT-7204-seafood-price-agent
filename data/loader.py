@@ -20,6 +20,9 @@ REGISTRY_CSV = DATA_DIR / "เอเจ้นหาปลา - working sheet (ta
 # Accumulated scrape snapshots (populated by data/scripts/scraper.py)
 SCRAPED_CSV = DATA_DIR / "seafood_prices.csv"
 
+# Talaad Thai wholesale market prices (populated by talaadthai_scraper.py)
+TALAADTHAI_CSV = DATA_DIR / "talaadthai_prices.csv"
+
 # ---------------------------------------------------------------------------
 # Category mapping: Group_Name_Eng → broad category
 # ---------------------------------------------------------------------------
@@ -146,6 +149,29 @@ def _load_registry() -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
+def _load_talaadthai() -> pd.DataFrame:
+    """Load Talaad Thai wholesale prices, normalised to the shared schema."""
+    if not TALAADTHAI_CSV.exists() or TALAADTHAI_CSV.stat().st_size < 50:
+        return pd.DataFrame()
+    try:
+        df = pd.read_csv(TALAADTHAI_CSV)
+    except Exception:
+        logger.warning("Failed to load talaadthai CSV", exc_info=True)
+        return pd.DataFrame()
+    if df.empty:
+        return df
+    df["category"] = df["group_en"].map(CATEGORY_MAP).fillna("other")
+    df["category_th"] = df["category"].map(CATEGORY_TH)
+    df["option"] = df["option"].fillna("wholesale")
+    df["link"] = df["link"].fillna("")
+    keep_cols = [
+        "scrape_date", "source", "item_name_website", "group_en", "group_th",
+        "option", "weight_kg", "selling_price", "price_per_kg", "link",
+        "category", "category_th",
+    ]
+    return df[keep_cols]
+
+
 def _prepare_scraped(scraped: pd.DataFrame) -> pd.DataFrame:
     """Normalise dtypes and add category columns to scraped data."""
     scraped["weight_kg"] = _clean_numeric(scraped["weight_kg"])
@@ -209,6 +235,11 @@ def load_seafood_data() -> pd.DataFrame:
                         scraped = pd.concat([scraped, mock_rows], ignore_index=True)
                 except Exception:
                     logger.warning("Could not generate mock shop rows", exc_info=True)
+
+                # Merge in Talaad Thai wholesale prices as an additional shop
+                tt = _load_talaadthai()
+                if not tt.empty:
+                    scraped = pd.concat([scraped, tt], ignore_index=True)
 
                 return scraped
         except Exception:

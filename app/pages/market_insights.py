@@ -30,22 +30,38 @@ if "scrape_date" not in seafood_df.columns or seafood_df["scrape_date"].isna().a
     st.warning("No historical seafood data yet. Wait for daily scrape to accumulate.")
     st.stop()
 
-species_options = sorted(seafood_df["group_en"].dropna().unique())
-species = st.selectbox("Species", species_options)
+# Restrict species to those that actually have usable price + date data.
+seafood_df = seafood_df.copy()
+seafood_df["scrape_date"] = pd.to_datetime(seafood_df["scrape_date"], errors="coerce")
+valid = seafood_df[
+    seafood_df["group_en"].notna()
+    & seafood_df["price_per_kg"].notna()
+    & seafood_df["scrape_date"].notna()
+]
+if valid.empty:
+    st.warning("No seafood price data available yet.")
+    st.stop()
+
+# Build label "English (ไทย)" when a Thai name exists for the group.
+th_lookup = (
+    valid.dropna(subset=["group_th"])
+    .groupby("group_en")["group_th"]
+    .agg(lambda s: s.mode().iat[0] if not s.mode().empty else s.iloc[0])
+    .to_dict()
+) if "group_th" in valid.columns else {}
+
+
+def _label(en: str) -> str:
+    th = th_lookup.get(en)
+    return f"{en} ({th})" if th and th != en else en
+
+
+species_options = sorted(valid["group_en"].unique())
+species = st.selectbox("Species", species_options, format_func=_label)
 
 days = st.slider("Time window (days)", min_value=30, max_value=365, value=90)
 
-# Build seafood daily avg for the selected species
-sub = seafood_df.copy()
-sub["scrape_date"] = pd.to_datetime(sub["scrape_date"], errors="coerce")
-sub = sub[
-    (sub["group_en"] == species)
-    & sub["price_per_kg"].notna()
-    & sub["scrape_date"].notna()
-]
-if sub.empty:
-    st.info(f"No price data available for '{species}'.")
-    st.stop()
+sub = valid[valid["group_en"] == species]
 
 seafood_series = sub.groupby("scrape_date")["price_per_kg"].mean().sort_index()
 
