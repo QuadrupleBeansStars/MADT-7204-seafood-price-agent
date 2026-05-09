@@ -18,10 +18,10 @@ import time
 from pathlib import Path
 
 import pandas as pd
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 
+from agent.llm import get_chat_llm
 from data.loader import load_seafood_data
 from data.oil_correlation import pct_change
 from data.oil_loader import diesel_series, load_oil_news
@@ -158,9 +158,8 @@ def _build_prompt(news: pd.DataFrame, period: str, language: str) -> str:
 
 
 def _summarize_with_llm(prompt: str) -> str:
-    """Call Claude. Patched in tests."""
-    llm = ChatAnthropic(model="claude-sonnet-4-5", temperature=0)
-    return llm.invoke([HumanMessage(content=prompt)]).content
+    """Call the chat LLM. Patched in tests."""
+    return get_chat_llm().invoke([HumanMessage(content=prompt)]).content
 
 
 @tool

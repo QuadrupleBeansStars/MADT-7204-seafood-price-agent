@@ -6,11 +6,12 @@ and never calls data tools.
 """
 import logging
 
-from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
 from langgraph.graph import END
 from pydantic import BaseModel, Field
+
+from agent.llm import get_chat_llm
 
 logger = logging.getLogger(__name__)
 
@@ -86,11 +87,9 @@ shrimp (กุ้ง), fish (ปลา), squid (หมึก), crab (ปู), sh
 # ── LLM factory (extracted for test-patching) ────────────────────────────────
 
 def _build_reason_llm():
-    llm = ChatAnthropic(
-        model="claude-sonnet-4-5",
-        temperature=0,
-    )
-    return llm.bind_tools(_INTERNAL_TOOLS, tool_choice="any")
+    # tool_choice="any" works on both Anthropic and OpenAI via langchain
+    # (mapped to OpenAI's "required" under the hood for Azure/OpenAI).
+    return get_chat_llm().bind_tools(_INTERNAL_TOOLS, tool_choice="any")
 
 
 # ── Node ──────────────────────────────────────────────────────────────────────
