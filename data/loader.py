@@ -149,8 +149,22 @@ def _load_registry() -> pd.DataFrame:
     return df.reset_index(drop=True)
 
 
-def _load_talaadthai() -> pd.DataFrame:
-    """Load Talaad Thai wholesale prices, normalised to the shared schema."""
+def load_talaadthai_benchmark() -> pd.DataFrame:
+    """Talaad Thai wholesale market benchmark, one row per species.
+
+    Talaad Thai is treated as the *market reference price* (ราคากลาง), not a
+    retail supplier. Multiple item variants per species (e.g. small/medium/
+    large size grades) are aggregated to a single price per ``group_en``:
+
+        - ``price_per_kg``  mean of variants (the headline number)
+        - ``price_min``     cheapest variant
+        - ``price_max``     priciest variant
+        - ``n_variants``    how many products were averaged
+        - ``snapshot_date`` most-recent ``snapshot_date`` from the source
+        - ``link``          link of the most-recent variant
+
+    Returns an empty DataFrame when the CSV is missing or unreadable.
+    """
     if not TALAADTHAI_CSV.exists() or TALAADTHAI_CSV.stat().st_size < 50:
         return pd.DataFrame()
     try:
@@ -158,18 +172,33 @@ def _load_talaadthai() -> pd.DataFrame:
     except Exception:
         logger.warning("Failed to load talaadthai CSV", exc_info=True)
         return pd.DataFrame()
+    if df.empty or "group_en" not in df.columns:
+        return pd.DataFrame()
+
+    df = df[df["price_per_kg"].notna() & df["group_en"].notna()].copy()
     if df.empty:
         return df
-    df["category"] = df["group_en"].map(CATEGORY_MAP).fillna("other")
-    df["category_th"] = df["category"].map(CATEGORY_TH)
-    df["option"] = df["option"].fillna("wholesale")
-    df["link"] = df["link"].fillna("")
-    keep_cols = [
-        "scrape_date", "source", "item_name_website", "group_en", "group_th",
-        "option", "weight_kg", "selling_price", "price_per_kg", "link",
-        "category", "category_th",
-    ]
-    return df[keep_cols]
+
+    if "snapshot_date" in df.columns:
+        df["snapshot_date"] = pd.to_datetime(df["snapshot_date"], errors="coerce")
+    else:
+        df["snapshot_date"] = pd.NaT
+
+    grouped = (
+        df.sort_values("snapshot_date")
+        .groupby("group_en")
+        .agg(
+            group_th=("group_th", "first"),
+            price_per_kg=("price_per_kg", "mean"),
+            price_min=("price_per_kg", "min"),
+            price_max=("price_per_kg", "max"),
+            n_variants=("price_per_kg", "size"),
+            snapshot_date=("snapshot_date", "max"),
+            link=("link", "last"),
+        )
+        .reset_index()
+    )
+    return grouped
 
 
 def _prepare_scraped(scraped: pd.DataFrame) -> pd.DataFrame:
@@ -236,10 +265,9 @@ def load_seafood_data() -> pd.DataFrame:
                 except Exception:
                     logger.warning("Could not generate mock shop rows", exc_info=True)
 
-                # Merge in Talaad Thai wholesale prices as an additional shop
-                tt = _load_talaadthai()
-                if not tt.empty:
-                    scraped = pd.concat([scraped, tt], ignore_index=True)
+                # NOTE: Talaad Thai is intentionally NOT merged here. It is
+                # the market benchmark (ราคากลาง), surfaced separately via
+                # ``load_talaadthai_benchmark()``.
 
                 return scraped
         except Exception:
