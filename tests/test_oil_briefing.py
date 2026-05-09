@@ -52,10 +52,21 @@ def test_briefing_contains_source_links(cache_db, fake_news, monkeypatch):
     assert "https://x/1" in out
 
 
-def test_no_news_returns_friendly_message(cache_db, monkeypatch):
+def test_no_news_still_generates_briefing_from_price_data(cache_db, monkeypatch):
+    """Empty news should NOT dead-end. The prompt still includes price
+    context; the LLM should produce a real briefing."""
     monkeypatch.setattr(mod, "load_oil_news", lambda days: pd.DataFrame())
+    captured: dict = {}
+
+    def fake_llm(prompt: str) -> str:
+        captured["prompt"] = prompt
+        return "## Headline\n- diesel up 2%\n- shrimp up 1%"
+
+    monkeypatch.setattr(mod, "_summarize_with_llm", fake_llm)
     out = mod.generate_oil_briefing.invoke({"period": "weekly", "language": "en"})
-    assert "no recent" in out.lower() or "no oil-related" in out.lower()
+    assert out.startswith("## Headline")
+    assert "Recent oil-specific news: none" in captured["prompt"]
+    assert "Diesel price" in captured["prompt"]
 
 
 def test_invalid_period_raises(cache_db):
