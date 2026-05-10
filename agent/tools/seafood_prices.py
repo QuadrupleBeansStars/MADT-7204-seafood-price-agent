@@ -31,6 +31,33 @@ def _match_item(df: pd.DataFrame, item: str) -> pd.DataFrame:
     return df[mask]
 
 
+def _latest_per_shop_item(df: pd.DataFrame) -> pd.DataFrame:
+    """Collapse historical scrape rows to the latest per (source, group_en, option).
+
+    The scraped CSV accumulates one row per shop+item+option per day. Tools
+    that answer 'what's the price *now*' must dedupe to today's snapshot —
+    otherwise the same shop appears N times (once per scrape day) and the
+    agent shows 5 days of the same product as if they were 5 different
+    offers (real bug observed in production).
+
+    Rows without a parseable ``scrape_date`` (e.g. registry fallback) are
+    kept as-is; they're treated as the "latest" by default since they have
+    no timestamp to age out.
+    """
+    if df.empty or "scrape_date" not in df.columns:
+        return df
+    work = df.copy()
+    work["_dt"] = pd.to_datetime(work["scrape_date"], errors="coerce")
+    # Sort so most-recent rows come last; drop_duplicates(keep="last") then
+    # keeps the freshest per shop+item+option. NaT sorts first, so dated
+    # rows correctly win over timestamp-less ones.
+    work = work.sort_values("_dt", na_position="first")
+    work = work.drop_duplicates(
+        subset=["source", "group_en", "option"], keep="last"
+    )
+    return work.drop(columns="_dt")
+
+
 def _format_row(row: pd.Series) -> str:
     """Format a single product row for the agent's text response."""
     name = f"{row['group_th']} ({row['group_en']})"
@@ -59,7 +86,7 @@ def query_seafood_prices(
         shop: Optional shop/source name to filter by (e.g. 'PPNSeafood',
               'ไต้ก๋ง').  Case-insensitive partial match.
     """
-    df = load_seafood_data()
+    df = _latest_per_shop_item(load_seafood_data())
     result = _match_item(df, item)
 
     if result.empty:
@@ -112,7 +139,7 @@ def get_best_deals(
     else:
         cat_lower = None
 
-    df = load_seafood_data()
+    df = _latest_per_shop_item(load_seafood_data())
 
     # Only rows with price_per_kg for fair comparison
     df = df[df["price_per_kg"].notna()].copy()
