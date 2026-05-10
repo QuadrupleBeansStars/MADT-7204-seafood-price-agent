@@ -6,7 +6,7 @@ and never calls data tools.
 """
 import logging
 
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import AIMessage, SystemMessage
 from langchain_core.tools import tool
 from langgraph.graph import END
 from pydantic import BaseModel, Field
@@ -126,10 +126,18 @@ def reason_node(state: dict) -> dict:
     updates["last_thinking"] = call["args"].get("reasoning")
 
     if call["name"] == "request_clarification":
+        question = call["args"]["question"]
+        options = call["args"]["options"]
         updates["pending_clarification"] = {
-            "question": call["args"]["question"],
-            "options": call["args"]["options"],
+            "question": question,
+            "options": options,
         }
+        # Persist the clarifying question as an AI turn so the next
+        # reason_node call sees a proper user→assistant→user sequence
+        # instead of two consecutive HumanMessages (which caused the
+        # model to treat the user's button click as a fresh ambiguous
+        # query and re-ask the same clarification — clarification loop).
+        updates["messages"] = [AIMessage(content=question)]
     elif call["name"] == "create_plan":
         updates["current_plan"] = call["args"]["steps"]
     else:
