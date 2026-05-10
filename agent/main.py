@@ -57,8 +57,15 @@ def agent_node(state: AgentState) -> dict:
     if snapshot:
         system_content = SYSTEM_PROMPT + "\n\n" + snapshot
     if plan:
-        plan_text = "\n\nExecution plan (follow these steps in order):\n" + "\n".join(
-            f"{i+1}. {step}" for i, step in enumerate(plan)
+        plan_text = (
+            "\n\n## Execution plan (FOLLOW EXACTLY)\n"
+            "The reasoning layer has produced this plan. You MUST call every "
+            "tool listed below, in order, with the arguments shown. Do NOT "
+            "substitute one tool for another (e.g. do not replace "
+            "get_price_trend with query_seafood_prices). The Talaad Thai "
+            "benchmark rule still applies and is ADDITIONAL to — not a "
+            "replacement for — these steps.\n\n"
+            + "\n".join(f"{i+1}. {step}" for i, step in enumerate(plan))
         )
         system_content = system_content + plan_text
 
