@@ -99,19 +99,22 @@ def _render_plan_expander(plan: list | None) -> None:
 
 
 def _render_clarification(clarification: dict | None) -> None:
-    """Render the clarifying question and clickable option buttons."""
+    """Render clickable option buttons for the pending clarification.
+
+    The question itself is already rendered as part of the message
+    history (reason_node persists it as an AIMessage), so we only show
+    the buttons here.
+    """
     if not clarification:
         return
-    with st.chat_message("assistant"):
-        st.markdown(f"**{clarification['question']}**")
-        cols = st.columns(len(clarification["options"]))
-        for idx, option in enumerate(clarification["options"]):
-            with cols[idx]:
-                round_id = st.session_state.get("clarification_round", 0)
-                if st.button(option, use_container_width=True, key=f"clarify_{round_id}_{idx}_{option}"):
-                    st.session_state["pending_clarification"] = None
-                    st.session_state["pending_prompt"] = option
-                    st.rerun()
+    cols = st.columns(len(clarification["options"]))
+    for idx, option in enumerate(clarification["options"]):
+        with cols[idx]:
+            round_id = st.session_state.get("clarification_round", 0)
+            if st.button(option, use_container_width=True, key=f"clarify_{round_id}_{idx}_{option}"):
+                st.session_state["pending_clarification"] = None
+                st.session_state["pending_prompt"] = option
+                st.rerun()
 
 
 def _render_history(messages: list) -> None:

@@ -51,6 +51,48 @@ class TestReasonNode:
         }
         assert result["current_plan"] is None
 
+    def test_clarification_persists_question_as_ai_message(self):
+        """Regression: previously, the clarifying question lived only in
+        pending_clarification, never in messages. After the user clicked an
+        option a HumanMessage was appended directly after the original
+        HumanMessage, with no assistant turn between them, and the next
+        reason_node call re-asked the same clarification (loop)."""
+        from agent.reason import reason_node
+        from langchain_core.messages import AIMessage
+
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Ambiguous", "question": "Which type of prawn?",
+             "options": ["Tiger Prawn", "Giant Freshwater Prawn"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert "messages" in result, "clarification must persist as a message"
+        assert len(result["messages"]) == 1
+        assert isinstance(result["messages"][0], AIMessage)
+        assert result["messages"][0].content == "Which type of prawn?"
+
+    def test_plan_path_does_not_emit_extra_message(self):
+        """The non-clarification path should not push a synthetic AIMessage."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "create_plan",
+            {"reasoning": "clear", "steps": ["query"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert "messages" not in result
+
     def test_sets_current_plan_when_llm_calls_create_plan(self):
         from agent.reason import reason_node
         mock_response = _ai_with_tool_call(
