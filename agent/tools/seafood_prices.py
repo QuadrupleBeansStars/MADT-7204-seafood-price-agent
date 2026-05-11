@@ -6,9 +6,13 @@ based on user questions.  They read from the unified data layer
 (``data.loader``) which handles both the registry CSV and scraped data.
 """
 
+import logging
+
 import pandas as pd
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
 
 from data.loader import (
     CATEGORY_MAP,
@@ -235,6 +239,12 @@ def get_best_deals(
     # Talaad Thai benchmark — the *only* reference price we accept.
     bench = load_talaadthai_benchmark()
     if bench.empty:
+        # Log loudly: a missing TT benchmark blocks ALL deals queries, so
+        # operators need to notice (e.g. scraper outage, empty CSV).
+        logger.warning(
+            "get_best_deals: Talaad Thai benchmark is empty — "
+            "all deals queries will be blocked until it is repopulated."
+        )
         return (
             "No Talaad Thai benchmark available, so deals cannot be ranked "
             "honestly (a floating cross-shop average is not a real market "
@@ -283,8 +293,11 @@ def get_best_deals(
                 f"Save: {row['pct_below_benchmark']:.1f}%{link_str}"
             )
 
-    # Surface pack-only items so the agent can still mention them
+    # Surface pack-only items so the agent can still mention them.
+    # Sort by absolute pack price so the cheapest pack appears first —
+    # head(5) on an unsorted frame produced non-deterministic output.
     if not pack_only.empty:
+        pack_only = pack_only.sort_values("selling_price", na_position="last")
         lines.append("\nPack-only offers (weight unknown — not ranked):")
         lines.append("-" * 60)
         for _, row in pack_only.head(5).iterrows():
