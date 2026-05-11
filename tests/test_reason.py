@@ -199,3 +199,84 @@ class TestRouteReason:
         from agent.reason import route_reason
         state = _make_state()
         assert route_reason(state) == "agent"
+
+
+# ── guards against over-asking ───────────────────────────────────────────────
+
+class TestClarificationGuards:
+
+    def test_shop_options_are_suppressed(self):
+        """If the LLM proposes shop names as options, drop the clarification
+        and route to agent (Best-Match resolves on its own)."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking which shop", "question": "Which shop?",
+             "options": ["ไต้ก๋ง ซีฟู้ด", "Sawasdee Seafood", "PPNSeafood"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+        assert result["current_plan"] is None  # falls through to agent
+
+    def test_budget_options_are_suppressed(self):
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking budget", "question": "What budget?",
+             "options": ["Below ฿500/kg", "฿500-฿1000/kg", "Above ฿1000/kg"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_size_pieces_per_kg_options_are_suppressed(self):
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking size", "question": "Which size?",
+             "options": ["Small (10-20 pieces/kg)", "Medium (21-30 pieces/kg)"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_second_clarification_is_suppressed(self):
+        """One clarification round max. If the conversation already has a
+        persisted clarification (AIMessage without tool_calls), force a plan."""
+        from agent.reason import reason_node
+        prior_clarification = AIMessage(content="Which category?")
+        # AIMessage with no tool_calls — this is how reason_node persists Q's.
+        messages = [
+            HumanMessage(content="seafood"),
+            prior_clarification,
+            HumanMessage(content="shrimp"),
+        ]
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "still vague", "question": "Which species?",
+             "options": ["กุ้งขาว", "กุ้งลายเสือ", "กุ้งกุลาดำ"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state(messages=messages))
+
+        assert result["pending_clarification"] is None  # suppressed
