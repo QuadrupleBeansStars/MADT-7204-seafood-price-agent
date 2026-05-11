@@ -15,7 +15,9 @@ import pytest
 from agent.tools import seafood_prices as mod
 from agent.tools.seafood_prices import (
     _latest_per_shop_item,
+    _resolve_best_match,
     get_best_deals,
+    get_purchase_quote,
     query_seafood_prices,
 )
 
@@ -97,11 +99,27 @@ def test_query_seafood_prices_returns_one_row_per_shop_item(history_with_duplica
     assert out.count("Gulf Fresh Co.") == 1
 
 
-def test_get_best_deals_uses_current_prices_only(history_with_duplicates):
+def test_get_best_deals_uses_current_prices_only(history_with_duplicates, monkeypatch):
+    # New get_best_deals requires a Talaad Thai benchmark (no floating average).
+    # Mock one well above the cheapest current price so PakPanang shows as a deal.
+    bench_df = pd.DataFrame([{
+        "group_en": "Tiger Prawn",
+        "group_th": "กุ้งลายเสือ",
+        "price_per_kg": 800.0,
+        "price_min": 800.0,
+        "price_max": 800.0,
+        "n_variants": 1,
+        "snapshot_date": pd.Timestamp("2026-05-09"),
+        "link": "",
+    }])
+    monkeypatch.setattr(mod, "load_talaadthai_benchmark", lambda: bench_df)
+
     out = get_best_deals.invoke({"category": "shrimp"})
-    # PakPanang's current price is 419; the historical 400-418 should be gone
+    # PakPanang's current price is 419; historical 400-418 must be gone.
     assert "419" in out
-    assert "400" not in out  # earliest historical price must not appear
+    # Earliest historical day-0 price (400) must not appear as PakPanang's price.
+    # (It can still appear as e.g. a benchmark digit, so check it's not in a price slot.)
+    assert "400/kg" not in out
 
 
 def test_dedup_keeps_rows_without_scrape_date():
@@ -118,3 +136,99 @@ def test_dedup_keeps_rows_without_scrape_date():
 
 def test_empty_input_handled():
     assert _latest_per_shop_item(pd.DataFrame()).empty
+
+
+# ── Best-Match resolution (A1) ───────────────────────────────────────────────
+
+
+@pytest.fixture
+def two_shrimp_species(monkeypatch):
+    """A generic 'shrimp' query matches both Tiger Prawn and White Shrimp.
+    White Shrimp has more shops (3) and a benchmark → must win Best-Match."""
+    rows = [
+        # Tiger Prawn — 1 shop, no benchmark
+        {"source": "Shop A", "group_en": "Tiger Prawn", "group_th": "กุ้งลายเสือ",
+         "category": "shrimp", "category_th": "กุ้ง", "option": "-",
+         "scrape_date": "2026-05-09", "price_per_kg": 400.0, "selling_price": 400.0,
+         "weight_kg": 1.0, "item_name_website": "tiger", "link": ""},
+        # White Shrimp (Vannamei) — 3 shops, benchmark exists
+        {"source": "Shop A", "group_en": "Vannamei Shrimp", "group_th": "กุ้งขาว",
+         "category": "shrimp", "category_th": "กุ้ง", "option": "L",
+         "scrape_date": "2026-05-09", "price_per_kg": 250.0, "selling_price": 250.0,
+         "weight_kg": 1.0, "item_name_website": "vannamei", "link": ""},
+        {"source": "Shop B", "group_en": "Vannamei Shrimp", "group_th": "กุ้งขาว",
+         "category": "shrimp", "category_th": "กุ้ง", "option": "L",
+         "scrape_date": "2026-05-09", "price_per_kg": 260.0, "selling_price": 260.0,
+         "weight_kg": 1.0, "item_name_website": "vannamei", "link": ""},
+        {"source": "Shop C", "group_en": "Vannamei Shrimp", "group_th": "กุ้งขาว",
+         "category": "shrimp", "category_th": "กุ้ง", "option": "L",
+         "scrape_date": "2026-05-09", "price_per_kg": 240.0, "selling_price": 240.0,
+         "weight_kg": 1.0, "item_name_website": "vannamei", "link": ""},
+    ]
+    df = _make_df(rows)
+    monkeypatch.setattr(mod, "load_seafood_data", lambda: df)
+    bench_df = pd.DataFrame([{
+        "group_en": "Vannamei Shrimp", "group_th": "กุ้งขาว",
+        "price_per_kg": 300.0, "price_min": 300.0, "price_max": 300.0,
+        "n_variants": 1, "snapshot_date": pd.Timestamp("2026-05-09"), "link": "",
+    }])
+    monkeypatch.setattr(mod, "load_talaadthai_benchmark", lambda: bench_df)
+    return df
+
+
+def test_best_match_picks_high_liquidity_with_benchmark(two_shrimp_species):
+    out, note = _resolve_best_match(two_shrimp_species, "กุ้ง")
+    assert set(out["group_en"].unique()) == {"Vannamei Shrimp"}
+    assert note is not None and "Vannamei Shrimp" in note
+
+
+def test_query_seafood_prices_resolves_generic_term(two_shrimp_species):
+    out = query_seafood_prices.invoke({"item": "กุ้ง"})
+    # Should surface the Best-Match note + only Vannamei prices
+    assert "กุ้งขาว" in out
+    # Tiger Prawn's shelf price (฿400) must not appear as a listed offer.
+    assert "฿400/kg" not in out
+    assert "กุ้งลายเสือ" not in out  # Thai name only appears in row listings
+
+
+def test_best_match_passes_through_when_only_one_species():
+    rows = [
+        {"source": "S", "group_en": "Salmon", "group_th": "ปลาแซลมอน",
+         "category": "fish", "category_th": "ปลา", "option": "-",
+         "scrape_date": "2026-05-09", "price_per_kg": 500.0, "selling_price": 500.0,
+         "weight_kg": 1.0, "item_name_website": "salmon", "link": ""},
+    ]
+    df = _make_df(rows)
+    out, note = _resolve_best_match(df, "salmon")
+    assert len(out) == 1
+    assert note is None
+
+
+# ── Pro-forma quote (A4) ─────────────────────────────────────────────────────
+
+
+def test_purchase_quote_picks_lowest_landed_cost(monkeypatch):
+    rows = [
+        # Cheap shelf price but no free-delivery threshold (PakPanang per_kg=20)
+        {"source": "PakPanang Direct", "group_en": "Vannamei Shrimp",
+         "group_th": "กุ้งขาว", "category": "shrimp", "category_th": "กุ้ง",
+         "option": "L", "scrape_date": "2026-05-09", "price_per_kg": 240.0,
+         "selling_price": 240.0, "weight_kg": 1.0,
+         "item_name_website": "v", "link": ""},
+        # Slightly higher shelf price but qualifies for free delivery at 5kg
+        {"source": "Sawasdee Seafood", "group_en": "Vannamei Shrimp",
+         "group_th": "กุ้งขาว", "category": "shrimp", "category_th": "กุ้ง",
+         "option": "L", "scrape_date": "2026-05-09", "price_per_kg": 250.0,
+         "selling_price": 250.0, "weight_kg": 1.0,
+         "item_name_website": "v", "link": ""},
+    ]
+    df = _make_df(rows)
+    monkeypatch.setattr(mod, "load_seafood_data", lambda: df)
+    monkeypatch.setattr(mod, "load_talaadthai_benchmark", lambda: pd.DataFrame())
+
+    # 5kg order: Sawasdee 5×250=1250 ≥ free_threshold 1000 → ฿1250 total
+    #            PakPanang 5×240 + 50 + 5×20 = 1200+50+100 = ฿1350
+    # Sawasdee wins on landed cost despite higher shelf price.
+    out = get_purchase_quote.invoke({"items": [{"species": "กุ้งขาว", "qty_kg": 5.0}]})
+    assert "Sawasdee Seafood" in out
+    assert "GRAND TOTAL" in out

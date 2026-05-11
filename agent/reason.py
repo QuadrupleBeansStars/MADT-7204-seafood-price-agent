@@ -68,8 +68,9 @@ Read the conversation and decide ONE of two things:
 1. **Have enough information** → call `create_plan` (DEFAULT — prefer this)
    - Write an ordered list of concrete steps using these tools:
      * query_seafood_prices(item, shop?) — look up prices; shop is OPTIONAL
-     * get_best_deals(category?) — cheapest items; category is OPTIONAL (omit = all)
+     * get_best_deals(category?) — cheapest items vs Talaad Thai benchmark, includes shipping
      * get_price_trend(item, days=7) — history / cross-shop spread for an item
+     * get_purchase_quote(items=[{species, qty_kg}, ...]) — pro-forma multi-item order total
      * get_talaadthai_benchmark(species) — wholesale Talaad Thai reference price
      * get_oil_context(species?) — diesel↔seafood correlation context
      * generate_oil_briefing(period, language) — oil briefing markdown
