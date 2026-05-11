@@ -256,16 +256,16 @@ class TestClarificationGuards:
 
         assert result["pending_clarification"] is None
 
-    def test_second_clarification_is_suppressed(self):
-        """One clarification round max. If the conversation already has a
-        persisted clarification (AIMessage without tool_calls), force a plan."""
+    def test_second_clarification_in_same_turn_is_suppressed(self):
+        """Within a single turn (no new HumanMessage), a second clarification
+        attempt is suppressed. This guards against any code path that would
+        invoke reason_node twice for the same user input."""
         from agent.reason import reason_node
-        prior_clarification = AIMessage(content="Which category?")
-        # AIMessage with no tool_calls — this is how reason_node persists Q's.
+        # No HumanMessage at the end → the prior AIMessage is in the
+        # CURRENT turn, so this counts as already-clarified.
         messages = [
             HumanMessage(content="seafood"),
-            prior_clarification,
-            HumanMessage(content="shrimp"),
+            AIMessage(content="Which category?"),  # persisted clarification
         ]
         mock_response = _ai_with_tool_call(
             "request_clarification",
@@ -280,3 +280,36 @@ class TestClarificationGuards:
             result = reason_node(_make_state(messages=messages))
 
         assert result["pending_clarification"] is None  # suppressed
+
+    def test_clarification_allowed_in_a_later_turn(self):
+        """Regression: an earlier over-broad implementation walked the
+        ENTIRE message history and returned True for any AIMessage without
+        tool_calls — which includes plain text answers from agent_node.
+        That suppressed all clarifications for the rest of the session.
+
+        Setup: a fully-completed prior turn (user → assistant answer),
+        followed by a NEW ambiguous user question. The new question must
+        be allowed to receive a fresh clarification."""
+        from agent.reason import reason_node
+        messages = [
+            HumanMessage(content="cheapest salmon"),
+            AIMessage(content="Salmon at Shop X is ฿430/pack."),  # past answer
+            HumanMessage(content="seafood"),  # NEW turn, ambiguous
+        ]
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "ambiguous", "question": "Which category?",
+             "options": ["shrimp", "fish", "squid"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state(messages=messages))
+
+        # MUST NOT be suppressed — first clarification of the new turn.
+        assert result["pending_clarification"] == {
+            "question": "Which category?",
+            "options": ["shrimp", "fish", "squid"],
+        }

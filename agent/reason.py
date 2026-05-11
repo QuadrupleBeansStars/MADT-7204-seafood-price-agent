@@ -6,12 +6,13 @@ and never calls data tools.
 """
 import logging
 
-from langchain_core.messages import AIMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.tools import tool
 from langgraph.graph import END
 from pydantic import BaseModel, Field
 
 from agent.llm import get_chat_llm
+from data.transport_rates import TRANSPORT_RATES
 
 logger = logging.getLogger(__name__)
 
@@ -45,21 +46,21 @@ def create_plan(reasoning: str, steps: list[str]) -> str:
 
 _INTERNAL_TOOLS = [request_clarification, create_plan]
 
-# Names the agent must never offer as clarification options. The LLM was
-# observed proposing shop names ("ไต้ก๋ง", "Sawasdee Seafood", …) and budget
-# bands ("Below ฿500/kg", …) as clickable buttons, which created infinite
-# clarification loops in production. The reasoning layer's job is to plan
-# around these — never to push the choice onto the user.
-_BANNED_OPTION_TOKENS = {
-    # Shops
-    "ไต้ก๋ง", "sawasdee", "heng heng", "ppnseafood", "supreme",
-    "siriratseafood", "sirinfarm", "gulf fresh", "pakpanang", "cha-am",
-    # Budget / per-kg price bands
-    "thb/kg", "บาท/kg", "฿/kg",
-    "below ", "above ",
-    # Pieces-per-kg size bands
-    "pieces/kg", "ตัวโล", "ตัว/โล",
-}
+# Tokens we must never see in clarification options. The LLM was observed
+# proposing shop names ("ไต้ก๋ง", …) and budget bands ("Below ฿500/kg", …)
+# as clickable buttons, which created infinite clarification loops in
+# production. Shop tokens are derived from TRANSPORT_RATES so adding a new
+# shop there automatically extends this guard — no second source of truth.
+_BANNED_OPTION_TOKENS: set[str] = (
+    {s.lower() for s in TRANSPORT_RATES.keys()}
+    | {
+        # Budget / per-kg price bands
+        "thb/kg", "บาท/kg", "฿/kg",
+        "below ", "above ",
+        # Pieces-per-kg size bands
+        "pieces/kg", "ตัวโล", "ตัว/โล",
+    }
+)
 
 
 def _options_are_banned(options: list[str]) -> bool:
@@ -72,12 +73,23 @@ def _options_are_banned(options: list[str]) -> bool:
 
 
 def _already_clarified(messages: list) -> bool:
-    """True if the conversation already contains a persisted clarification.
+    """True if THIS TURN already produced a clarification.
 
-    Each clarification is stored as an AIMessage with no tool_calls (see
-    reason_node below). One round is enough — never ask twice.
+    A "turn" is the slice of messages from the most-recent HumanMessage
+    onward — i.e. since the user last spoke. Within a single turn we
+    refuse to clarify twice (that's how loops formed). But earlier turns
+    in the same session must NOT count: the agent_node also produces
+    AIMessages without tool_calls (final answers), and treating those as
+    prior clarifications would block all further clarifications for the
+    rest of the session.
     """
-    for m in messages:
+    # Find the most recent HumanMessage and only inspect messages after it.
+    last_user_idx = -1
+    for i, m in enumerate(messages):
+        if isinstance(m, HumanMessage):
+            last_user_idx = i
+    current_turn = messages[last_user_idx + 1:] if last_user_idx >= 0 else messages
+    for m in current_turn:
         if isinstance(m, AIMessage) and not getattr(m, "tool_calls", None):
             return True
     return False
