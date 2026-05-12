@@ -6,12 +6,13 @@ and never calls data tools.
 """
 import logging
 
-from langchain_core.messages import AIMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.tools import tool
 from langgraph.graph import END
 from pydantic import BaseModel, Field
 
 from agent.llm import get_chat_llm
+from data.transport_rates import TRANSPORT_RATES
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,54 @@ def create_plan(reasoning: str, steps: list[str]) -> str:
 
 
 _INTERNAL_TOOLS = [request_clarification, create_plan]
+
+# Tokens we must never see in clarification options. The LLM was observed
+# proposing shop names ("ไต้ก๋ง", …) and budget bands ("Below ฿500/kg", …)
+# as clickable buttons, which created infinite clarification loops in
+# production. Shop tokens are derived from TRANSPORT_RATES so adding a new
+# shop there automatically extends this guard — no second source of truth.
+_BANNED_OPTION_TOKENS: set[str] = (
+    {s.lower() for s in TRANSPORT_RATES.keys()}
+    | {
+        # Budget / per-kg price bands
+        "thb/kg", "บาท/kg", "฿/kg",
+        "below ", "above ",
+        # Pieces-per-kg size bands
+        "pieces/kg", "ตัวโล", "ตัว/โล",
+    }
+)
+
+
+def _options_are_banned(options: list[str]) -> bool:
+    """True if any option string contains a banned token (shop / size / budget)."""
+    for opt in options:
+        low = (opt or "").lower()
+        if any(tok in low for tok in _BANNED_OPTION_TOKENS):
+            return True
+    return False
+
+
+def _already_clarified(messages: list) -> bool:
+    """True if THIS TURN already produced a clarification.
+
+    A "turn" is the slice of messages from the most-recent HumanMessage
+    onward — i.e. since the user last spoke. Within a single turn we
+    refuse to clarify twice (that's how loops formed). But earlier turns
+    in the same session must NOT count: the agent_node also produces
+    AIMessages without tool_calls (final answers), and treating those as
+    prior clarifications would block all further clarifications for the
+    rest of the session.
+    """
+    # Find the most recent HumanMessage and only inspect messages after it.
+    last_user_idx = -1
+    for i, m in enumerate(messages):
+        if isinstance(m, HumanMessage):
+            last_user_idx = i
+    current_turn = messages[last_user_idx + 1:] if last_user_idx >= 0 else messages
+    for m in current_turn:
+        if isinstance(m, AIMessage) and not getattr(m, "tool_calls", None):
+            return True
+    return False
 
 # ── System prompt ─────────────────────────────────────────────────────────────
 
@@ -81,12 +130,27 @@ Read the conversation and decide ONE of two things:
    - Provide 3–5 short, specific options
    - Do NOT ask multiple questions at once
    - Do NOT ask if the information is already in the conversation
-   - Do NOT ask for OPTIONAL parameters (shop, category, days, size) — pick a sensible default and plan
+
+## Forbidden clarifications (NEVER ask the user about these)
+The agent must resolve all of these on its own. Asking the user about
+them is over-engineering and creates clarification loops:
+
+- **Which shop** — the agent compares ALL shops automatically
+- **Which size / weight range / pieces-per-kg** — Best-Match in
+  query_seafood_prices already picks the highest-liquidity size
+- **Budget range** — irrelevant; the agent always returns the cheapest
+  landed-cost option
+- **Which market to compare against** — Talaad Thai is the only
+  benchmark; never offer a market choice
+- **Which species (when user gave a generic term)** — query_seafood_prices
+  resolves "กุ้ง" → "Vannamei Shrimp L" via Best-Match. Plan with the
+  generic term and let the tool decide.
 
 ## When to plan vs clarify
-ALWAYS plan if the user names a specific item (tiger prawn, salmon, squid…)
-or a specific intent (deals, trend, briefing, benchmark) — even if shop or
-category is missing. Optional parameters are NOT a reason to clarify.
+ALWAYS plan if the user names ANY of: a category (กุ้ง, fish, squid…),
+a specific item (tiger prawn, salmon…), an intent (deals, trend, quote,
+briefing, benchmark), or a quantity (e.g. "30 kg shrimp"). Missing
+optional parameters are NOT a reason to clarify.
 
 ONLY clarify when the request has no item AND no clear intent, e.g.:
    - "I want to buy some seafood" → ask which category
@@ -104,6 +168,15 @@ ONLY clarify when the request has no item AND no clear intent, e.g.:
 - "ฉันต้องสั่งกุ้ง ปลาหมึก และปลากะพง ร้านไหนถูกที่สุดแต่ละอย่าง?" →
   PLAN: query_seafood_prices(item="กุ้ง") + query_seafood_prices(item="ปลาหมึก") + query_seafood_prices(item="ปลากะพง")
   (Don't ask for subtypes — the category-level item names are valid input.)
+- "ราคากุ้งลายเสือเทียบกับตลาด" → PLAN: query_seafood_prices(item="กุ้งลายเสือ")
+  + get_talaadthai_benchmark(species="กุ้งลายเสือ")
+  (NEVER ask "which market?" — Talaad Thai is the only benchmark.)
+- "ถ้าฉันซื้อกุ้ง 30 กก กับปลาหมึก 20 กก วันนี้จ่ายเท่าไหร่" →
+  PLAN: get_purchase_quote(items=[{"species":"กุ้ง","qty_kg":30},
+                                   {"species":"ปลาหมึก","qty_kg":20}])
+  (NEVER ask for subtype, size, or shop — the quote tool resolves all of it.)
+- "อยากลดต้นทุนวัตถุดิบในสัปดาห์นี้ Agent มีแผนการจัดซื้อแนะนำไหม?" →
+  PLAN: get_best_deals() + get_oil_context()  (then synthesize a plan.)
 - "I want to buy some seafood" → CLARIFY: which category?
 
 ## Conversation continuity
@@ -116,14 +189,11 @@ TREAT IT AS THE ANSWER and plan immediately. NEVER re-ask the same question.
 - Never answer the user directly in text — always use a tool
 - Never call data tools yourself
 - Always fill in the `reasoning` field to explain your decision in one sentence
-- After 2 clarification exchanges in the conversation, you MUST call create_plan
+- After 1 clarification exchange in the conversation, you MUST call
+  create_plan — never loop. If the user's reply is still vague, plan with
+  best-effort defaults rather than asking again.
 
-## Available shops
-ไต้ก๋ง ซีฟู้ด, Sawasdee Seafood, HENG HENG Seafood, PPNSeafood,
-supreme seafoods, siriratseafood, sirinfarm,
-Gulf Fresh Co., PakPanang Direct, Cha-Am Seafood
-
-## Available categories
+## Available categories (the ONLY valid clarification options for "what kind?")
 shrimp (กุ้ง), fish (ปลา), squid (หมึก), crab (ปู), shellfish (หอย)
 """
 
@@ -171,6 +241,18 @@ def reason_node(state: dict) -> dict:
     if call["name"] == "request_clarification":
         question = call["args"]["question"]
         options = call["args"]["options"]
+
+        # Programmatic guards: even if the LLM ignores its system prompt,
+        # never let banned options through and never clarify twice.
+        if _options_are_banned(options) or _already_clarified(state.get("messages", [])):
+            logger.info(
+                "reason_node: suppressing clarification "
+                "(already_clarified=%s, banned=%s) — routing to agent",
+                _already_clarified(state.get("messages", [])),
+                _options_are_banned(options),
+            )
+            return updates  # both None → falls through to agent_node
+
         updates["pending_clarification"] = {
             "question": question,
             "options": options,
