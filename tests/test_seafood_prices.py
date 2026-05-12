@@ -14,6 +14,7 @@ import pytest
 
 from agent.tools import seafood_prices as mod
 from agent.tools.seafood_prices import (
+    _format_row,
     _latest_per_shop_item,
     _resolve_best_match,
     get_best_deals,
@@ -232,3 +233,55 @@ def test_purchase_quote_picks_lowest_landed_cost(monkeypatch):
     out = get_purchase_quote.invoke({"items": [{"species": "กุ้งขาว", "qty_kg": 5.0}]})
     assert "Sawasdee Seafood" in out
     assert "GRAND TOTAL" in out
+
+
+# ── Pack/kg unit safety (PR #A) ──────────────────────────────────────────────
+
+
+def test_format_row_tags_pack_items_with_unit_warning():
+    """Regression for the '380/pack vs 199/kg = 91% cheaper' bug. Pack rows
+    must carry an explicit ⚠ PACK marker AND a do-not-compare instruction
+    so the LLM cannot silently mix units in its arithmetic."""
+    pack_row = pd.Series({
+        "source": "PPNSeafood", "group_th": "หมึก", "group_en": "Squid",
+        "option": "10-20 ตัว/กก", "price_per_kg": float("nan"),
+        "selling_price": 380.0, "link": "https://example/squid",
+    })
+    out = _format_row(pack_row)
+    assert "⚠ PACK" in out
+    assert "/pack" in out
+    assert "DO NOT compare" in out
+
+
+def test_format_row_per_kg_items_unchanged():
+    """Per-kg rows must NOT carry the pack warning — that signal exists
+    only to flag unit risk, applying it everywhere makes it noise."""
+    perkg_row = pd.Series({
+        "source": "Sawasdee Seafood", "group_th": "กุ้งขาว",
+        "group_en": "Vannamei Shrimp", "option": "L",
+        "price_per_kg": 250.0, "selling_price": 250.0,
+        "link": "https://example/v",
+    })
+    out = _format_row(perkg_row)
+    assert "⚠ PACK" not in out
+    assert "฿250/kg" in out
+
+
+def test_talaadthai_benchmark_returns_unit_field(monkeypatch):
+    """The benchmark tool must return an explicit 'unit' key so the LLM
+    can perform a runtime unit-check before computing percentages."""
+    from agent.tools.talaadthai_benchmark import get_talaadthai_benchmark
+    import agent.tools.talaadthai_benchmark as bench_mod
+
+    bench_df = pd.DataFrame([{
+        "group_en": "Squid", "group_th": "หมึก",
+        "price_per_kg": 199.17, "price_min": 170.0, "price_max": 310.0,
+        "n_variants": 3, "snapshot_date": pd.Timestamp("2026-05-11"),
+        "link": "",
+    }])
+    monkeypatch.setattr(bench_mod, "load_talaadthai_benchmark", lambda: bench_df)
+
+    out = get_talaadthai_benchmark.invoke({"species": "หมึก"})
+    assert out["found"] is True
+    assert out["unit"] == "THB/kg"
+    assert out["price_per_kg"] == 199.17

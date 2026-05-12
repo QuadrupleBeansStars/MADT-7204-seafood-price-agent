@@ -40,6 +40,14 @@ def get_talaadthai_benchmark(species: str) -> dict:
     benchmark. Talaad Thai is a wholesale market — not a shop the user
     orders from — so its price is the reference, not an option to buy.
 
+    UNIT SAFETY: the returned price_per_kg is in ฿/kg. NEVER compare it to
+    a supplier price quoted in ฿/pack — they are different units. If the
+    only supplier price is per-pack (look for "⚠ PACK" in
+    query_seafood_prices output), DO NOT compute a percentage; instead say
+    "ราคาต่อแพ็ค ไม่สามารถเทียบกับราคากลาง ฿/kg ได้ (ไม่ทราบน้ำหนัก)" /
+    "Pack-priced item cannot be compared to per-kg benchmark without
+    knowing pack weight."
+
     Args:
         species: English or Thai species name (partial match accepted, e.g.
                  "white shrimp", "กุ้งขาว", "salmon").
@@ -47,6 +55,7 @@ def get_talaadthai_benchmark(species: str) -> dict:
     Returns:
         dict with:
             found: bool
+            unit: always "THB/kg" — comparison only valid against per-kg prices
             group_en, group_th: matched species names
             price_per_kg: mean THB/kg across size variants (the headline)
             price_min, price_max: range across size variants
@@ -61,6 +70,7 @@ def get_talaadthai_benchmark(species: str) -> dict:
         return {"found": False, "species": species}
     return {
         "found": True,
+        "unit": "THB/kg",
         "group_en": row["group_en"],
         "group_th": row["group_th"],
         "price_per_kg": float(row["price_per_kg"]),
