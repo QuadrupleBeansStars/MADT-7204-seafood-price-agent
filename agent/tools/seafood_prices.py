@@ -19,6 +19,7 @@ from data.loader import (
     CATEGORY_TH,
     VALID_CATEGORIES,
     has_historical_data,
+    latest_per_shop_item,
     load_seafood_data,
     load_talaadthai_benchmark,
 )
@@ -38,31 +39,10 @@ def _match_item(df: pd.DataFrame, item: str) -> pd.DataFrame:
     return df[mask]
 
 
-def _latest_per_shop_item(df: pd.DataFrame) -> pd.DataFrame:
-    """Collapse historical scrape rows to the latest per (source, group_en, option).
-
-    The scraped CSV accumulates one row per shop+item+option per day. Tools
-    that answer 'what's the price *now*' must dedupe to today's snapshot —
-    otherwise the same shop appears N times (once per scrape day) and the
-    agent shows 5 days of the same product as if they were 5 different
-    offers (real bug observed in production).
-
-    Rows without a parseable ``scrape_date`` (e.g. registry fallback) are
-    kept as-is; they're treated as the "latest" by default since they have
-    no timestamp to age out.
-    """
-    if df.empty or "scrape_date" not in df.columns:
-        return df
-    work = df.copy()
-    work["_dt"] = pd.to_datetime(work["scrape_date"], errors="coerce")
-    # Sort so most-recent rows come last; drop_duplicates(keep="last") then
-    # keeps the freshest per shop+item+option. NaT sorts first, so dated
-    # rows correctly win over timestamp-less ones.
-    work = work.sort_values("_dt", na_position="first")
-    work = work.drop_duplicates(
-        subset=["source", "group_en", "option"], keep="last"
-    )
-    return work.drop(columns="_dt")
+# Dedupe helper moved to data.loader.latest_per_shop_item so dashboard +
+# shop_profile share one source of truth with agent tools. Keep this
+# private alias so existing imports / tests continue to work.
+_latest_per_shop_item = latest_per_shop_item
 
 
 def _resolve_best_match(df: pd.DataFrame, item: str) -> tuple[pd.DataFrame, str | None]:
