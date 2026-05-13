@@ -392,3 +392,65 @@ class TestClarificationGuards:
             result = reason_node(_make_state())
 
         assert result["pending_clarification"] is None
+
+    def test_scope_confusion_seafood_or_pork_is_suppressed(self):
+        """Exact PDF Issue F shape: user asked 'ราคาเนื้อหมูวันนี้?' and
+        agent looped 'Are you looking for seafood prices or pork prices?'
+        three times with no answer. The clarification mixes an in-scope
+        category (seafood) with an out-of-scope one (pork) — the user's
+        answer cannot give the agent anything useful."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking scope", "question":
+             "Are you looking for seafood prices or pork prices?",
+             "options": ["Seafood", "Pork", "Both"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_scope_confusion_thai_variant_is_suppressed(self):
+        """Same loop in Thai: 'ซีฟู้ดหรือเนื้อหมูคะ?'."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking scope", "question":
+             "ต้องการดูราคาซีฟู้ดหรือเนื้อหมูคะ?",
+             "options": ["ซีฟู้ด", "เนื้อหมู"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_legitimate_in_scope_clarification_is_NOT_suppressed(self):
+        """Sanity check: a clarification mentioning only in-scope categories
+        must NOT be caught by the scope-confusion guard."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Ambiguous category", "question":
+             "Which category are you interested in?",
+             "options": ["shrimp", "squid"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] == {
+            "question": "Which category are you interested in?",
+            "options": ["shrimp", "squid"],
+        }

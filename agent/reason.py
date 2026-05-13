@@ -81,6 +81,40 @@ _BANNED_QUESTION_PHRASES: tuple[str, ...] = (
     "which market", "ตลาดไหน",
 )
 
+# Out-of-scope category tokens. Asking the user "Are you looking for
+# seafood OR pork prices?" mixes an in-scope category with an out-of-scope
+# one — the answer is always "the out-of-scope thing", and the agent
+# should reply with a 1-turn scope statement instead. PDF Issue F:
+# user asked "ราคาเนื้อหมู?", agent looped this question 3 times then
+# gave up. We catch the shape regardless of the option list because the
+# loop happens whether options are ["Pork", "Seafood"] or ["Yes", "No"].
+_OUT_OF_SCOPE_TOKENS: tuple[str, ...] = (
+    "pork", "เนื้อหมู",
+    "chicken", "เนื้อไก่",
+    "beef", "เนื้อวัว",
+    "vegetable", "ผัก",
+    "facebook",
+)
+
+
+def _is_scope_confusion_question(question: str) -> bool:
+    """Detect 'in-scope OR out-of-scope?' clarification loops.
+
+    Fires when the question text mentions BOTH something we cover
+    (seafood/ซีฟู้ด, or one of our 5 categories) AND an out-of-scope
+    token. Such questions ARE the loop pattern from PDF Issue F —
+    the user's answer cannot give us anything useful.
+    """
+    low = (question or "").lower()
+    has_in_scope = any(
+        tok in low for tok in (
+            "seafood", "ซีฟู้ด", "shrimp", "กุ้ง", "fish ", "ปลา",
+            "squid", "หมึก", "crab", "ปู ", "shellfish", "หอย",
+        )
+    )
+    has_out_of_scope = any(tok in low for tok in _OUT_OF_SCOPE_TOKENS)
+    return has_in_scope and has_out_of_scope
+
 
 def _options_are_banned(options: list[str]) -> bool:
     """True if any option string contains a banned token (shop / size / budget)."""
@@ -304,14 +338,16 @@ def reason_node(state: dict) -> dict:
         if (
             _options_are_banned(options)
             or _question_is_banned(question)
+            or _is_scope_confusion_question(question)
             or _already_clarified(state.get("messages", []))
         ):
             logger.info(
                 "reason_node: suppressing clarification "
-                "(already=%s, opt_banned=%s, q_banned=%s) — routing to agent",
+                "(already=%s, opt_banned=%s, q_banned=%s, scope=%s) — routing to agent",
                 _already_clarified(state.get("messages", [])),
                 _options_are_banned(options),
                 _question_is_banned(question),
+                _is_scope_confusion_question(question),
             )
             return updates  # both None → falls through to agent_node
 
