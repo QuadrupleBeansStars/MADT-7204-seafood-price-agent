@@ -6,6 +6,7 @@ names, and missing-price computation.
 """
 
 import logging
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -100,6 +101,102 @@ def _clean_numeric(series: pd.Series) -> pd.Series:
     )
 
 
+# --- Weight parser (option text → kg) -------------------------------------
+#
+# Many shops encode product weight in the option text rather than a separate
+# column. Without this parser, those rows look like "pack-priced" items with
+# no per-kg comparison possible, even though the data IS there. Examples:
+#
+#   "ปูม้า 500 กรัม"  ฿1500  → weight=0.5  → ฿3000/kg
+#   "1.1 กิโลกรัม"    ฿300   → weight=1.1  → ฿273/kg
+#   "L: 7-10 ตัวโล"   ฿400   → weight=1.0  → ฿400/kg  (sold per kilo by count)
+#   "8-12 ตัว (กก)"   ฿500   → weight=1.0  → ฿500/kg  (parenthetical kg unit)
+#
+# Patterns we INTENTIONALLY skip — these are pure piece counts with no
+# weight signal, so any conversion would be guesswork:
+#   "3 ชิ้น/แพ็ค"            → leave as pack
+#   "26-35 ตัว" (no unit)    → leave as pack
+
+# Explicit grams: "500 กรัม", "280g", "500กรัม"
+_RE_GRAMS = re.compile(r"(\d+(?:[.,]\d+)?)\s*(?:กรัม|g)\b", re.IGNORECASE)
+
+# Explicit kilograms: "1.1 กิโลกรัม", "1.3กิโล", "1 กก", "1 kg", "1.5kg"
+_RE_KILOS = re.compile(
+    r"(\d+(?:[.,]\d+)?)\s*(?:กิโลกรัม|กิโล|กก|kg)\b", re.IGNORECASE
+)
+
+# Implicit per-kg signals (no number to extract, just a marker):
+#   "ตัวโล" — Thai for "pieces per kilo", canonical per-kg pricing
+#   "(กก)" / "(kg)" — parenthetical unit suffix
+_RE_PER_KG_MARKER = re.compile(r"ตัวโล|\(กก\)|\(kg\)", re.IGNORECASE)
+
+
+def _parse_weight_kg_from_option(option: str) -> float | None:
+    """Return weight in kg parsed from option text, or None if no signal.
+
+    Order of precedence: explicit grams > explicit kg > per-kg marker.
+    Grams comes first because options like "8-12 ตัว (280กรัม)" contain
+    BOTH "(280กรัม)" and a piece count — the gram is the authoritative
+    weight, not the implicit-per-kg fallback.
+    """
+    if not isinstance(option, str) or not option.strip() or option.strip() == "-":
+        return None
+
+    m = _RE_GRAMS.search(option)
+    if m:
+        try:
+            return float(m.group(1).replace(",", ".")) / 1000.0
+        except ValueError:
+            pass
+
+    m = _RE_KILOS.search(option)
+    if m:
+        try:
+            return float(m.group(1).replace(",", "."))
+        except ValueError:
+            pass
+
+    if _RE_PER_KG_MARKER.search(option):
+        return 1.0
+
+    return None
+
+
+def _fill_weight_from_option(df: pd.DataFrame) -> pd.DataFrame:
+    """Populate weight_kg from option text where the column is missing.
+
+    Only fills NaN cells; never overwrites a value the source CSV already
+    provided. Returns the same DataFrame for chaining.
+    """
+    if "option" not in df.columns or "weight_kg" not in df.columns:
+        return df
+    needs_fill = df["weight_kg"].isna()
+    if not needs_fill.any():
+        return df
+    # Coerce explicitly to float so pandas doesn't warn about object→float
+    # dtype assignment when most parsed values are None.
+    parsed = df.loc[needs_fill, "option"].map(_parse_weight_kg_from_option)
+    df.loc[needs_fill, "weight_kg"] = pd.to_numeric(parsed, errors="coerce")
+    return df
+
+
+def _compute_per_kg_from_weight(df: pd.DataFrame) -> pd.DataFrame:
+    """Compute price_per_kg = selling_price / weight_kg where missing."""
+    # Coerce all three columns to numeric — callers may hand us hand-built
+    # fixtures or partially-cleaned data where columns are object dtype.
+    df["price_per_kg"] = pd.to_numeric(df["price_per_kg"], errors="coerce")
+    df["selling_price"] = pd.to_numeric(df["selling_price"], errors="coerce")
+    df["weight_kg"] = pd.to_numeric(df["weight_kg"], errors="coerce")
+    missing_ppkg = df["price_per_kg"].isna()
+    can_compute = missing_ppkg & df["selling_price"].notna() & (df["weight_kg"] > 0)
+    df.loc[can_compute, "price_per_kg"] = (
+        (df.loc[can_compute, "selling_price"] / df.loc[can_compute, "weight_kg"])
+        .round(0)
+        .astype(float)
+    )
+    return df
+
+
 def _load_registry() -> pd.DataFrame:
     """Load the one-time Google-Sheet export and normalise columns."""
     df = pd.read_csv(REGISTRY_CSV)
@@ -121,15 +218,15 @@ def _load_registry() -> pd.DataFrame:
     df["selling_price"] = _clean_numeric(df["selling_price"])
     df["price_per_kg"] = _clean_numeric(df["price_per_kg"])
 
-    # Compute missing price_per_kg where possible
-    missing_ppkg = df["price_per_kg"].isna()
-    can_compute = missing_ppkg & df["selling_price"].notna() & (df["weight_kg"] > 0)
-    df.loc[can_compute, "price_per_kg"] = (
-        df.loc[can_compute, "selling_price"] / df.loc[can_compute, "weight_kg"]
-    ).round(0)
+    # Backfill weight_kg from option text where the source CSV omitted it,
+    # then compute price_per_kg from weight + selling_price.
+    df["option"] = df["option"].fillna("-")
+    df = _fill_weight_from_option(df)
+    df = _compute_per_kg_from_weight(df)
 
-    # For items with selling_price but no weight (e.g. per-pack pricing),
-    # keep selling_price as a reference — price_per_kg stays NaN.
+    # For items with selling_price but no weight signal (true pack items
+    # like "3 ชิ้น"), keep selling_price as a reference — price_per_kg
+    # stays NaN and downstream tools display them as ⚠ PACK.
 
     # Map categories
     df["category"] = df["group_en"].map(CATEGORY_MAP).fillna("other")
@@ -208,6 +305,11 @@ def _prepare_scraped(scraped: pd.DataFrame) -> pd.DataFrame:
     scraped["price_per_kg"] = _clean_numeric(scraped["price_per_kg"])
     scraped["option"] = scraped["option"].fillna("-")
     scraped["link"] = scraped["link"].fillna("")
+    # Backfill weight_kg from option text and compute per-kg pricing.
+    # Scrapers rarely populate weight_kg, but the option text often
+    # encodes it ("500 กรัม", "1.1 กิโลกรัม", "L: 7-10 ตัวโล").
+    scraped = _fill_weight_from_option(scraped)
+    scraped = _compute_per_kg_from_weight(scraped)
     if "category" not in scraped.columns:
         scraped["category"] = scraped["group_en"].map(CATEGORY_MAP).fillna("other")
         scraped["category_th"] = scraped["category"].map(CATEGORY_TH)
