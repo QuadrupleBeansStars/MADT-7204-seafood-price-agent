@@ -9,12 +9,15 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from data.loader import load_seafood_data
+from data.loader import latest_per_shop_item, load_seafood_data
 
 
 @st.cache_data(ttl="5m")
 def _load_data():
-    return load_seafood_data()
+    # Dedupe to today's snapshot per shop+item+option so KPI averages
+    # ('Avg vs market') and per-group min/max stats reflect current
+    # prices rather than collapsing N days of history.
+    return latest_per_shop_item(load_seafood_data())
 
 
 # --- Data Loading ---
@@ -56,14 +59,26 @@ else:
             diffs = shop_avg[common_groups] - market_avg[common_groups]
             avg_diff = diffs.mean()
 
+    # Explain why Avg vs market is N/A: shop sells per-pack only (no
+    # weight) so we cannot honestly normalise to ฿/kg for comparison.
+    if avg_diff is not None:
+        avg_value = f"{'+' if avg_diff > 0 else ''}{avg_diff:,.0f} ฿/kg"
+        avg_help = "Mean ฿/kg difference vs cross-shop average for items this shop carries."
+    elif shop_priced.empty:
+        avg_value = "N/A"
+        avg_help = (
+            "This shop sells items per-pack without published weight, so "
+            "prices cannot be normalised to ฿/kg for an apples-to-apples "
+            "market comparison."
+        )
+    else:
+        avg_value = "N/A"
+        avg_help = "No overlap between this shop's items and the rest of the market."
+
     with st.container(horizontal=True):
         st.metric("Product groups", f"{total_products}", border=True)
         st.metric("Total items", f"{total_items}", help="Including all options/sizes", border=True)
-        st.metric(
-            "Avg vs market",
-            f"{'+'if avg_diff and avg_diff > 0 else ''}{avg_diff:,.0f} ฿/kg" if avg_diff is not None else "N/A",
-            border=True,
-        )
+        st.metric("Avg vs market", avg_value, help=avg_help, border=True)
         st.metric("Categories", f"{cats}/5", border=True)
 
     # --- ANALYSIS TABS ---

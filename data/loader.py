@@ -276,6 +276,36 @@ def load_seafood_data() -> pd.DataFrame:
     return _load_registry()
 
 
+def latest_per_shop_item(df: pd.DataFrame) -> pd.DataFrame:
+    """Collapse historical scrape rows to the latest per (source, group_en, option).
+
+    The scraped CSV accumulates one row per shop+item+option per day. Code
+    that answers "what's the price *now*" — agent tools, dashboard charts,
+    shop profile stats — must dedupe to today's snapshot. Otherwise the
+    same shop+item appears N times (once per scrape day) and aggregations
+    silently sum/stack across history. The dashboard bar chart was
+    rendering bars at ฿15k/kg because Plotly stacked 15+ days of ฿400/kg
+    rows for the same shop+item — the original production bug we now fix
+    in one shared place instead of three.
+
+    Rows without a parseable ``scrape_date`` (e.g. registry fallback) are
+    kept as-is; they're treated as the "latest" by default since they
+    have no timestamp to age out.
+    """
+    if df.empty or "scrape_date" not in df.columns:
+        return df
+    work = df.copy()
+    work["_dt"] = pd.to_datetime(work["scrape_date"], errors="coerce")
+    # Sort so most-recent rows come last; drop_duplicates(keep="last") then
+    # keeps the freshest per shop+item+option. NaT sorts first, so dated
+    # rows correctly win over timestamp-less ones.
+    work = work.sort_values("_dt", na_position="first")
+    work = work.drop_duplicates(
+        subset=["source", "group_en", "option"], keep="last"
+    )
+    return work.drop(columns="_dt")
+
+
 def has_historical_data() -> bool:
     """Return True if the scraped CSV has data from more than one date."""
     if not SCRAPED_CSV.exists():

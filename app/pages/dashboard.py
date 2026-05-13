@@ -9,13 +9,22 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from data.loader import VALID_CATEGORIES, CATEGORY_TH, load_seafood_data
+from data.loader import (
+    VALID_CATEGORIES,
+    CATEGORY_TH,
+    latest_per_shop_item,
+    load_seafood_data,
+)
 from data.transport_rates import TRANSPORT_RATES, estimate_transport
 
 
 @st.cache_data(ttl="5m")
 def _load_data():
-    return load_seafood_data()
+    # Dedupe to today's snapshot per shop+item+option. Without this, the
+    # comparison bar chart stacked N days × ~฿400/kg into single bars
+    # showing ~฿15k/kg (Banana Prawn etc.) — the dashboard inherited the
+    # same scraped-CSV issue the agent tools already handle.
+    return latest_per_shop_item(load_seafood_data())
 
 
 # --- Data Loading ---
