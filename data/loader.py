@@ -166,35 +166,41 @@ def _fill_weight_from_option(df: pd.DataFrame) -> pd.DataFrame:
     """Populate weight_kg from option text where the column is missing.
 
     Only fills NaN cells; never overwrites a value the source CSV already
-    provided. Returns the same DataFrame for chaining.
+    provided. Returns a NEW DataFrame — does not mutate the input — to
+    follow the pandas convention that helpers return copies.
     """
     if "option" not in df.columns or "weight_kg" not in df.columns:
         return df
-    needs_fill = df["weight_kg"].isna()
+    out = df.copy()
+    needs_fill = out["weight_kg"].isna()
     if not needs_fill.any():
-        return df
+        return out
     # Coerce explicitly to float so pandas doesn't warn about object→float
     # dtype assignment when most parsed values are None.
-    parsed = df.loc[needs_fill, "option"].map(_parse_weight_kg_from_option)
-    df.loc[needs_fill, "weight_kg"] = pd.to_numeric(parsed, errors="coerce")
-    return df
+    parsed = out.loc[needs_fill, "option"].map(_parse_weight_kg_from_option)
+    out.loc[needs_fill, "weight_kg"] = pd.to_numeric(parsed, errors="coerce")
+    return out
 
 
 def _compute_per_kg_from_weight(df: pd.DataFrame) -> pd.DataFrame:
-    """Compute price_per_kg = selling_price / weight_kg where missing."""
+    """Compute price_per_kg = selling_price / weight_kg where missing.
+
+    Returns a NEW DataFrame; does not mutate the input.
+    """
     # Coerce all three columns to numeric — callers may hand us hand-built
     # fixtures or partially-cleaned data where columns are object dtype.
-    df["price_per_kg"] = pd.to_numeric(df["price_per_kg"], errors="coerce")
-    df["selling_price"] = pd.to_numeric(df["selling_price"], errors="coerce")
-    df["weight_kg"] = pd.to_numeric(df["weight_kg"], errors="coerce")
-    missing_ppkg = df["price_per_kg"].isna()
-    can_compute = missing_ppkg & df["selling_price"].notna() & (df["weight_kg"] > 0)
-    df.loc[can_compute, "price_per_kg"] = (
-        (df.loc[can_compute, "selling_price"] / df.loc[can_compute, "weight_kg"])
+    out = df.copy()
+    out["price_per_kg"] = pd.to_numeric(out["price_per_kg"], errors="coerce")
+    out["selling_price"] = pd.to_numeric(out["selling_price"], errors="coerce")
+    out["weight_kg"] = pd.to_numeric(out["weight_kg"], errors="coerce")
+    missing_ppkg = out["price_per_kg"].isna()
+    can_compute = missing_ppkg & out["selling_price"].notna() & (out["weight_kg"] > 0)
+    out.loc[can_compute, "price_per_kg"] = (
+        (out.loc[can_compute, "selling_price"] / out.loc[can_compute, "weight_kg"])
         .round(0)
         .astype(float)
     )
-    return df
+    return out
 
 
 def _load_registry() -> pd.DataFrame:

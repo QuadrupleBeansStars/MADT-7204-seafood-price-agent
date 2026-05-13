@@ -77,3 +77,26 @@ def test_compute_per_kg_normalises_pack_to_per_kg():
     # Pure-piece pack stays as pack — no spurious per-kg estimate.
     assert pd.isna(df.loc[1, "weight_kg"])
     assert pd.isna(df.loc[1, "price_per_kg"])
+
+
+def test_helpers_do_not_mutate_input():
+    """Regression: both helpers must return a NEW DataFrame and leave the
+    caller's reference untouched. Mutating shared dfs broke the contract
+    in early drafts (assignments to df['weight_kg']/df['price_per_kg']
+    leaked back into the caller's view of the data)."""
+    original = pd.DataFrame({
+        "option": ["500 กรัม", "3 ชิ้น/แพ็ค"],
+        "weight_kg": [None, None],
+        "selling_price": [1500.0, 250.0],
+        "price_per_kg": [None, None],
+    })
+    snapshot = original.copy()
+
+    out_a = _fill_weight_from_option(original)
+    out_b = _compute_per_kg_from_weight(out_a)
+
+    # Returned DataFrames carry the new values…
+    assert out_a.loc[0, "weight_kg"] == 0.5
+    assert out_b.loc[0, "price_per_kg"] == 3000.0
+    # …but the original input is untouched.
+    pd.testing.assert_frame_equal(original, snapshot)
