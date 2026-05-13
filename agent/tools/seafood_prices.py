@@ -98,13 +98,23 @@ def _resolve_best_match(df: pd.DataFrame, item: str) -> tuple[pd.DataFrame, str 
 
 
 def _format_row(row: pd.Series) -> str:
-    """Format a single product row for the agent's text response."""
+    """Format a single product row for the agent's text response.
+
+    Pack-priced rows (no ฿/kg available) are tagged ⚠ PACK so the LLM
+    cannot accidentally compare them to a Talaad Thai per-kg benchmark.
+    Production bug we fix here: agent saw "PPNSeafood ฿380/pack" alongside
+    "TT benchmark ฿199.17/kg" and computed "(199.17 − 380) / 199.17 = 91%
+    below market" — units silently mixed.
+    """
     name = f"{row['group_th']} ({row['group_en']})"
     option_str = f" | {row['option']}" if row["option"] != "-" else ""
     if pd.notna(row["price_per_kg"]):
         price_str = f"฿{row['price_per_kg']:,.0f}/kg"
     else:
-        price_str = f"฿{row['selling_price']:,.0f} (pack)"
+        price_str = (
+            f"⚠ PACK ฿{row['selling_price']:,.0f}/pack "
+            f"(weight unknown — DO NOT compare to ฿/kg benchmark)"
+        )
     link_str = f"\n  🔗 {row['link']}" if row["link"] else ""
     return f"  {row['source']:25s} | {name}{option_str} | {price_str}{link_str}"
 
