@@ -313,3 +313,144 @@ class TestClarificationGuards:
             "question": "Which category?",
             "options": ["shrimp", "fish", "squid"],
         }
+
+    def test_shipping_yes_no_clarification_is_suppressed(self):
+        """Total Landed Cost is the default — never ask 'include shipping?'.
+        Production loop: agent asked 'Would you like to include shipping
+        costs?' then walked through every shop's rate one at a time."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking shipping", "question":
+             "Would you like to include shipping costs in the total price calculation?",
+             "options": ["Yes", "No"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        # Suppressed by question-text guard ('shipping cost' phrase).
+        assert result["pending_clarification"] is None
+
+    def test_which_other_shop_question_is_suppressed(self):
+        """Loop pattern: 'Which other shops would you like to compare?'
+        — caught by question-text scan even when options are shop names
+        (which would also fail the option guard) OR are short answers."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking shop", "question":
+             "Which other shops would you like to compare for salmon prices?",
+             "options": ["Done", "Skip"]},  # innocuous options that bypass option guard
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_thai_ran_nai_question_is_suppressed(self):
+        """Same as above but in Thai ('ร้านไหน' / 'ร้านอื่น')."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking shop", "question":
+             "ร้านไหนที่จะดึงราคาแซลมอนให้เปรียบเทียบครับ?",
+             "options": ["ลองดู", "ข้าม"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_per_shop_shipping_rate_question_is_suppressed(self):
+        """'What is the shipping rate for PakPanang Direct?' — caught by
+        both option guard (shop name in question, but options are
+        innocuous) AND question-text 'shipping rate' phrase."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking ship rate", "question":
+             "What is the shipping rate for PakPanang Direct?",
+             "options": ["Free shipping", "Standard rate"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_scope_confusion_seafood_or_pork_is_suppressed(self):
+        """Exact PDF Issue F shape: user asked 'ราคาเนื้อหมูวันนี้?' and
+        agent looped 'Are you looking for seafood prices or pork prices?'
+        three times with no answer. The clarification mixes an in-scope
+        category (seafood) with an out-of-scope one (pork) — the user's
+        answer cannot give the agent anything useful."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking scope", "question":
+             "Are you looking for seafood prices or pork prices?",
+             "options": ["Seafood", "Pork", "Both"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_scope_confusion_thai_variant_is_suppressed(self):
+        """Same loop in Thai: 'ซีฟู้ดหรือเนื้อหมูคะ?'."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Asking scope", "question":
+             "ต้องการดูราคาซีฟู้ดหรือเนื้อหมูคะ?",
+             "options": ["ซีฟู้ด", "เนื้อหมู"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] is None
+
+    def test_legitimate_in_scope_clarification_is_NOT_suppressed(self):
+        """Sanity check: a clarification mentioning only in-scope categories
+        must NOT be caught by the scope-confusion guard."""
+        from agent.reason import reason_node
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "Ambiguous category", "question":
+             "Which category are you interested in?",
+             "options": ["shrimp", "squid"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state())
+
+        assert result["pending_clarification"] == {
+            "question": "Which category are you interested in?",
+            "options": ["shrimp", "squid"],
+        }

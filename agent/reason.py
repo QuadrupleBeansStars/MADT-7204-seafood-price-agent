@@ -59,8 +59,61 @@ _BANNED_OPTION_TOKENS: set[str] = (
         "below ", "above ",
         # Pieces-per-kg size bands
         "pieces/kg", "ตัวโล", "ตัว/โล",
+        # Shipping yes/no — Total Landed Cost is always default
+        "free shipping", "ฟรีค่าขนส่ง", "include shipping",
+        "รวมค่าขนส่ง", "รวมขนส่ง",
     }
 )
+
+# Banned phrases in the clarification QUESTION text itself (not the options).
+# These are the shapes of question we observed looping in production:
+# "Which shop would you like to compare?", "Which other shops…?",
+# "Would you like to include shipping costs?", "What is the shipping rate
+# for X?", "ร้านไหนที่จะเทียบ", "ร้านอื่นล่ะ".
+_BANNED_QUESTION_PHRASES: tuple[str, ...] = (
+    # Shop selection — agent must compare ALL shops
+    "which shop", "which shops", "which other shop", "from which shop",
+    "ร้านไหน", "ร้านอื่น", "เลือกร้าน",
+    # Shipping — Total Landed Cost is always included by default
+    "shipping cost", "shipping rate", "include shipping",
+    "ค่าขนส่ง", "รวมค่าขนส่ง", "รวมขนส่ง",
+    # Market choice — Talaad Thai is the only benchmark
+    "which market", "ตลาดไหน",
+)
+
+# Out-of-scope category tokens. Asking the user "Are you looking for
+# seafood OR pork prices?" mixes an in-scope category with an out-of-scope
+# one — the answer is always "the out-of-scope thing", and the agent
+# should reply with a 1-turn scope statement instead. PDF Issue F:
+# user asked "ราคาเนื้อหมู?", agent looped this question 3 times then
+# gave up. We catch the shape regardless of the option list because the
+# loop happens whether options are ["Pork", "Seafood"] or ["Yes", "No"].
+_OUT_OF_SCOPE_TOKENS: tuple[str, ...] = (
+    "pork", "เนื้อหมู",
+    "chicken", "เนื้อไก่",
+    "beef", "เนื้อวัว",
+    "vegetable", "ผัก",
+    "facebook",
+)
+
+
+def _is_scope_confusion_question(question: str) -> bool:
+    """Detect 'in-scope OR out-of-scope?' clarification loops.
+
+    Fires when the question text mentions BOTH something we cover
+    (seafood/ซีฟู้ด, or one of our 5 categories) AND an out-of-scope
+    token. Such questions ARE the loop pattern from PDF Issue F —
+    the user's answer cannot give us anything useful.
+    """
+    low = (question or "").lower()
+    has_in_scope = any(
+        tok in low for tok in (
+            "seafood", "ซีฟู้ด", "shrimp", "กุ้ง", "fish ", "ปลา",
+            "squid", "หมึก", "crab", "ปู ", "shellfish", "หอย",
+        )
+    )
+    has_out_of_scope = any(tok in low for tok in _OUT_OF_SCOPE_TOKENS)
+    return has_in_scope and has_out_of_scope
 
 
 def _options_are_banned(options: list[str]) -> bool:
@@ -70,6 +123,17 @@ def _options_are_banned(options: list[str]) -> bool:
         if any(tok in low for tok in _BANNED_OPTION_TOKENS):
             return True
     return False
+
+
+def _question_is_banned(question: str) -> bool:
+    """True if the clarification's QUESTION text matches a banned shape.
+
+    This catches loops where the LLM phrased a banned ask (Which shop?
+    Include shipping?) but supplied innocuous-looking options like
+    "Yes/No" that wouldn't trigger the option-token guard.
+    """
+    low = (question or "").lower()
+    return any(phrase in low for phrase in _BANNED_QUESTION_PHRASES)
 
 
 def _already_clarified(messages: list) -> bool:
@@ -135,7 +199,9 @@ Read the conversation and decide ONE of two things:
 The agent must resolve all of these on its own. Asking the user about
 them is over-engineering and creates clarification loops:
 
-- **Which shop** — the agent compares ALL shops automatically
+- **Which shop** — the agent compares ALL shops automatically. Never
+  ask "which shop?" / "ร้านไหน?" / "Which other shops would you like to
+  compare?" / "ร้านอื่นล่ะ?". Plan get_best_deals or query_seafood_prices.
 - **Which size / weight range / pieces-per-kg** — Best-Match in
   query_seafood_prices already picks the highest-liquidity size
 - **Budget range** — irrelevant; the agent always returns the cheapest
@@ -145,6 +211,31 @@ them is over-engineering and creates clarification loops:
 - **Which species (when user gave a generic term)** — query_seafood_prices
   resolves "กุ้ง" → "Vannamei Shrimp L" via Best-Match. Plan with the
   generic term and let the tool decide.
+- **Include shipping costs?** — Total Landed Cost (price + per-shop
+  delivery via data/transport_rates) is ALWAYS the default. Never ask
+  "Would you like to include shipping?" / "รวมค่าขนส่งไหม?". get_best_deals
+  and get_purchase_quote already include it.
+- **Per-shop shipping rates** — never ask "What is the shipping rate for
+  X shop?" — data/transport_rates has them.
+
+## Out-of-scope queries — answer in 1 turn, do NOT clarify
+This platform covers ONLY 5 seafood categories: shrimp / fish / squid /
+crab / shellfish from Gulf of Thailand shops delivering to Bangkok.
+When the user asks about something clearly outside that scope (pork /
+chicken / vegetables / Facebook groups / nearby physical stores /
+delivery time / etc.), DO NOT request clarification. Instead, plan an
+empty/no-tool response by calling create_plan with steps like:
+
+  PLAN: ["respond_out_of_scope: pork is not covered; offer to show today's
+         seafood deals instead"]
+
+The agent_node will then deliver the scope statement directly. Examples:
+
+- "ราคาเนื้อหมูวันนี้เป็นยังไง?" → PLAN: ["respond_out_of_scope: pork not
+  covered — suggest seafood alternative"]   (NEVER ask "seafood or pork?")
+- "ช่วยหากลุ่มขายซีฟู้ดบน Facebook" → PLAN: ["respond_out_of_scope:
+  Facebook group search not supported — offer to compare seafood prices
+  here instead"]   (NEVER pull them into a 'buy shrimp' clarification)
 
 ## When to plan vs clarify
 ALWAYS plan if the user names ANY of: a category (กุ้ง, fish, squid…),
@@ -243,13 +334,20 @@ def reason_node(state: dict) -> dict:
         options = call["args"]["options"]
 
         # Programmatic guards: even if the LLM ignores its system prompt,
-        # never let banned options through and never clarify twice.
-        if _options_are_banned(options) or _already_clarified(state.get("messages", [])):
+        # never let banned options/questions through and never clarify twice.
+        if (
+            _options_are_banned(options)
+            or _question_is_banned(question)
+            or _is_scope_confusion_question(question)
+            or _already_clarified(state.get("messages", []))
+        ):
             logger.info(
                 "reason_node: suppressing clarification "
-                "(already_clarified=%s, banned=%s) — routing to agent",
+                "(already=%s, opt_banned=%s, q_banned=%s, scope=%s) — routing to agent",
                 _already_clarified(state.get("messages", [])),
                 _options_are_banned(options),
+                _question_is_banned(question),
+                _is_scope_confusion_question(question),
             )
             return updates  # both None → falls through to agent_node
 
