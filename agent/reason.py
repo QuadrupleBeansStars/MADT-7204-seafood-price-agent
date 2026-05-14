@@ -158,6 +158,50 @@ def _already_clarified(messages: list) -> bool:
             return True
     return False
 
+
+def _session_clarification_count(messages: list) -> int:
+    """Count clarifications already asked anywhere in the session.
+
+    `_already_clarified` only sees the current turn, so it cannot stop a
+    loop that spans turns: every option-button click is a fresh
+    HumanMessage, which resets the "current turn" window, so the LLM was
+    free to clarify again and again (screenshot loop: ปูม้า → ปูม้าสด →
+    เนื้อปูม้าสด → … each click triggering another "ประเภทไหน?").
+
+    reason_node tags each persisted clarification AIMessage with
+    additional_kwargs["is_clarification"]; this counts those tags across
+    the WHOLE history. Plain-text answers from agent_node are untagged,
+    so they never inflate the count.
+    """
+    return sum(
+        1
+        for m in messages
+        if isinstance(m, AIMessage)
+        and getattr(m, "additional_kwargs", {}).get("is_clarification")
+    )
+
+
+def _is_renarrowing_question(question: str, messages: list) -> bool:
+    """True if the question just echoes the user's last answer back at them.
+
+    The screenshot loop: the user clicks "ปูม้าสด", and the next
+    clarification is "คุณต้องการปูม้าสดประเภทไหน?" — the button label is
+    literally a substring of the new question. That shape is always a
+    re-narrowing loop: the user already answered, the agent should plan
+    with that answer instead of asking a longer version of the same Q.
+    """
+    last_user = None
+    for m in messages:
+        if isinstance(m, HumanMessage):
+            last_user = m
+    if last_user is None:
+        return False
+    answer = (last_user.content or "").strip()
+    # Require a non-trivial answer so a stray 1-2 char message can't match.
+    if len(answer) < 3:
+        return False
+    return answer.lower() in (question or "").lower()
+
 # ── System prompt ─────────────────────────────────────────────────────────────
 
 REASON_SYSTEM_PROMPT = """\
@@ -346,19 +390,25 @@ def reason_node(state: dict) -> dict:
 
         # Programmatic guards: even if the LLM ignores its system prompt,
         # never let banned options/questions through and never clarify twice.
+        session_msgs = state.get("messages", [])
         if (
             _options_are_banned(options)
             or _question_is_banned(question)
             or _is_scope_confusion_question(question)
-            or _already_clarified(state.get("messages", []))
+            or _already_clarified(session_msgs)
+            or _session_clarification_count(session_msgs) >= 1
+            or _is_renarrowing_question(question, session_msgs)
         ):
             logger.info(
                 "reason_node: suppressing clarification "
-                "(already=%s, opt_banned=%s, q_banned=%s, scope=%s) — routing to agent",
-                _already_clarified(state.get("messages", [])),
+                "(already=%s, opt_banned=%s, q_banned=%s, scope=%s, "
+                "session_count=%s, renarrowing=%s) — routing to agent",
+                _already_clarified(session_msgs),
                 _options_are_banned(options),
                 _question_is_banned(question),
                 _is_scope_confusion_question(question),
+                _session_clarification_count(session_msgs),
+                _is_renarrowing_question(question, session_msgs),
             )
             return updates  # both None → falls through to agent_node
 
@@ -371,7 +421,11 @@ def reason_node(state: dict) -> dict:
         # instead of two consecutive HumanMessages (which caused the
         # model to treat the user's button click as a fresh ambiguous
         # query and re-ask the same clarification — clarification loop).
-        updates["messages"] = [AIMessage(content=question)]
+        # The is_clarification tag lets _session_clarification_count find
+        # this message later, even after option clicks add new turns.
+        updates["messages"] = [
+            AIMessage(content=question, additional_kwargs={"is_clarification": True})
+        ]
     elif call["name"] == "create_plan":
         updates["current_plan"] = call["args"]["steps"]
     else:
