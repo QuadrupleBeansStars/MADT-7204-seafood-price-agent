@@ -76,3 +76,24 @@ def test_prepare_scraped_drops_pack_only_rows():
     assert len(out) == 2
     assert out["price_per_kg"].notna().all()
     assert "Crab Meat" not in out["group_en"].values
+
+
+# ── Mock demo shops carry a contact phone ────────────────────────────────────
+
+
+def test_generate_mock_rows_attaches_contact_phone():
+    """Demo shops have no storefront link, so each mock row must carry a
+    `contact` phone number — _format_row falls back to it so the Order
+    cell is never empty."""
+    from data.mock_shops import generate_mock_rows
+
+    real = pd.DataFrame([{
+        "source": "ไต้ก๋ง ซีฟู้ด", "group_en": "Shrimp", "group_th": "กุ้ง",
+        "option": "L", "price_per_kg": 200.0, "selling_price": 200.0,
+        "link": "https://real", "scrape_date": "2026-05-14",
+    }])
+    out = generate_mock_rows(real)
+    assert not out.empty
+    assert "contact" in out.columns
+    assert out["contact"].notna().all()
+    assert (out["link"] == "").all()  # demo shops never carry a real link

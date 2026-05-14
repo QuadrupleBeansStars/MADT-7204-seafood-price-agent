@@ -9,10 +9,14 @@ import random
 
 import pandas as pd
 
+# Demo shops have no public storefront URL, so each carries a mock phone
+# number instead. Downstream (_order_line in agent/tools/seafood_prices)
+# falls back to this when a row has no link, so every row still shows an
+# actionable way to buy.
 MOCK_SHOPS = [
-    {"name": "Gulf Fresh Co.", "bias": 1.05},
-    {"name": "PakPanang Direct", "bias": 0.95},
-    {"name": "Cha-Am Seafood", "bias": 1.00},
+    {"name": "Gulf Fresh Co.", "bias": 1.05, "phone": "02-555-0188"},
+    {"name": "PakPanang Direct", "bias": 0.95, "phone": "075-410-260"},
+    {"name": "Cha-Am Seafood", "bias": 1.00, "phone": "032-471-339"},
 ]
 
 _BASE_SOURCES = ["ไต้ก๋ง ซีฟู้ด", "PPNSeafood"]
@@ -64,6 +68,7 @@ def generate_mock_rows(real_df: pd.DataFrame) -> pd.DataFrame:
                         float(row["selling_price"]) * multiplier, 0
                     )
                 new_row["link"] = ""
+                new_row["contact"] = shop["phone"]
 
                 all_rows.append(new_row)
 
