@@ -335,7 +335,7 @@ TREAT IT AS THE ANSWER and plan immediately. NEVER re-ask the same question.
 - Never answer the user directly in text — always use a tool
 - Never call data tools yourself
 - Always fill in the `reasoning` field to explain your decision in one sentence
-- After 1 clarification exchange in the conversation, you MUST call
+- After 3 clarification exchanges in the conversation, you MUST call
   create_plan — never loop. If the user's reply is still vague, plan with
   best-effort defaults rather than asking again.
 
@@ -389,14 +389,15 @@ def reason_node(state: dict) -> dict:
         options = call["args"]["options"]
 
         # Programmatic guards: even if the LLM ignores its system prompt,
-        # never let banned options/questions through and never clarify twice.
+        # never let banned options/questions through and never exceed the
+        # 3-clarification-per-session cap.
         session_msgs = state.get("messages", [])
         if (
             _options_are_banned(options)
             or _question_is_banned(question)
             or _is_scope_confusion_question(question)
             or _already_clarified(session_msgs)
-            or _session_clarification_count(session_msgs) >= 1
+            or _session_clarification_count(session_msgs) >= 3
             or _is_renarrowing_question(question, session_msgs)
         ):
             logger.info(

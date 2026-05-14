@@ -214,7 +214,19 @@ def _invoke_agent(user_text: str) -> None:
 
 # --- Page body ---------------------------------------------------------------
 
-st.title("Thailand Seafood Price Advisor")
+title_col, newchat_col = st.columns([4, 1])
+with title_col:
+    st.title("Thailand Seafood Price Advisor")
+with newchat_col:
+    st.write("")  # nudge the button down to roughly align with the title
+    if st.button("New chat", use_container_width=True):
+        st.session_state["messages"] = [SystemMessage(content=SYSTEM_PROMPT)]
+        st.session_state["pending_clarification"] = None
+        st.session_state["current_plan"] = None
+        st.session_state["last_thinking"] = None
+        st.session_state["clarification_round"] = 0
+        st.session_state.pop("last_error", None)
+        st.rerun()
 st.caption("Ask me anything — I'll clarify if needed, then find the best answer.")
 
 if "messages" not in st.session_state:
