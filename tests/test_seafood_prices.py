@@ -235,27 +235,12 @@ def test_purchase_quote_picks_lowest_landed_cost(monkeypatch):
     assert "GRAND TOTAL" in out
 
 
-# ── Pack/kg unit safety (PR #A) ──────────────────────────────────────────────
+# ── Per-kg row formatting ────────────────────────────────────────────────────
 
 
-def test_format_row_tags_pack_items_with_unit_warning():
-    """Regression for the '380/pack vs 199/kg = 91% cheaper' bug. Pack rows
-    must carry an explicit ⚠ PACK marker AND a do-not-compare instruction
-    so the LLM cannot silently mix units in its arithmetic."""
-    pack_row = pd.Series({
-        "source": "PPNSeafood", "group_th": "หมึก", "group_en": "Squid",
-        "option": "10-20 ตัว/กก", "price_per_kg": float("nan"),
-        "selling_price": 380.0, "link": "https://example/squid",
-    })
-    out = _format_row(pack_row)
-    assert "⚠ PACK" in out
-    assert "/pack" in out
-    assert "DO NOT compare" in out
-
-
-def test_format_row_per_kg_items_unchanged():
-    """Per-kg rows must NOT carry the pack warning — that signal exists
-    only to flag unit risk, applying it everywhere makes it noise."""
+def test_format_row_renders_per_kg_price():
+    """Every row reaching the agent carries a ฿/kg price (the loader drops
+    pack-only items), so _format_row always renders ฿X/kg."""
     perkg_row = pd.Series({
         "source": "Sawasdee Seafood", "group_th": "กุ้งขาว",
         "group_en": "Vannamei Shrimp", "option": "L",
@@ -263,8 +248,8 @@ def test_format_row_per_kg_items_unchanged():
         "link": "https://example/v",
     })
     out = _format_row(perkg_row)
-    assert "⚠ PACK" not in out
     assert "฿250/kg" in out
+    assert "PACK" not in out
 
 
 def test_talaadthai_benchmark_returns_unit_field(monkeypatch):

@@ -113,9 +113,10 @@ def _clean_numeric(series: pd.Series) -> pd.Series:
 #   "8-12 ตัว (กก)"   ฿500   → weight=1.0  → ฿500/kg  (parenthetical kg unit)
 #
 # Patterns we INTENTIONALLY skip — these are pure piece counts with no
-# weight signal, so any conversion would be guesswork:
-#   "3 ชิ้น/แพ็ค"            → leave as pack
-#   "26-35 ตัว" (no unit)    → leave as pack
+# weight signal, so any conversion would be guesswork. Rows the parser
+# can't resolve to a per-kg price are dropped by the loader (see below):
+#   "3 ชิ้น/แพ็ค"            → no weight signal → dropped
+#   "26-35 ตัว" (no unit)    → no weight signal → dropped
 
 # Explicit grams: "500 กรัม", "280g", "500กรัม"
 _RE_GRAMS = re.compile(r"(\d+(?:[.,]\d+)?)\s*(?:กรัม|g)\b", re.IGNORECASE)
@@ -230,9 +231,9 @@ def _load_registry() -> pd.DataFrame:
     df = _fill_weight_from_option(df)
     df = _compute_per_kg_from_weight(df)
 
-    # For items with selling_price but no weight signal (true pack items
-    # like "3 ชิ้น"), keep selling_price as a reference — price_per_kg
-    # stays NaN and downstream tools display them as ⚠ PACK.
+    # Drop pack-only rows (no per-kg price). Biz team found them confusing
+    # in the comparison UI since they can't be compared apples-to-apples.
+    df = df[df["price_per_kg"].notna() & (df["price_per_kg"] > 0)]
 
     # Map categories
     df["category"] = df["group_en"].map(CATEGORY_MAP).fillna("other")
@@ -316,6 +317,8 @@ def _prepare_scraped(scraped: pd.DataFrame) -> pd.DataFrame:
     # encodes it ("500 กรัม", "1.1 กิโลกรัม", "L: 7-10 ตัวโล").
     scraped = _fill_weight_from_option(scraped)
     scraped = _compute_per_kg_from_weight(scraped)
+    # Drop pack-only rows (no per-kg price) so they don't reach the UI/agent.
+    scraped = scraped[scraped["price_per_kg"].notna() & (scraped["price_per_kg"] > 0)]
     if "category" not in scraped.columns:
         scraped["category"] = scraped["group_en"].map(CATEGORY_MAP).fillna("other")
         scraped["category_th"] = scraped["category"].map(CATEGORY_TH)

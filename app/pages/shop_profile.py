@@ -59,18 +59,9 @@ else:
             diffs = shop_avg[common_groups] - market_avg[common_groups]
             avg_diff = diffs.mean()
 
-    # Explain why Avg vs market is N/A: shop sells per-pack only (no
-    # weight) so we cannot honestly normalise to ฿/kg for comparison.
     if avg_diff is not None:
         avg_value = f"{'+' if avg_diff > 0 else ''}{avg_diff:,.0f} ฿/kg"
         avg_help = "Mean ฿/kg difference vs cross-shop average for items this shop carries."
-    elif shop_priced.empty:
-        avg_value = "N/A"
-        avg_help = (
-            "This shop sells items per-pack without published weight, so "
-            "prices cannot be normalised to ฿/kg for an apples-to-apples "
-            "market comparison."
-        )
     else:
         avg_value = "N/A"
         avg_help = "No overlap between this shop's items and the rest of the market."
@@ -159,7 +150,7 @@ else:
                     st.plotly_chart(fig_range, use_container_width=True)
 
     with tab3:
-        catalog_cols = ["group_th", "group_en", "item_name_website", "option", "selling_price", "price_per_kg", "link"]
+        catalog_cols = ["group_th", "group_en", "item_name_website", "option", "price_per_kg", "link"]
         available_cols = [c for c in catalog_cols if c in shop_df.columns]
         st.dataframe(
             shop_df[available_cols],
@@ -168,7 +159,6 @@ else:
                 "group_en": "Group",
                 "item_name_website": "Item name",
                 "option": "Option/Size",
-                "selling_price": st.column_config.NumberColumn("Price (฿)", format="฿%,.0f"),
                 "price_per_kg": st.column_config.NumberColumn("฿/kg", format="฿%,.0f"),
                 "link": st.column_config.LinkColumn("Link", display_text="View"),
             },
