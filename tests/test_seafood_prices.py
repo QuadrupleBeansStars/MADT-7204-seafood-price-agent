@@ -252,6 +252,47 @@ def test_format_row_renders_per_kg_price():
     assert "PACK" not in out
 
 
+def test_format_row_consistent_field_count_with_and_without_option():
+    """Regression: the order table misaligned because rows WITH an option
+    were 4 `|`-fields and rows WITHOUT were 3, so the LLM leaked the
+    option into the Price column. Every row must now be exactly
+    `source | name | price` — the option is folded into the name."""
+    base = {"source": "S", "group_th": "กุ้ง", "group_en": "Shrimp",
+            "price_per_kg": 200.0, "link": "https://x"}
+    with_opt = _format_row(pd.Series({**base, "option": "L"})).split("\n")[0]
+    no_opt = _format_row(pd.Series({**base, "option": "-"})).split("\n")[0]
+    assert with_opt.count("|") == 2
+    assert no_opt.count("|") == 2
+    # The option lives inside the name field, not as its own column.
+    assert "กุ้ง L (Shrimp)" in with_opt
+
+
+def test_format_row_falls_back_to_contact_when_no_link():
+    """Demo shops have no storefront URL — _format_row shows the mock
+    phone number so the Order cell is never empty."""
+    row = pd.Series({
+        "source": "Cha-Am Seafood", "group_th": "เนื้อปูแกะ",
+        "group_en": "Crab Meat", "option": "กลาง500กรัม",
+        "price_per_kg": 2800.0, "link": "", "contact": "032-471-339",
+    })
+    out = _format_row(row)
+    assert "📞" in out
+    assert "032-471-339" in out
+    assert "🔗" not in out
+
+
+def test_format_row_prefers_link_over_contact():
+    """When a row has both a real link and a contact, the link wins."""
+    row = pd.Series({
+        "source": "S", "group_th": "ปู", "group_en": "Crab Meat",
+        "option": "-", "price_per_kg": 100.0,
+        "link": "https://x", "contact": "02-000-0000",
+    })
+    out = _format_row(row)
+    assert "🔗 https://x" in out
+    assert "📞" not in out
+
+
 def test_talaadthai_benchmark_returns_unit_field(monkeypatch):
     """The benchmark tool must return an explicit 'unit' key so the LLM
     can perform a runtime unit-check before computing percentages."""

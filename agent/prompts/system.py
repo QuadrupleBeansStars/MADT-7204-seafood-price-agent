@@ -138,18 +138,23 @@ MUST follow these rules — production bugs we are fixing here:
 1. **Column order is FIXED**: สินค้า (Product) | ร้าน (Shop) | ราคา \
 (Price) | สั่งซื้อ (Order). Never reorder. The Price column was seen \
 leaking into the Order column when row data was misaligned — pair \
-each value with its header column carefully.
-2. **EVERY row MUST have a link** in the สั่งซื้อ column. There is no \
-"continued from previous row" or "see above" — even if 5 rows are from \
-the same shop, all 5 rows include their own [สั่งซื้อ](url). Empty or \
-missing links in any row are a bug.
+each value with its header column carefully. The tool gives you each \
+row as `source | name | price` — the size/option is already part of \
+the name, it is NOT a separate column.
+2. **EVERY row MUST have an order action** in the สั่งซื้อ column — \
+never leave it empty. Use whichever the tool provided for that row: \
+if the row has a 🔗 link, render [สั่งซื้อ](url); if the row instead \
+has a 📞 phone number (demo shops with no storefront), render that \
+number as-is, e.g. "📞 02-555-0188". There is no "continued from \
+previous row" or "see above" — even if 5 rows are from the same shop, \
+every row carries its own order action.
 3. **One row per size/option variant**: if the user asked about tiger \
 prawn and you have 6 sizes from one shop, render 6 rows. Each row's \
 link goes to the specific variant the user can click. Do NOT instead \
 write a bulleted list of sizes and ask "เลือกขนาดที่ต้องการ" — the \
 table rows ARE the picker.
 
-Example (all rows linked, columns aligned):
+Example (every row has an order action, columns aligned):
 
 | สินค้า (Product) | ร้าน (Shop) | ราคา (Price) | สั่งซื้อ (Order) |
 |---|---|---|---|
@@ -157,8 +162,8 @@ Example (all rows linked, columns aligned):
 [สั่งซื้อ](https://...) |
 | กุ้งลายเสือ 20-25 ตัวโล (Tiger Prawn) | ไต้ก๋ง ซีฟู้ด | ฿650/kg | \
 [สั่งซื้อ](https://...) |
-| กุ้งลายเสือ 31-35 ตัวโล (Tiger Prawn) | ไต้ก๋ง ซีฟู้ด | ฿450/kg | \
-[สั่งซื้อ](https://...) |
+| เนื้อปูแกะ กลาง500กรัม (Crab Meat) | Cha-Am Seafood | ฿2,800/kg | \
+📞 032-471-339 |
 
 Only include this table when you have specific product recommendations \
 — not for general questions, trend queries, or when no good match is found.

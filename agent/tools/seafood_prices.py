@@ -97,17 +97,47 @@ def _resolve_best_match(df: pd.DataFrame, item: str) -> tuple[pd.DataFrame, str 
     return matched[matched["group_en"] == winner], note
 
 
+def _order_line(row: pd.Series) -> str:
+    """Return the order/contact suffix for a product row.
+
+    Shops with a product URL get a 🔗 link. Demo shops have no URL, so
+    they fall back to a 📞 phone number (data/mock_shops) — every row
+    must carry an actionable way to buy, never an empty Order cell.
+    """
+    link = row.get("link")
+    if isinstance(link, str) and link:
+        return f"\n  🔗 {link}"
+    contact = row.get("contact")
+    if isinstance(contact, str) and contact:
+        return f"\n  📞 โทรสั่ง {contact}"
+    return ""
+
+
+def _row_name(row: pd.Series) -> str:
+    """Bilingual product name with the size/option folded in.
+
+    The option is part of the NAME, not a separate field. Earlier it was
+    emitted as its own ``| {option}`` column, which made rows variable-
+    width (3 fields without an option, 4 with) — the LLM then misaligned
+    the markdown table, leaking the option into the Price column and the
+    price into the Order column.
+    """
+    if row["option"] != "-":
+        return f"{row['group_th']} {row['option']} ({row['group_en']})"
+    return f"{row['group_th']} ({row['group_en']})"
+
+
 def _format_row(row: pd.Series) -> str:
     """Format a single product row for the agent's text response.
 
     Every row carries a ฿/kg price — the data loader drops pack-only
-    items (no per-kg price) before they reach the agent.
+    items (no per-kg price) before they reach the agent. Each row is a
+    fixed-width ``source | name | price`` record so the LLM can map it
+    to the order table without column drift.
     """
-    name = f"{row['group_th']} ({row['group_en']})"
-    option_str = f" | {row['option']}" if row["option"] != "-" else ""
+    name = _row_name(row)
     price_str = f"฿{row['price_per_kg']:,.0f}/kg"
-    link_str = f"\n  🔗 {row['link']}" if row["link"] else ""
-    return f"  {row['source']:25s} | {name}{option_str} | {price_str}{link_str}"
+    return f"  {row['source']:25s} | {name} | {price_str}{_order_line(row)}"
 
 
 @tool
@@ -256,15 +286,12 @@ def get_best_deals(
         lines.append("Top Best Deals (landed cost = price + amortised delivery):")
         lines.append("-" * 60)
         for _, row in top_deals.iterrows():
-            name = f"{row['group_th']} ({row['group_en']})"
-            option_str = f" {row['option']}" if row["option"] != "-" else ""
-            link_str = f"\n  🔗 {row['link']}" if row.get("link") else ""
             lines.append(
-                f"• {name}{option_str} at {row['source']} | "
+                f"• {_row_name(row)} at {row['source']} | "
                 f"Shelf: ฿{row['price_per_kg']:,.0f}/kg → "
                 f"Landed: ฿{row['landed_per_kg']:,.0f}/kg | "
                 f"Benchmark: ฿{row['benchmark_per_kg']:,.0f}/kg | "
-                f"Save: {row['pct_below_benchmark']:.1f}%{link_str}"
+                f"Save: {row['pct_below_benchmark']:.1f}%{_order_line(row)}"
             )
 
     return "\n".join(lines)
@@ -454,9 +481,8 @@ def get_purchase_quote(items: list[dict]) -> str:
             grand_benchmark += benchmark_total
 
         grand_total += best_total
-        option_str = f" {best_row['option']}" if best_row["option"] != "-" else ""
         lines.append(
-            f"\n• {group_th} ({group_en}){option_str} — {qty_kg:g} kg @ "
+            f"\n• {_row_name(best_row)} — {qty_kg:g} kg @ "
             f"฿{best_row['price_per_kg']:,.0f}/kg"
         )
         lines.append(f"   Shop:      {best_row['source']}")
@@ -472,8 +498,9 @@ def get_purchase_quote(items: list[dict]) -> str:
                 f"   Talaad Thai benchmark: ฿{benchmark_total:,.0f} "
                 f"(save ฿{saving:,.0f}, {pct:+.1f}%)"
             )
-        if best_row.get("link"):
-            lines.append(f"   🔗 {best_row['link']}")
+        order = _order_line(best_row).strip()
+        if order:
+            lines.append(f"   {order}")
 
     lines.append("\n" + "=" * 60)
     lines.append(f"GRAND TOTAL: ฿{grand_total:,.0f}")
