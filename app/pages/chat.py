@@ -1,4 +1,4 @@
-"""Chat page — LangGraph ReAct agent backed by Claude Sonnet 4.5.
+"""Chat page — LangGraph ReAct agent backed by the configured LLM provider.
 
 Each assistant "turn" (one or more AI/Tool messages between user inputs)
 renders as a single chat bubble: the final text on top, with a collapsed

@@ -22,7 +22,7 @@ def _make_state(messages=None, pending_clarification=None, current_plan=None, la
 
 
 def _ai_with_tool_call(tool_name: str, args: dict) -> AIMessage:
-    """Return an AIMessage that looks like Claude called a tool."""
+    """Return an AIMessage that looks like the LLM called a tool."""
     msg = AIMessage(content="")
     msg.tool_calls = [{"name": tool_name, "args": args, "id": "call_123"}]
     return msg
@@ -151,7 +151,7 @@ class TestReasonNode:
         assert result["last_thinking"] == "Item and intent are clear."
 
     def test_falls_back_gracefully_when_no_tool_called(self):
-        """If Claude returns plain text (no tool call), state has no plan/clarification."""
+        """If the LLM returns plain text (no tool call), state has no plan/clarification."""
         from agent.reason import reason_node
         mock_response = AIMessage(content="I am not sure what to do.")
         mock_response.tool_calls = []
