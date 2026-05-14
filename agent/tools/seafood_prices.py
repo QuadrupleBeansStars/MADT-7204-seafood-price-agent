@@ -100,21 +100,12 @@ def _resolve_best_match(df: pd.DataFrame, item: str) -> tuple[pd.DataFrame, str 
 def _format_row(row: pd.Series) -> str:
     """Format a single product row for the agent's text response.
 
-    Pack-priced rows (no ฿/kg available) are tagged ⚠ PACK so the LLM
-    cannot accidentally compare them to a Talaad Thai per-kg benchmark.
-    Production bug we fix here: agent saw "PPNSeafood ฿380/pack" alongside
-    "TT benchmark ฿199.17/kg" and computed "(199.17 − 380) / 199.17 = 91%
-    below market" — units silently mixed.
+    Every row carries a ฿/kg price — the data loader drops pack-only
+    items (no per-kg price) before they reach the agent.
     """
     name = f"{row['group_th']} ({row['group_en']})"
     option_str = f" | {row['option']}" if row["option"] != "-" else ""
-    if pd.notna(row["price_per_kg"]):
-        price_str = f"฿{row['price_per_kg']:,.0f}/kg"
-    else:
-        price_str = (
-            f"⚠ PACK ฿{row['selling_price']:,.0f}/pack "
-            f"(weight unknown — DO NOT compare to ฿/kg benchmark)"
-        )
+    price_str = f"฿{row['price_per_kg']:,.0f}/kg"
     link_str = f"\n  🔗 {row['link']}" if row["link"] else ""
     return f"  {row['source']:25s} | {name}{option_str} | {price_str}{link_str}"
 
@@ -211,18 +202,14 @@ def get_best_deals(
 
     df = _latest_per_shop_item(load_seafood_data())
 
-    # Keep rows with a usable per-kg price. The loader has already filled
-    # price_per_kg from selling_price/weight_kg where weight is known, so
-    # pack items with declared weight ARE included here. Pack items with
-    # unknown weight stay null and are surfaced separately below.
-    priced = df[df["price_per_kg"].notna()].copy()
-    pack_only = df[df["price_per_kg"].isna() & df["selling_price"].notna()].copy()
+    # Every row has a ฿/kg price — the loader drops pack-only items
+    # (no per-kg price) before they reach the tools.
+    priced = df.copy()
 
     if cat_lower:
         priced = priced[priced["category"] == cat_lower]
-        pack_only = pack_only[pack_only["category"] == cat_lower]
 
-    if priced.empty and pack_only.empty:
+    if priced.empty:
         cat_msg = f" for category '{category}'" if category else ""
         return f"No available inventory found{cat_msg}."
 
@@ -243,16 +230,13 @@ def get_best_deals(
 
     bench_lookup = bench.set_index("group_en")["price_per_kg"].to_dict()
 
-    if priced.empty:
-        analysis = pd.DataFrame()
-    else:
-        priced["benchmark_per_kg"] = priced["group_en"].map(bench_lookup)
-        analysis = priced[priced["benchmark_per_kg"].notna()].copy()
-        analysis["landed_per_kg"] = analysis.apply(_landed_per_kg, axis=1)
-        analysis["pct_below_benchmark"] = (
-            (analysis["benchmark_per_kg"] - analysis["landed_per_kg"])
-            / analysis["benchmark_per_kg"]
-        ) * 100
+    priced["benchmark_per_kg"] = priced["group_en"].map(bench_lookup)
+    analysis = priced[priced["benchmark_per_kg"].notna()].copy()
+    analysis["landed_per_kg"] = analysis.apply(_landed_per_kg, axis=1)
+    analysis["pct_below_benchmark"] = (
+        (analysis["benchmark_per_kg"] - analysis["landed_per_kg"])
+        / analysis["benchmark_per_kg"]
+    ) * 100
 
     deals = analysis[analysis["pct_below_benchmark"] > 10] if not analysis.empty else analysis
     cat_str = cat_lower if cat_lower else "all categories"
@@ -281,22 +265,6 @@ def get_best_deals(
                 f"Landed: ฿{row['landed_per_kg']:,.0f}/kg | "
                 f"Benchmark: ฿{row['benchmark_per_kg']:,.0f}/kg | "
                 f"Save: {row['pct_below_benchmark']:.1f}%{link_str}"
-            )
-
-    # Surface pack-only items so the agent can still mention them.
-    # Sort by absolute pack price so the cheapest pack appears first —
-    # head(5) on an unsorted frame produced non-deterministic output.
-    if not pack_only.empty:
-        pack_only = pack_only.sort_values("selling_price", na_position="last")
-        lines.append("\nPack-only offers (weight unknown — not ranked):")
-        lines.append("-" * 60)
-        for _, row in pack_only.head(5).iterrows():
-            name = f"{row['group_th']} ({row['group_en']})"
-            option_str = f" {row['option']}" if row["option"] != "-" else ""
-            link_str = f"\n  🔗 {row['link']}" if row.get("link") else ""
-            lines.append(
-                f"• {name}{option_str} at {row['source']} | "
-                f"฿{row['selling_price']:,.0f} (pack){link_str}"
             )
 
     return "\n".join(lines)
@@ -365,10 +333,9 @@ def get_price_trend(item: str, days: int = 7) -> str:
     unique_dates = sorted(matched["scrape_date"].unique())[-days:]
     matched = matched[matched["scrape_date"].isin(unique_dates)]
 
-    # Prefer price_per_kg; fall back to selling_price for pack-only items (e.g. crab)
-    has_ppkg = matched["price_per_kg"].notna().any()
-    price_col = "price_per_kg" if has_ppkg else "selling_price"
-    price_label = "฿/kg" if has_ppkg else "฿/pack"
+    # Every row is per-kg — the loader drops pack-only items.
+    price_col = "price_per_kg"
+    price_label = "฿/kg"
 
     table = matched.pivot_table(
         index="scrape_date",

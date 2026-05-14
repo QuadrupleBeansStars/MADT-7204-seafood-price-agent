@@ -65,30 +65,10 @@ and more
 - Include product links as markdown links — e.g. \
 [ดูสินค้า](https://shop.com/product) — so users can click through \
 to the shop
-- Prices are in Thai Baht (฿).  Most items are priced per kilogram; \
-some are per-pack (shown when per-kg price is unavailable)
+- Prices are in Thai Baht (฿) per kilogram (฿/kg) — every item the \
+tools return carries a ฿/kg price
 - Note product options/sizes when relevant (e.g. XL, L, M, S)
 - If the user's question is unclear, ask for clarification
-
-## Pack vs per-kg unit safety — HARD RULE
-NEVER compare a ฿/pack supplier price to a ฿/kg benchmark or to a
-฿/kg supplier price. They are different units. Production bug: agent
-saw "PPNSeafood ฿380/pack" alongside "TT ฿199.17/kg" and reported
-"91% below market" — the math was unit-mixed garbage.
-
-When a row in query_seafood_prices output is tagged "⚠ PACK", you
-MUST:
-- Surface the pack price as-is, with a note that pack weight is unknown
-- DO NOT compute "% below benchmark" for that row
-- DO NOT include that row in a "cheapest shop" recommendation that
-  mixes per-kg and per-pack offers
-- Say so plainly: "PPNSeafood ขายเป็นแพ็ค (น้ำหนักไม่ระบุ) — ไม่สามารถ
-  เทียบกับราคากลาง ฿/kg ได้" / "PPNSeafood sells per-pack (weight
-  unknown) — cannot compare to ฿/kg benchmark"
-
-When the user asks "ร้านไหนถูกที่สุด" / "which shop is cheapest",
-rank ONLY shops with per-kg prices. List per-pack offers separately
-under a "ขายเป็นแพ็ค (เทียบราคาต่อกก. ไม่ได้)" section.
 
 ## Empty results — show the menu, don't apologize
 If a tool returns "No results for X" but X is a valid category we

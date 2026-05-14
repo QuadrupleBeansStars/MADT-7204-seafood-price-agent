@@ -158,7 +158,7 @@ if df is not None and not df.empty:
                 )
 
     # Full catalog
-    catalog_cols = ["group_th", "group_en", "source", "option", "price_per_kg", "selling_price", "link"]
+    catalog_cols = ["group_th", "group_en", "source", "option", "price_per_kg", "link"]
     catalog = df_filtered[catalog_cols].copy()
     catalog = catalog.rename(columns={
         "group_th": "ชื่อสินค้า",
@@ -166,14 +166,12 @@ if df is not None and not df.empty:
         "source": "Shop",
         "option": "Option",
         "price_per_kg": "฿/kg",
-        "selling_price": "Price (pack)",
         "link": "Link",
     })
     st.dataframe(
         catalog,
         column_config={
             "฿/kg": st.column_config.NumberColumn(format="฿%,.0f"),
-            "Price (pack)": st.column_config.NumberColumn(format="฿%,.0f"),
             "Link": st.column_config.LinkColumn("Link", display_text="View"),
         },
         use_container_width=True,

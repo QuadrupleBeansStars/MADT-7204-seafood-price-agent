@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from data.loader import latest_per_shop_item
+from data.loader import _prepare_scraped, latest_per_shop_item
 
 
 def _make_df(rows):
@@ -48,3 +48,31 @@ def test_latest_per_shop_item_keeps_distinct_options():
 
 def test_latest_per_shop_item_handles_empty_input():
     assert latest_per_shop_item(pd.DataFrame()).empty
+
+
+# ── Pack-only rows are dropped ───────────────────────────────────────────────
+
+
+def test_prepare_scraped_drops_pack_only_rows():
+    """Rows with no per-kg price (pack-only items the weight parser cannot
+    resolve) must not reach the UI/agent — the biz team found them
+    confusing since they can't be compared apples-to-apples. Rows whose
+    weight IS encoded in the option text are kept (per-kg is computed)."""
+    scraped = pd.DataFrame([
+        # Already per-kg — kept
+        {"source": "S", "group_en": "Squid", "group_th": "หมึก",
+         "option": "L", "weight_kg": None, "selling_price": 400.0,
+         "price_per_kg": 400.0, "link": ""},
+        # Weight in option text → per-kg computed → kept
+        {"source": "S", "group_en": "Squid", "group_th": "หมึก",
+         "option": "500 กรัม", "weight_kg": None, "selling_price": 250.0,
+         "price_per_kg": None, "link": ""},
+        # Pure piece count, no weight signal → no per-kg → dropped
+        {"source": "S", "group_en": "Crab Meat", "group_th": "เนื้อปู",
+         "option": "3 ชิ้น/แพ็ค", "weight_kg": None, "selling_price": 380.0,
+         "price_per_kg": None, "link": ""},
+    ])
+    out = _prepare_scraped(scraped)
+    assert len(out) == 2
+    assert out["price_per_kg"].notna().all()
+    assert "Crab Meat" not in out["group_en"].values
