@@ -28,6 +28,13 @@ load_dotenv()
 TOOLS = ALL_TOOLS
 
 
+def _required_env_vars(provider: str) -> tuple[str, ...]:
+    """Env vars that must be set for the given LLM provider to work."""
+    if provider == "anthropic":
+        return ("ANTHROPIC_API_KEY",)
+    return ("AZURE_OPENAI_API_KEY", "AZURE_ENDPOINT", "AZURE_API_VERSION")
+
+
 # --- State ---
 
 class AgentState(TypedDict):
@@ -130,12 +137,12 @@ def get_langfuse_handler():
 
 def main():
     """Interactive CLI loop for the seafood price agent."""
-    # Check for required Azure OpenAI config
-    missing = [k for k in ("AZURE_OPENAI_API_KEY", "AZURE_ENDPOINT", "AZURE_API_VERSION")
-               if not os.getenv(k)]
+    # Check for required LLM-provider config
+    provider = os.getenv("LLM_PROVIDER", "azure").strip().lower()
+    missing = [k for k in _required_env_vars(provider) if not os.getenv(k)]
     if missing:
-        print(f"ERROR: missing env vars: {', '.join(missing)}. "
-              f"Copy .env.example to .env and fill them in.")
+        print(f"ERROR: missing env vars for LLM_PROVIDER='{provider}': "
+              f"{', '.join(missing)}. Copy .env.example to .env and fill them in.")
         sys.exit(1)
 
     graph = build_graph()
