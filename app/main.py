@@ -22,6 +22,8 @@ if str(REPO_ROOT) not in sys.path:
 
 from auth import require_login
 
+from agent.llm import DEFAULT_ANTHROPIC_MODEL, DEFAULT_DEPLOYMENT
+
 st.set_page_config(
     page_title="Seafood Price Agent",
     page_icon="🐟",
@@ -34,10 +36,13 @@ load_dotenv()
 # Langfuse) reads them identically whether running on Streamlit Cloud
 # (secrets.toml / dashboard UI) or local dev (.env). Env wins if set.
 _BRIDGED_SECRETS = (
+    "LLM_PROVIDER",
     "AZURE_OPENAI_API_KEY",
     "AZURE_ENDPOINT",
     "AZURE_API_VERSION",
     "AZURE_DEPLOYMENT",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_MODEL",
     "LANGFUSE_SECRET_KEY",
     "LANGFUSE_PUBLIC_KEY",
     "LANGFUSE_HOST",
@@ -58,7 +63,12 @@ def _render_sidebar() -> None:
     with st.sidebar:
         st.markdown("### Seafood price advisor")
         st.caption("Your AI guide to Gulf seafood shops delivering to Bangkok.")
-        st.badge("Azure OpenAI · GPT-4o", icon=":material/smart_toy:", color="blue")
+        _provider = os.getenv("LLM_PROVIDER", "azure").strip().lower()
+        if _provider == "anthropic":
+            _badge = f"Anthropic · {os.getenv('ANTHROPIC_MODEL', DEFAULT_ANTHROPIC_MODEL)}"
+        else:
+            _badge = f"Azure OpenAI · {os.getenv('AZURE_DEPLOYMENT', DEFAULT_DEPLOYMENT)}"
+        st.badge(_badge, icon=":material/smart_toy:", color="blue")
 
         st.write("")
         if st.button("Clear chat history", icon=":material/delete:", use_container_width=True):
