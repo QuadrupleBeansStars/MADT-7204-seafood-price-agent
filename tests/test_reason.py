@@ -453,23 +453,27 @@ class TestClarificationGuards:
         persisted = result["messages"][0]
         assert persisted.additional_kwargs.get("is_clarification") is True
 
-    def test_session_wide_clarification_loop_is_suppressed(self):
-        """Screenshot bug: 'ปูม้าวันนี้ที่ไหนถูกสุด' → agent asked
-        'ปูม้าประเภทไหน?', user clicked 'ปูม้าสด' (a new HumanMessage, which
-        resets the per-turn guard), and the agent clarified AGAIN. Once a
-        clarification has been asked anywhere in the session, the next one
-        must be suppressed regardless of how many option clicks happened."""
+    def test_fourth_clarification_in_session_is_suppressed(self):
+        """Cap is 3 clarifying exchanges per session. Once 3 tagged
+        clarifications exist in history, the 4th attempt is suppressed and
+        the turn falls through to agent_node to answer best-effort."""
         from agent.reason import reason_node
         messages = [
-            HumanMessage(content="ปูม้าวันนี้ที่ไหนถูกสุด"),
-            AIMessage(content="คุณต้องการปูม้าประเภทไหน?",
+            HumanMessage(content="อยากซื้ออาหารทะเล"),
+            AIMessage(content="ประเภทไหน?",
                       additional_kwargs={"is_clarification": True}),
-            HumanMessage(content="ปูม้าสด"),  # button click → fresh turn
+            HumanMessage(content="กุ้ง"),
+            AIMessage(content="ขนาดไหน?",
+                      additional_kwargs={"is_clarification": True}),
+            HumanMessage(content="ตัวใหญ่"),
+            AIMessage(content="งบเท่าไหร่?",
+                      additional_kwargs={"is_clarification": True}),
+            HumanMessage(content="ไม่จำกัด"),
         ]
         mock_response = _ai_with_tool_call(
             "request_clarification",
-            {"reasoning": "still narrowing", "question": "คุณต้องการปูม้าแบบไหน?",
-             "options": ["เนื้อปูม้าสด", "เนื้อปูม้าก้อน"]},
+            {"reasoning": "still narrowing", "question": "ยังต้องการถามอีกไหม?",
+             "options": ["A", "B", "C"]},
         )
         with patch("agent.reason._build_reason_llm") as mock_llm_factory:
             mock_llm = MagicMock()
@@ -480,6 +484,36 @@ class TestClarificationGuards:
 
         assert result["pending_clarification"] is None  # suppressed
         assert result["current_plan"] is None  # falls through to agent
+
+    def test_clarification_within_budget_is_allowed(self):
+        """With fewer than 3 tagged clarifications in history, a new
+        clarification is allowed — the cap is 3, not 1."""
+        from agent.reason import reason_node
+        messages = [
+            HumanMessage(content="อยากซื้ออาหารทะเล"),
+            AIMessage(content="ประเภทไหน?",
+                      additional_kwargs={"is_clarification": True}),
+            HumanMessage(content="กุ้ง"),
+            AIMessage(content="ขนาดไหน?",
+                      additional_kwargs={"is_clarification": True}),
+            HumanMessage(content="ไม่รู้"),
+        ]
+        mock_response = _ai_with_tool_call(
+            "request_clarification",
+            {"reasoning": "still ambiguous", "question": "ต้องการแบบไหน?",
+             "options": ["ตัวเป็น", "แช่แข็ง", "แปรรูป"]},
+        )
+        with patch("agent.reason._build_reason_llm") as mock_llm_factory:
+            mock_llm = MagicMock()
+            mock_llm.invoke.return_value = mock_response
+            mock_llm_factory.return_value = mock_llm
+
+            result = reason_node(_make_state(messages=messages))
+
+        assert result["pending_clarification"] == {
+            "question": "ต้องการแบบไหน?",
+            "options": ["ตัวเป็น", "แช่แข็ง", "แปรรูป"],
+        }
 
     def test_renarrowing_question_echoing_user_answer_is_suppressed(self):
         """If the clarification question contains the user's last answer
