@@ -299,6 +299,11 @@ def load_talaadthai_benchmark() -> pd.DataFrame:
             n_variants=("price_per_kg", "size"),
             snapshot_date=("snapshot_date", "max"),
             link=("link", "last"),
+            # All variant display names, joined for substring search by the
+            # agent's benchmark tool. Users often query a child name
+            # ("ปลาหมึกกล้วย") that doesn't appear in the parent group name
+            # ("หมึก") — without this, the matcher misses the row entirely.
+            item_names=("item_name_website", lambda s: " | ".join(sorted({str(x) for x in s.dropna()}))),
         )
         .reset_index()
     )
