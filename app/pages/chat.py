@@ -23,10 +23,10 @@ from agent.prompts.system import SYSTEM_PROMPT
 
 
 EXAMPLE_PROMPTS = [
-    ("🦐 ดีลวันนี้", "วันนี้อาหารทะเลอะไรราคาดีบ้าง?"),
-    ("📊 ราคากุ้งขาว 7 วัน", "ราคากุ้งขาวย้อนหลัง 7 วันเป็นอย่างไร?"),
-    ("🐟 เทียบราคาแซลมอน", "เปรียบเทียบราคาปลาแซลมอนทุกร้าน"),
-    ("🦑 ปลาหมึกถูกสุด", "ปลาหมึกร้านไหนถูกที่สุดวันนี้?"),
+    ("🦐 กุ้งแชบ๊วยตัวใหญ่", "กุ้งแชบ๊วยตัวใหญ่ ร้านไหนถูกที่สุดและถูกกว่าราคาตลาดไทไหม?"),
+    ("🐟 ปลากะพง", "ปลากะพงร้านไหนถูกที่สุดและถูกกว่าราคาตลาดไทไหม?"),
+    ("🦀 ปูม้าเบอร์เล็ก", "ปูม้าเบอร์เล็กร้านไหนถูกที่สุดและถูกกว่าราคาตลาดไทไหม?"),
+    ("🦑 ปลาหมึกกล้วยตัวเล็ก", "ปลาหมึกกล้วยตัวเล็กร้านไหนถูกที่สุดและถูกกว่าราคาตลาดไทไหม?"),
 ]
 
 @st.cache_resource
@@ -182,13 +182,16 @@ def _render_welcome() -> None:
                 st.rerun()
 
 
-def _invoke_agent(user_text: str) -> None:
+def _invoke_agent() -> None:
+    """Run the agent on the current messages list (which must already include
+    the user's latest HumanMessage). The caller is responsible for appending
+    the human message *before* invoking, so the user's question is painted
+    immediately while the agent runs."""
     graph = _graph()
     handler = _langfuse()
     config = {"callbacks": [handler]} if handler else {}
 
     messages = st.session_state.get("messages", [SystemMessage(content=SYSTEM_PROMPT)])
-    messages.append(HumanMessage(content=user_text))
 
     try:
         with st.spinner("Thinking…", show_time=False):
@@ -232,15 +235,31 @@ st.caption("Ask me anything — I'll clarify if needed, then find the best answe
 if "messages" not in st.session_state:
     st.session_state["messages"] = [SystemMessage(content=SYSTEM_PROMPT)]
 
-# Consume a queued prompt (example button click or clarification button click)
-if prompt := st.session_state.pop("pending_prompt", None):
-    _invoke_agent(prompt)
+# Pull any queued prompt (chat-input submit, example-button click, or
+# clarification-button click). Append the HumanMessage to history *before*
+# rendering, so the user's question paints immediately. The agent then runs
+# inside a spinner that appears below the question — no more "where did my
+# question go?" while the agent is thinking.
+pending_prompt = st.session_state.pop("pending_prompt", None)
+if pending_prompt:
+    st.session_state["pending_clarification"] = None
+    st.session_state["current_plan"] = None
+    st.session_state["last_thinking"] = None
+    st.session_state["clarification_round"] = 0
+    st.session_state["messages"].append(HumanMessage(content=pending_prompt))
 
 non_system = [m for m in st.session_state["messages"] if not isinstance(m, SystemMessage)]
 if not non_system:
     _render_welcome()
 else:
     _render_history(st.session_state["messages"])
+
+# Run the agent on the just-painted history. Spinner shows below the user
+# bubble; on completion we rerun so the assistant message renders through
+# the normal history path.
+if pending_prompt:
+    _invoke_agent()
+    st.rerun()
 
 # Render reasoning and plan expanders after the history
 _render_thinking_expander(st.session_state.get("last_thinking"))
@@ -255,10 +274,5 @@ if err := st.session_state.get("last_error"):
         st.code(err)
 
 if user_input := st.chat_input("e.g. Which shop has cheapest white shrimp today?"):
-    # Clear previous reasoning state before new query
-    st.session_state["pending_clarification"] = None
-    st.session_state["current_plan"] = None
-    st.session_state["last_thinking"] = None
-    st.session_state["clarification_round"] = 0
-    _invoke_agent(user_input)
+    st.session_state["pending_prompt"] = user_input
     st.rerun()
