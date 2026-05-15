@@ -31,6 +31,26 @@ NEXT_DATA_RE = re.compile(
 )
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
 
+# Per-URL pricing override: biz wants these SKUs benchmarked at the *ceiling*
+# of the daily range (priceMaxThb) rather than the mid-point. Treat the range
+# as "what you might pay at the top of the day" — useful when comparing
+# retail shops that tend to sit nearer the high end of wholesale.
+MAX_PRICE_URLS: set[str] = {
+    "https://talaadthai.com/products/squid-9423-3060",
+    "https://talaadthai.com/products/saltwater-fish-9433-2433",
+}
+
+# Supplementary catalog: items biz wants tracked that aren't yet in the
+# source xlsx. Each entry mirrors the columns produced by _load_catalog.
+EXTRA_CATALOG_ITEMS: list[dict] = [
+    {
+        "group_en": "Squid",
+        "group_th": "หมึก",
+        "item_name_website": "ปลาหมึกกล้วย (ไม่ปอก) ไซส์ใหญ่",
+        "link": "https://talaadthai.com/products/squid-9423-3060",
+    },
+]
+
 logger = logging.getLogger("talaadthai_scraper")
 
 
@@ -76,13 +96,19 @@ def _parse_price(html: str) -> dict | None:
 def _load_catalog() -> pd.DataFrame:
     df = pd.read_excel(SOURCE_XLSX, sheet_name="ตลาดไท")
     df = df[df["link"].notna() & df["link"].astype(str).str.startswith("https://")]
-    return df.rename(
+    df = df.rename(
         columns={
             "Group_Name_TH": "group_th",
             "Group_Name_Eng": "group_en",
             "name from website": "item_name_website",
         }
-    )[["group_en", "group_th", "item_name_website", "link"]].reset_index(drop=True)
+    )[["group_en", "group_th", "item_name_website", "link"]]
+    if EXTRA_CATALOG_ITEMS:
+        existing_links = set(df["link"])
+        extras = [item for item in EXTRA_CATALOG_ITEMS if item["link"] not in existing_links]
+        if extras:
+            df = pd.concat([df, pd.DataFrame(extras)], ignore_index=True)
+    return df.reset_index(drop=True)
 
 
 def scrape(limit: int | None = None, sleep_s: float = 0.5) -> pd.DataFrame:
@@ -106,8 +132,10 @@ def scrape(limit: int | None = None, sleep_s: float = 0.5) -> pd.DataFrame:
         # Treat 0 as missing (sentinel used by the site for "no data")
         if not pmin and not pmax:
             continue
-        avg = None
-        if pmin and pmax:
+        if url in MAX_PRICE_URLS:
+            # Biz override: benchmark at top of range, falling back to min.
+            avg = float(pmax) if pmax else float(pmin)
+        elif pmin and pmax:
             avg = (float(pmin) + float(pmax)) / 2
         elif pmin:
             avg = float(pmin)
