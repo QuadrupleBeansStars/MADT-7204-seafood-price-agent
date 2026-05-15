@@ -23,6 +23,8 @@ def _match_row(species: str):
         df["group_en"].str.contains(q, case=False, na=False)
         | df["group_th"].str.contains(q, case=False, na=False)
     )
+    if "item_names" in df.columns:
+        mask = mask | df["item_names"].str.contains(q, case=False, na=False)
     sub = df[mask]
     if sub.empty:
         return None
