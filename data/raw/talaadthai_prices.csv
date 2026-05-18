@@ -484,3 +484,57 @@ scrape_date,source,item_name_website,group_en,group_th,option,weight_kg,selling_
 2026-05-17,Talaad Thai,หอยหวานแช่แข็ง ขนาด 30-50 ตัว/กิโลกรัม,Spotted Babylon,หอยหวาน,wholesale,1.0,165.0,165.0,150,180,กิโลกรัม,2025-11-25T23:59:59.999Z,https://talaadthai.com/products/shell-9195-2780
 2026-05-17,Talaad Thai,หอยหวาน,Spotted Babylon,หอยหวาน,wholesale,1.0,165.0,165.0,150,180,กิโลกรัม,2025-11-25T23:59:59.999Z,https://talaadthai.com/products/shell-9195-2780
 2026-05-17,Talaad Thai,ปลาหมึกกล้วย (ไม่ปอก) ไซส์ใหญ่,Squid,หมึก,wholesale,1.0,360.0,360.0,160,360,กิโลกรัม,2025-01-16T23:59:59.999Z,https://talaadthai.com/products/squid-9423-3060
+2026-05-18,Talaad Thai,กั้ง,Mantish Shrimp,กั้ง,wholesale,1.0,125.0,125.0,100,150,กิโลกรัม,2026-03-26T23:59:59.999Z,https://talaadthai.com/products/crayfish-9441-2712
+2026-05-18,Talaad Thai,กุ้งก้ามกราม คละขนาด,Prawn,กุ้งก้ามกราม,wholesale,1.0,270.0,270.0,140,400,กิโลกรัม,2025-07-02T23:59:59.999Z,https://talaadthai.com/products/5353
+2026-05-18,Talaad Thai,กุ้งก้ามกราม ขนาดเล็ก,Prawn,กุ้งก้ามกราม,wholesale,1.0,185.0,185.0,140,230,กิโลกรัม,2024-10-17T23:59:59.999Z,https://talaadthai.com/products/5352
+2026-05-18,Talaad Thai,กุ้งขาว – เบอร์เล็ก,Vannamei Shrimp,กุ้งขาว,wholesale,1.0,180.0,180.0,160,200,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/white-shrimp-9504-2741
+2026-05-18,Talaad Thai,กุ้งขาว – เบอร์กลาง,Vannamei Shrimp,กุ้งขาว,wholesale,1.0,240.0,240.0,230,250,กิโลกรัม,2024-10-17T23:59:59.999Z,https://talaadthai.com/products/shrimp-9505-2517
+2026-05-18,Talaad Thai,กุ้งขาว – เบอร์ใหญ่,Vannamei Shrimp,กุ้งขาว,wholesale,1.0,315.0,315.0,270,360,กิโลกรัม,2026-03-24T23:59:59.999Z,https://talaadthai.com/products/white-shrimp-9506-2758
+2026-05-18,Talaad Thai,กุ้งแชบ๊วย (เลี้ยง) – เบอร์เล็ก,Banana Prawn,กุ้งแชบ๊วย,wholesale,1.0,205.0,205.0,190,220,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/shrimp-9435-3036
+2026-05-18,Talaad Thai,กุ้งแชบ๊วย (เลี้ยง) – เบอร์กลาง,Banana Prawn,กุ้งแชบ๊วย,wholesale,1.0,225.0,225.0,220,230,กิโลกรัม,2024-10-31T23:59:59.999Z,https://talaadthai.com/products/shrimp-9436-2887
+2026-05-18,Talaad Thai,กุ้งแชบ๊วย (เลี้ยง) – เบอร์ใหญ่,Banana Prawn,กุ้งแชบ๊วย,wholesale,1.0,650.0,650.0,650,650,กิโลกรัม,2024-11-01T23:59:59.999Z,https://talaadthai.com/products/shrimp-9437-3057
+2026-05-18,Talaad Thai,กุ้งก้ามกราม (เลี้ยง) – เบอร์ใหญ่,Prawn,กุ้งแม่น้ำ,wholesale,1.0,350.0,350.0,300,400,กิโลกรัม,2025-07-02T23:59:59.999Z,https://talaadthai.com/products/fresh-river-prawn-9440-2773
+2026-05-18,Talaad Thai,กุ้งก้ามกราม (เลี้ยง) – เบอร์กลาง,Prawn,กุ้งแม่น้ำ,wholesale,1.0,265.0,265.0,250,280,กิโลกรัม,2024-11-01T23:59:59.999Z,https://talaadthai.com/products/fresh-river-prawn-9439-2513
+2026-05-18,Talaad Thai,กุ้งก้ามกราม (เลี้ยง) – เบอร์เล็ก,Prawn,กุ้งแม่น้ำ,wholesale,1.0,180.0,180.0,130,230,กิโลกรัม,2024-10-17T23:59:59.999Z,https://talaadthai.com/products/fresh-river-prawn-9438-2824
+2026-05-18,Talaad Thai,ปลาแซลมอน,Salmon,แซลมอน,wholesale,1.0,575.0,575.0,350,800,กิโลกรัม,2025-11-09T23:59:59.999Z,https://talaadthai.com/products/5371
+2026-05-18,Talaad Thai,แซลมอนซาซิมิ,Salmon,แซลมอน,wholesale,1.0,575.0,575.0,350,800,กิโลกรัม,2025-11-09T23:59:59.999Z,https://talaadthai.com/products/5371
+2026-05-18,Talaad Thai,แซลมอนเบบี้,Salmon,แซลมอน,wholesale,1.0,575.0,575.0,350,800,กิโลกรัม,2025-11-09T23:59:59.999Z,https://talaadthai.com/products/5371
+2026-05-18,Talaad Thai,ปลาแซลมอนสเต็ก,Salmon,แซลมอน,wholesale,1.0,575.0,575.0,350,800,กิโลกรัม,2025-11-09T23:59:59.999Z,https://talaadthai.com/products/5371
+2026-05-18,Talaad Thai,สเต็ก แซลม่อน ,Salmon,แซลมอน,wholesale,1.0,575.0,575.0,350,800,กิโลกรัม,2025-11-09T23:59:59.999Z,https://talaadthai.com/products/5371
+2026-05-18,Talaad Thai,เนื้อปลากราย,Minced Featherback Fish,เนื้อปลากราย,wholesale,1.0,100.0,100.0,80,120,กิโลกรัม,2026-02-26T23:59:59.999Z,https://talaadthai.com/products/grouper-fish-9500-2461
+2026-05-18,Talaad Thai,ปูเนื้อ,Crab Meat,เนื้อปูแกะ,wholesale,1.0,680.0,680.0,380,980,กิโลกรัม,2026-03-24T23:59:59.999Z,https://talaadthai.com/products/5368
+2026-05-18,Talaad Thai,กะพงแดงแล่ชิ้น,Sea Bass,ปลากะพง,wholesale,1.0,135.0,135.0,120,150,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9434-3329
+2026-05-18,Talaad Thai,กะพงแล่ชิ้น,Sea Bass,ปลากะพง,wholesale,1.0,135.0,135.0,120,150,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9434-3329
+2026-05-18,Talaad Thai,เนื้อปลากะพงหั่นแช่แข็ง,Sea Bass,ปลากะพง,wholesale,1.0,135.0,135.0,120,150,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9434-3329
+2026-05-18,Talaad Thai,เนื้อปลากะพงหั่นสด,Sea Bass,ปลากะพง,wholesale,1.0,135.0,135.0,120,150,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9434-3329
+2026-05-18,Talaad Thai,ปลากะพง,Sea Bass,ปลากะพง,wholesale,1.0,240.0,240.0,100,240,กิโลกรัม,2026-02-26T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9433-2433
+2026-05-18,Talaad Thai,เนื้อปลากะพง,Sea Bass,ปลากะพง,wholesale,1.0,240.0,240.0,100,240,กิโลกรัม,2026-02-26T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9433-2433
+2026-05-18,Talaad Thai,ปลากะพงขาวหั่นชิ้น,Sea Bass,ปลากะพง,wholesale,1.0,135.0,135.0,120,150,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9434-3329
+2026-05-18,Talaad Thai,ปลากะพงขาวแล่,Sea Bass,ปลากะพง,wholesale,1.0,135.0,135.0,120,150,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9434-3329
+2026-05-18,Talaad Thai,ปลาจาระเม็ด,Pomfret,ปลาจาระเม็ด,wholesale,1.0,47.5,47.5,45,50,กิโลกรัม,2024-10-17T23:59:59.999Z,https://talaadthai.com/products/snakehead-fish-9494-2427
+2026-05-18,Talaad Thai,ปลาดอลลี่,Dory Fillet,ปลาดอลลี่,wholesale,1.0,62.5,62.5,50,75,กิโลกรัม,2024-11-05T23:59:59.999Z,https://talaadthai.com/products/5372
+2026-05-18,Talaad Thai,ปลาแดง – เบอร์เล็ก,Sand Whiting,ปลาทราย,wholesale,1.0,205.0,205.0,160,250,กิโลกรัม,2026-02-26T23:59:59.999Z,https://talaadthai.com/products/freshwater-fish-9475-3045
+2026-05-18,Talaad Thai,ปลาแดง – เบอร์กลาง,Sand Whiting,ปลาทราย,wholesale,1.0,310.0,310.0,280,340,กิโลกรัม,2026-02-26T23:59:59.999Z,https://talaadthai.com/products/freshwater-fish-9476-2733
+2026-05-18,Talaad Thai,ปลาแดง – เบอร์ใหญ่,Sand Whiting,ปลาทราย,wholesale,1.0,420.0,420.0,350,490,กิโลกรัม,2026-02-26T23:59:59.999Z,https://talaadthai.com/products/freshwater-fish-9477-2939
+2026-05-18,Talaad Thai,ปลาทูทะเล,Short-bodied Mackerel,ปลาทู,wholesale,1.0,115.0,115.0,100,130,กิโลกรัม,2026-03-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9430-2750
+2026-05-18,Talaad Thai,ปลาสำลี,Black-banded Trevally,ปลาสำลี,wholesale,1.0,240.0,240.0,200,280,กิโลกรัม,2024-11-05T23:59:59.999Z,https://talaadthai.com/products/5375
+2026-05-18,Talaad Thai,ปลาอินทรีย์เค็ม,Spanish Mackerel,ปลาอินทรี,wholesale,1.0,330.0,330.0,320,340,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/saltwater-fish-9329-3025
+2026-05-18,Talaad Thai,ปลาอินทรีย์แดดเดียว,Spanish Mackerel,ปลาอินทรี,wholesale,1.0,330.0,330.0,320,340,กิโลกรัม,2023-10-24T23:59:59.999Z,https://talaadthai.com/products/5379
+2026-05-18,Talaad Thai,ปลาอินทรี,Spanish Mackerel,ปลาอินทรี,wholesale,1.0,290.0,290.0,180,400,กิโลกรัม,2024-11-05T23:59:59.999Z,https://talaadthai.com/products/5376
+2026-05-18,Talaad Thai,ปูม้า – เบอร์เล็ก,Blue Swimmer Crab,ปูม้า,wholesale,1.0,385.0,385.0,270,500,กิโลกรัม,2026-03-24T23:59:59.999Z,https://talaadthai.com/products/crab-9407-2866
+2026-05-18,Talaad Thai,ปูม้า – เบอร์กลาง,Blue Swimmer Crab,ปูม้า,wholesale,1.0,775.0,775.0,650,900,กิโลกรัม,2024-01-09T23:59:59.999Z,https://talaadthai.com/products/crab-9408-2876
+2026-05-18,Talaad Thai,ปูม้า – เบอร์ใหญ่,Blue Swimmer Crab,ปูม้า,wholesale,1.0,875.0,875.0,850,900,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/crab-9409-2917
+2026-05-18,Talaad Thai,หมึกกล้วย ไม่โดนน้ำจืด,Squid,หมึก,wholesale,1.0,170.0,170.0,160,180,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/cuttlefish-9421-3051
+2026-05-18,Talaad Thai,ปลาหมึกกล้วย,Squid,หมึก,wholesale,1.0,170.0,170.0,160,180,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/cuttlefish-9421-3051
+2026-05-18,Talaad Thai,หมึกกล้วยไซส์ใหญ่,Squid,หมึก,wholesale,1.0,205.0,205.0,190,220,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/squid-9422-2943
+2026-05-18,Talaad Thai,หมึกกล้วย,Squid,หมึก,wholesale,1.0,170.0,170.0,160,180,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/cuttlefish-9421-3051
+2026-05-18,Talaad Thai,ปลาหมึกกระดองลอก,Squid,หมึก,wholesale,1.0,310.0,310.0,250,370,กิโลกรัม,2025-01-16T23:59:59.999Z,https://talaadthai.com/products/cuttlefish-9428-2920
+2026-05-18,Talaad Thai,ปลาหมึกสายใหญ่,Squid,หมึก,wholesale,1.0,170.0,170.0,160,180,กิโลกรัม,2026-03-24T23:59:59.999Z,https://talaadthai.com/products/squid-9419-2994
+2026-05-18,Talaad Thai,หอยแครงจัมโบ้,Blood Cockles,หอยแครง,wholesale,1.0,195.0,195.0,150,240,กิโลกรัม,2025-11-26T23:59:59.999Z,https://talaadthai.com/products/shell-9190-2542
+2026-05-18,Talaad Thai,หอยแมลงภู่นิวซีแลนด์,Mussels,หอยแมลงภู่,wholesale,1.0,42.5,42.5,25,60,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/shell-9193-2565
+2026-05-18,Talaad Thai,หอยแมลงภู่,Mussels,หอยแมลงภู่,wholesale,1.0,42.5,42.5,25,60,กิโลกรัม,2023-10-21T23:59:59.999Z,https://talaadthai.com/products/shell-9193-2565
+2026-05-18,Talaad Thai,หอยลาย,Baby Clams,หอยลาย,wholesale,1.0,70.0,70.0,60,80,กิโลกรัม,2025-11-25T23:59:59.999Z,https://talaadthai.com/products/shell-9194-2637
+2026-05-18,Talaad Thai,เนื้อหอยลาย,Baby Clams,หอยลาย,wholesale,1.0,70.0,70.0,60,80,กิโลกรัม,2025-11-25T23:59:59.999Z,https://talaadthai.com/products/shell-9194-2637
+2026-05-18,Talaad Thai,หอยหวานแช่แข็ง ขนาด 30-50 ตัว/กิโลกรัม,Spotted Babylon,หอยหวาน,wholesale,1.0,165.0,165.0,150,180,กิโลกรัม,2025-11-25T23:59:59.999Z,https://talaadthai.com/products/shell-9195-2780
+2026-05-18,Talaad Thai,หอยหวาน,Spotted Babylon,หอยหวาน,wholesale,1.0,165.0,165.0,150,180,กิโลกรัม,2025-11-25T23:59:59.999Z,https://talaadthai.com/products/shell-9195-2780
+2026-05-18,Talaad Thai,ปลาหมึกกล้วย (ไม่ปอก) ไซส์ใหญ่,Squid,หมึก,wholesale,1.0,360.0,360.0,160,360,กิโลกรัม,2025-01-16T23:59:59.999Z,https://talaadthai.com/products/squid-9423-3060
